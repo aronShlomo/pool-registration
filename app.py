@@ -32,6 +32,10 @@ import traceback
 
 def send_email(to_email, subject, body, attachment=None):
     try:
+        print("Starting email send...")
+        print("Sending to:", to_email)
+        print("From:", OWNER_EMAIL)
+
         msg = EmailMessage()
         msg["From"] = OWNER_EMAIL
         msg["To"] = to_email
@@ -39,6 +43,8 @@ def send_email(to_email, subject, body, attachment=None):
         msg.set_content(body)
 
         if attachment:
+            print("Adding attachment:", attachment)
+
             with open(attachment, "rb") as file:
                 file_data = file.read()
 
@@ -49,22 +55,24 @@ def send_email(to_email, subject, body, attachment=None):
                 filename="Swimming_Registration.pdf"
             )
 
+        print("Connecting to Gmail...")
 
-        # with smtplib.SMTP("smtp.gmail.com", 587, timeout=15) as server:
-        #     server.starttls()
-        #     server.login(OWNER_EMAIL, EMAIL_PASSWORD)
-        #     server.send_message(msg)
         with smtplib.SMTP("smtp.gmail.com", 587, timeout=15) as server:
             server.starttls()
+
+            print("Logging into Gmail...")
+
             server.login(OWNER_EMAIL, EMAIL_PASSWORD)
+
+            print("Login successful")
+
             server.send_message(msg)
 
-        print("Email sent successfully")
+            print("Email sent successfully!")
 
     except Exception as e:
         print("EMAIL ERROR:", repr(e))
         traceback.print_exc()
-
 # def create_registration_pdf(data):
 
 #     # filename = "pool_registration.pdf"
