@@ -4,6 +4,10 @@ from email.message import EmailMessage
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
+import uuid
+from xml.sax.saxutils import escape
+import socket
+
 
 app = Flask(__name__)
 
@@ -15,53 +19,107 @@ load_dotenv()
 OWNER_EMAIL = os.getenv("POOL_EMAIL")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 
+print("POOL_EMAIL:", OWNER_EMAIL)
+print("EMAIL_PASSWORD exists:", EMAIL_PASSWORD is not None)
+
 
 @app.route("/")
 def home():
     return render_template("index.html")
 
+import traceback
+
+
+
+print(socket.create_connection(("smtp.gmail.com",587),timeout=10))
+
+
 
 def send_email(to_email, subject, body, attachment=None):
+    try:
+        msg = EmailMessage()
+        msg["From"] = OWNER_EMAIL
+        msg["To"] = to_email
+        msg["Subject"] = subject
+        msg.set_content(body)
 
-    msg = EmailMessage()
+        if attachment:
+            with open(attachment, "rb") as file:
+                file_data = file.read()
 
-    msg["From"] = OWNER_EMAIL
-    msg["To"] = to_email
-    msg["Subject"] = subject
-
-    msg.set_content(body)
-
-
-    if attachment:
-
-        with open(attachment, "rb") as file:
-
-            file_data = file.read()
-
-
-        msg.add_attachment(
-            file_data,
-            maintype="application",
-            subtype="pdf",
-            filename="Swimming_Registration.pdf"
-        )
+            msg.add_attachment(
+                file_data,
+                maintype="application",
+                subtype="pdf",
+                filename="Swimming_Registration.pdf"
+            )
 
 
-    with smtplib.SMTP_SSL(
-        "smtp.gmail.com",
-        465
-    ) as server:
+        # with smtplib.SMTP("smtp.gmail.com", 587, timeout=15) as server:
+        #     server.starttls()
+        #     server.login(OWNER_EMAIL, EMAIL_PASSWORD)
+        #     server.send_message(msg)
+        with smtplib.SMTP("smtp.gmail.com", 587, timeout=15) as server:
+            server.starttls()
+            server.login(OWNER_EMAIL, EMAIL_PASSWORD)
+            server.send_message(msg)
 
-        server.login(
-            OWNER_EMAIL,
-            EMAIL_PASSWORD
-        )
+        print("Email sent successfully")
 
-        server.send_message(msg)
+    except Exception as e:
+        print("EMAIL ERROR:", repr(e))
+        traceback.print_exc()
+
+# def create_registration_pdf(data):
+
+#     # filename = "pool_registration.pdf"
+#     filename = f"pool_registration_{uuid.uuid4()}.pdf"
+
+#     doc = SimpleDocTemplate(
+#         filename,
+#         pagesize=letter
+#     )
+
+#     styles = getSampleStyleSheet()
+
+#     content = []
+
+#     title = Paragraph(
+#         "Swimming Pool Registration",
+#         styles["Title"]
+#     )
+
+#     content.append(title)
+#     content.append(Spacer(1, 20))
+
+
+#     for field, value in data.items():
+
+#         # text = f"<b>{field.replace('_',' ').title()}:</b> {value}"
+#         text = f"<b>{field.replace('_',' ').title()}:</b> {escape(str(value))}"
+
+#         content.append(
+#             Paragraph(
+#                 text,
+#                 styles["Normal"]
+#             )
+#         )
+
+#         content.append(
+#             Spacer(1, 10)
+#         )
+
+
+#     doc.build(content)
+
+#     return filename        
 
 def create_registration_pdf(data):
 
-    filename = "pool_registration.pdf"
+    import uuid
+    from xml.sax.saxutils import escape
+
+    filename = f"pool_registration_{uuid.uuid4()}.pdf"
 
     doc = SimpleDocTemplate(
         filename,
@@ -72,18 +130,22 @@ def create_registration_pdf(data):
 
     content = []
 
-    title = Paragraph(
-        "Swimming Pool Registration",
-        styles["Title"]
+    content.append(
+        Paragraph(
+            "Swimming Pool Registration",
+            styles["Title"]
+        )
     )
 
-    content.append(title)
-    content.append(Spacer(1, 20))
+    content.append(Spacer(1,20))
 
 
     for field, value in data.items():
 
-        text = f"<b>{field.replace('_',' ').title()}:</b> {value}"
+        text = (
+            f"<b>{field.replace('_',' ').title()}:</b> "
+            f"{escape(str(value))}"
+        )
 
         content.append(
             Paragraph(
@@ -93,17 +155,35 @@ def create_registration_pdf(data):
         )
 
         content.append(
-            Spacer(1, 10)
+            Spacer(1,10)
         )
 
 
     doc.build(content)
 
-    return filename        
+    return filename
 
 
-        
-        
+# @app.route("/register", methods=["POST"])
+# def register():
+
+#     form_data = request.form.to_dict()
+
+#     pdf_file = create_registration_pdf(form_data)
+
+#     try:
+#         send_email(
+#             OWNER_EMAIL,
+#             "New Pool Registration",
+#             "A new registration was submitted.",
+#             pdf_file
+#         )
+
+#     except Exception as e:
+#         print("Email failed:", e)
+
+
+#     return "Registration submitted successfully!"
 @app.route("/register", methods=["POST"])
 def register():
 
@@ -171,5 +251,8 @@ Swimming Pool Team
     Registration submitted successfully!
     """
 
+# if __name__ == "__main__":
+#     app.run(host="0.0.0.0", port=5000, debug=True)
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
