@@ -6,7 +6,6 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
 import uuid
 from xml.sax.saxutils import escape
-import socket
 
 
 app = Flask(__name__)
@@ -28,10 +27,6 @@ def home():
     return render_template("index.html")
 
 import traceback
-
-
-
-print(socket.create_connection(("smtp.gmail.com",587),timeout=10))
 
 
 
