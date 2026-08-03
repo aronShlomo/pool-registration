@@ -28,13 +28,11 @@ def home():
 
 import traceback
 
-
-
 def send_email(to_email, subject, body, attachment=None):
     try:
-        print("Starting email send...")
-        print("Sending to:", to_email)
-        print("From:", OWNER_EMAIL)
+        print("=== EMAIL START ===")
+        print("FROM:", OWNER_EMAIL)
+        print("TO:", to_email)
 
         msg = EmailMessage()
         msg["From"] = OWNER_EMAIL
@@ -43,7 +41,7 @@ def send_email(to_email, subject, body, attachment=None):
         msg.set_content(body)
 
         if attachment:
-            print("Adding attachment:", attachment)
+            print("ATTACHMENT:", attachment)
 
             with open(attachment, "rb") as file:
                 file_data = file.read()
@@ -55,24 +53,34 @@ def send_email(to_email, subject, body, attachment=None):
                 filename="Swimming_Registration.pdf"
             )
 
-        print("Connecting to Gmail...")
+        print("Connecting Gmail SMTP")
 
         with smtplib.SMTP("smtp.gmail.com", 587, timeout=15) as server:
+
             server.starttls()
 
-            print("Logging into Gmail...")
+            print("Trying Gmail login")
 
-            server.login(OWNER_EMAIL, EMAIL_PASSWORD)
+            server.login(
+                OWNER_EMAIL,
+                EMAIL_PASSWORD
+            )
 
-            print("Login successful")
+            print("Gmail login successful")
 
             server.send_message(msg)
 
-            print("Email sent successfully!")
+            print("EMAIL SENT")
+
+        print("=== EMAIL END ===")
 
     except Exception as e:
-        print("EMAIL ERROR:", repr(e))
+        print("EMAIL FAILED:", repr(e))
         traceback.print_exc()
+
+
+
+
 # def create_registration_pdf(data):
 
 #     # filename = "pool_registration.pdf"
