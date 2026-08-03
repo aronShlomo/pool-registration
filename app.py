@@ -6,6 +6,8 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
 import uuid
 from xml.sax.saxutils import escape
+import resend
+
 
 
 app = Flask(__name__)
@@ -17,6 +19,7 @@ load_dotenv()
 
 OWNER_EMAIL = os.getenv("POOL_EMAIL")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
+resend.api_key = os.getenv("RESEND_API_KEY")
 
 print("POOL_EMAIL:", OWNER_EMAIL)
 print("EMAIL_PASSWORD exists:", EMAIL_PASSWORD is not None)
