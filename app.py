@@ -230,8 +230,28 @@ def register():
     first_name = request.form.get("first_name")
     parent_email = request.form.get("parent_email")
     schedule_id = request.form.get("schedule_id")
+    
+        
+    cursor.execute("""
+        SELECT lesson_date, lesson_time, class_name
+        FROM schedule
+        WHERE id = ?
+    """, (schedule_id,))
+
+
+    selected_schedule = cursor.fetchone()
+
+    conn.close()
+
+
+    if selected_schedule:
+
+        form_data["Swimming Date"] = selected_schedule[0]
+        form_data["Swimming Time"] = selected_schedule[1]
+        form_data["Swimming Class"] = selected_schedule[2]
 
     pdf_file = create_registration_pdf(form_data)
+
 
     registration_email = """
 New Swimming Registration
