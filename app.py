@@ -38,16 +38,31 @@ def send_email(to_email, subject, body, attachment=None):
 
     try:
         params = {
-            "from": "onboarding@resend.dev",   # or your verified domain
+            "from": "Millrod Swim <info@millrodswim.com>",
             "to": [to_email],
             "subject": subject,
             "text": body,
         }
 
+        if attachment:
+            with open(attachment, "rb") as f:
+                pdf_content = f.read()
+
+            params["attachments"] = [
+                {
+                    "filename": "pool_registration.pdf",
+                    "content": pdf_content
+                }
+            ]
+
         response = resend.Emails.send(params)
-        print("RESEND RESPONSE:", response)
+
+        print("SUCCESS!")
+        print(response)
 
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         print("EMAIL ERROR:", repr(e))
 
 # def create_registration_pdf(data):
