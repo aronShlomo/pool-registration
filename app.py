@@ -53,7 +53,7 @@ def send_email(to_email, subject, body, attachment=None):
         params = {
             "from": "Millrod Swim <info@millrodswim.com>",
             "to": [to_email],
-            "bbc": [OWNER_EMAIL],
+            "bcc": [OWNER_EMAIL],
             "subject": subject,
             "text": body,
         }
@@ -85,7 +85,6 @@ def send_email(to_email, subject, body, attachment=None):
 
 def create_registration_pdf(data):
 
-    import uuid
     from xml.sax.saxutils import escape
 
     filename = f"pool_registration_{uuid.uuid4()}.pdf"
@@ -175,16 +174,6 @@ Millrod Swim Team
         pdf_file
     )
 
-
-    # # Send confirmation to parent
-    # print("PARENT EMAIL:", parent_email)
-
-    # if parent_email:
-    #     send_email(
-    #         parent_email,
-    #         "Thank you for your registration",
-    #         thank_you_email
-    #     )
 
 
     print("PARENT EMAIL:", parent_email)
