@@ -109,7 +109,14 @@ def create_registration_pdf(data):
     content.append(Spacer(1,20))
 
 
+    hidden_fields = [
+        "schedule_id"
+    ]
+
     for field, value in data.items():
+
+        if field in hidden_fields:
+            continue
 
         text = (
             f"<b>{field.replace('_',' ').title()}:</b> "
