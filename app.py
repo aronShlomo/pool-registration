@@ -5,9 +5,11 @@ from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
 import uuid
+import traceback
 from xml.sax.saxutils import escape
 import resend
 import sqlite3
+import base64
 from datetime import datetime, timedelta
 
 
@@ -42,9 +44,7 @@ def home():
     WHERE booked = 0
     """)
 
-
     slots = cursor.fetchall()
-
     conn.close()
 
 
@@ -60,10 +60,8 @@ def test():
     return "Flask is working!"
 
 
-import traceback
 
 
-import base64
 
 def send_email(to_email, subject, body, attachment=None):
     print("=== send_email() CALLED ===")
