@@ -130,8 +130,6 @@
       </p>
 
       <form action="/register" method="POST">
-        <input type="hidden" id="schedule_id" name="schedule_id" />
-
         <div class="section">
           <h2>Participant Information</h2>
 
@@ -352,18 +350,8 @@
         <div class="section">
           <h2>Schedule</h2>
 
-          {% comment %} <label> Choose Swimming Time </label>
+          <div id="calendar"></div>
 
-          <select name="schedule_id" id="schedule_id">
-            {% for slot in slots %}
-
-            <option value="{{ slot[0] }}">
-              {{ slot[1] }} - {{ slot[2] }} - {{ slot[3] }}
-            </option>
-
-            {% endfor %}
-          </select>
-          {% endcomment %}
           <label>Choose Swimming Time</label>
 
           <input type="hidden" name="schedule_id" id="schedule_id" />
@@ -402,10 +390,13 @@
 
       eventClick: function (info) {
         if (info.event.extendedProps.available) {
-          // Put selected schedule ID into your form
           document.getElementById("schedule_id").value = info.event.id;
 
-          alert("Selected: " + info.event.title);
+          document.getElementById("selected_schedule").innerHTML =
+            "Selected: " +
+            info.event.title +
+            " - " +
+            info.event.start.toLocaleString();
         } else {
           alert(
             "This lesson time is already booked. Please choose another time.",
