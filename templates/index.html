@@ -347,8 +347,6 @@
           </div>
         </div>
 
-        <div id="calendar"></div>
-
         <div class="section">
           <h2>Schedule</h2>
 
@@ -388,28 +386,3 @@
     </div>
   </body>
 </html>
-
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    var calendarEl = document.getElementById("calendar");
-
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-      initialView: "dayGridMonth",
-
-      events: "/schedule",
-
-      eventClick: function (info) {
-        if (info.event.extendedProps.available == true) {
-          alert("Selected: " + info.event.start);
-
-          document.getElementById("lesson_date").value =
-            info.event.start.toISOString();
-        } else {
-          alert("This time is already booked. Please choose another time.");
-        }
-      },
-    });
-
-    calendar.render();
-  });
-</script>
