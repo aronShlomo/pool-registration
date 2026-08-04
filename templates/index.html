@@ -350,10 +350,12 @@
         <div class="section">
           <h2>Schedule</h2>
 
-          <select name="lesson_date" id="lesson_date">
-            {% for date in dates %}
+          <select name="schedule_id">
+            {% for slot in slots %}
 
-            <option value="{{ date }}">{{ date }}</option>
+            <option value="{{slot[0]}}">
+              {{slot[1]}} - {{slot[2]}} - {{slot[3]}}
+            </option>
 
             {% endfor %}
           </select>

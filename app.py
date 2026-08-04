@@ -30,22 +30,32 @@ print("RESEND_API_KEY exists:", os.getenv("RESEND_API_KEY") is not None)
 
 @app.route("/")
 def home():
-    
-    today = datetime.now().date()
+    import sqlite3
 
-    max_date = today + timedelta(days=60)
 
-    dates = []
+@app.route("/")
+def home():
 
-    current = today
+    conn = sqlite3.connect("pool.db")
 
-    while current <= max_date:
-        dates.append(current.strftime("%Y-%m-%d"))
-        current += timedelta(days=1)
+    cursor = conn.cursor()
+
+
+    cursor.execute("""
+    SELECT id, lesson_date, lesson_time, class_name
+    FROM schedule
+    WHERE booked = 0
+    """)
+
+
+    slots = cursor.fetchall()
+
+    conn.close()
+
 
     return render_template(
         "index.html",
-        dates=dates
+        slots=slots
     )
 
 
@@ -218,9 +228,7 @@ Millrod Swim Team
         print("No parent email found.")
         
         
-
-    lesson_date = request.form.get("lesson_date")
-    lesson_time = request.form.get("lesson_time")
+    schedule_id = request.form.get("schedule_id")
 
 
     conn = sqlite3.connect("pool.db")
@@ -228,57 +236,32 @@ Millrod Swim Team
     cursor = conn.cursor()
 
 
-    cursor.execute(
-    """
+    cursor.execute("""
     SELECT booked
-    FROM schedules
-    WHERE date=? AND time=?
-    """,
-    (lesson_date, lesson_time)
-    )
+    FROM schedule
+    WHERE id=?
+    """,(schedule_id,))
 
 
     slot = cursor.fetchone()
 
 
-    if slot and slot[0] == 1:
+    if slot[0] == 1:
 
-        return """
-        This time is already booked.
-        Please choose another date or time.
-        """
+        return "Sorry, this time was already taken"
 
 
-    cursor.execute(
-    """
-    UPDATE schedules
+    cursor.execute("""
+    UPDATE schedule
     SET booked=1
-    WHERE date=? AND time=?
-    """,
-    (lesson_date, lesson_time)
-    )
+    WHERE id=?
+    """,(schedule_id,))
 
 
     conn.commit()
+
     conn.close()
-            
-            
-    thank_you_email = f"""
-
-    Thank you for registering {first_name}!
-
-    Your swimming lesson is scheduled:
-
-    Date:
-    {lesson_date}
-
-    Time:
-    {lesson_time}
-
-    We will contact you soon.
-
-    Millrod Swim
-    """        
+        
         
 
     return "Registration submitted successfully!"
