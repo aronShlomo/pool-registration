@@ -182,7 +182,8 @@ def create_registration_pdf(data):
 @app.route("/register", methods=["POST"])
 def register():
 
-    # Get ALL form information
+    print("=== REGISTER ROUTE HIT ===")
+    print(request.form)
 
     form_data = request.form.to_dict()
 
