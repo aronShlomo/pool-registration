@@ -53,7 +53,7 @@ def send_email(to_email, subject, body, attachment=None):
         params = {
             "from": "Millrod Swim <info@millrodswim.com>",
             "to": [to_email],
-            "bcc": [OWNER_EMAIL],
+            # "bcc": [OWNER_EMAIL],
             "subject": subject,
             "text": body,
         }
