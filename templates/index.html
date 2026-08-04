@@ -350,11 +350,13 @@
         <div class="section">
           <h2>Schedule</h2>
 
-          <select name="schedule_id">
+          <label> Choose Swimming Time </label>
+
+          <select name="schedule_id" id="schedule_id">
             {% for slot in slots %}
 
-            <option value="{{slot[0]}}">
-              {{slot[1]}} - {{slot[2]}} - {{slot[3]}}
+            <option value="{{ slot[0] }}">
+              {{ slot[1] }} - {{ slot[2] }} - {{ slot[3] }}
             </option>
 
             {% endfor %}

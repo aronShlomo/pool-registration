@@ -33,27 +33,29 @@ print("RESEND_API_KEY exists:", os.getenv("RESEND_API_KEY") is not None)
 @app.route("/")
 def home():
 
-    conn = sqlite3.connect("pool.db")
+    import sqlite3
 
+    conn = sqlite3.connect("pool.db")
     cursor = conn.cursor()
 
-
     cursor.execute("""
-    SELECT id, lesson_date, lesson_time, class_name
-    FROM schedule
-    WHERE booked = 0
+        SELECT id, lesson_date, lesson_time, class_name
+        FROM schedule
+        WHERE booked = 0
+        ORDER BY lesson_date, lesson_time
     """)
 
     slots = cursor.fetchall()
-    conn.close()
 
+    conn.close()
 
     return render_template(
         "index.html",
         slots=slots
     )
-
-
+    
+    
+    
 
 @app.route("/test")
 def test():
