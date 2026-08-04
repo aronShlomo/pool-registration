@@ -20,6 +20,7 @@ import os
 load_dotenv()
 
 OWNER_EMAIL = os.getenv("POOL_EMAIL")
+
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 resend.api_key = os.getenv("RESEND_API_KEY")
 
