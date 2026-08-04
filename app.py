@@ -263,10 +263,9 @@ def register():
 
     parent_email = request.form.get("parent_email")
 
-    schedule_id = request.form.get("schedule_id")
+    schedule_id = request.form.getlist("schedule_id")[-1]
 
     
-    schedule_id = request.form.get("schedule_id")
 
     print("========== SCHEDULE DEBUG ==========")
     print("schedule_id received:", schedule_id)
