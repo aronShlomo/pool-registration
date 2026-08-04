@@ -8,8 +8,7 @@ import uuid
 from xml.sax.saxutils import escape
 import resend
 import sqlite3
-
-
+from datetime import datetime, timedelta
 
 
 app = Flask(__name__)
@@ -31,7 +30,23 @@ print("RESEND_API_KEY exists:", os.getenv("RESEND_API_KEY") is not None)
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+    
+    today = datetime.now().date()
+
+    max_date = today + timedelta(days=60)
+
+    dates = []
+
+    current = today
+
+    while current <= max_date:
+        dates.append(current.strftime("%Y-%m-%d"))
+        current += timedelta(days=1)
+
+    return render_template(
+        "index.html",
+        dates=dates
+    )
 
 
 
