@@ -38,7 +38,7 @@ def send_email(to_email, subject, body, attachment=None):
 
     try:
         params = {
-            "from": "Millrod Swim <info@millrodswim.com>",
+            "from": "onboarding@resend.dev",
             "to": [to_email],
             "subject": subject,
             "text": body,
@@ -183,69 +183,21 @@ def create_registration_pdf(data):
 def register():
 
     print("=== REGISTER ROUTE HIT ===")
+
     print(request.form)
 
     form_data = request.form.to_dict()
 
-
-    # Create PDF
-
     pdf_file = create_registration_pdf(form_data)
-
-
-    # Email to owner
-
-    registration_email = """
-
-New Swimming Registration
-
-A new registration was submitted.
-
-The complete registration form is attached as a PDF.
-
-"""
-
 
     send_email(
         OWNER_EMAIL,
         "New Pool Registration",
-        registration_email,
+        "New registration received",
         pdf_file
     )
 
-
-    # Get parent email
-
-    parent_email = request.form.get("parent_email")
-
-
-    # Confirmation email
-
-    thank_you_email = """
-
-Thank you for your registration!
-
-We received your swimming registration form.
-
-Our team will review your information and get back to you as soon as possible.
-
-Thank you.
-
-Swimming Pool Team
-
-"""
-
-
-    send_email(
-        parent_email,
-        "Thank you for your registration",
-        thank_you_email
-    )
-
-
-    return """
-    Registration submitted successfully!
-    """
+    return "Registration submitted successfully!"
 
 # if __name__ == "__main__":
 #     app.run(host="0.0.0.0", port=5000, debug=True)
