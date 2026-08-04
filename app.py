@@ -247,9 +247,49 @@ Millrod Swim Team
     conn.commit()
     conn.close()
             
+            
+    thank_you_email = f"""
+
+    Thank you for registering {first_name}!
+
+    Your swimming lesson is scheduled:
+
+    Date:
+    {lesson_date}
+
+    Time:
+    {lesson_time}
+
+    We will contact you soon.
+
+    Millrod Swim
+    """        
         
 
     return "Registration submitted successfully!"
+
+
+
+
+@app.route("/schedule")
+def schedule():
+
+    return [
+        {
+            "title": "Available",
+            "start": "2026-08-10T16:00:00",
+            "color": "green",
+            "available": True
+        },
+
+        {
+            "title": "Booked",
+            "start": "2026-08-10T17:00:00",
+            "color": "black",
+            "available": False
+        }
+    ]
+
 
 
 if __name__ == "__main__":
