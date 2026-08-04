@@ -7,6 +7,8 @@ from reportlab.lib.styles import getSampleStyleSheet
 import uuid
 from xml.sax.saxutils import escape
 import resend
+import sqlite3
+
 
 
 
@@ -200,6 +202,51 @@ Millrod Swim Team
     else:
         print("No parent email found.")
         
+        
+
+    lesson_date = request.form.get("lesson_date")
+    lesson_time = request.form.get("lesson_time")
+
+
+    conn = sqlite3.connect("pool.db")
+
+    cursor = conn.cursor()
+
+
+    cursor.execute(
+    """
+    SELECT booked
+    FROM schedules
+    WHERE date=? AND time=?
+    """,
+    (lesson_date, lesson_time)
+    )
+
+
+    slot = cursor.fetchone()
+
+
+    if slot and slot[0] == 1:
+
+        return """
+        This time is already booked.
+        Please choose another date or time.
+        """
+
+
+    cursor.execute(
+    """
+    UPDATE schedules
+    SET booked=1
+    WHERE date=? AND time=?
+    """,
+    (lesson_date, lesson_time)
+    )
+
+
+    conn.commit()
+    conn.close()
+            
         
 
     return "Registration submitted successfully!"
