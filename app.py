@@ -49,7 +49,7 @@ def send_email(to_email, subject, body, attachment=None):
 
     try:
         params = {
-            "from": "onboarding@resend.dev",
+            "from": "Millrod Swim <info@millrodswim.com>",
             "to": [to_email],
             "bbc": [OWNER_EMAIL],
             "subject": subject,
