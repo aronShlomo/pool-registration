@@ -33,33 +33,23 @@ import traceback
 
 
 def send_email(to_email, subject, body, attachment=None):
-
     try:
+        print("=== SENDING EMAIL ===")
+        print("To:", to_email)
+
         params = {
-            "from": "onboarding@resend.dev",
+            "from": "Millrod Swim <onboarding@resend.dev>",  # or your verified domain
             "to": [to_email],
             "subject": subject,
-            "text": body
+            "text": body,
         }
 
-        if attachment:
-            with open(attachment, "rb") as f:
-                file_data = f.read()
+        response = resend.Emails.send(params)
 
-            params["attachments"] = [
-                {
-                    "filename": "Swimming_Registration.pdf",
-                    "content": file_data
-                }
-            ]
-
-        email = resend.Emails.send(params)
-
-        print("Email sent:", email)
+        print("RESEND RESPONSE:", response)
 
     except Exception as e:
         print("EMAIL ERROR:", repr(e))
-
 
 # def create_registration_pdf(data):
 
