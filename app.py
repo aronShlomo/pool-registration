@@ -25,9 +25,18 @@ print("POOL_EMAIL:", OWNER_EMAIL)
 print("EMAIL_PASSWORD exists:", EMAIL_PASSWORD is not None)
 print("RESEND_API_KEY exists:", os.getenv("RESEND_API_KEY") is not None)
 
+
+
 @app.route("/")
 def home():
     return render_template("index.html")
+
+
+
+@app.route("/test")
+def test():
+    return "Flask is working!"
+
 
 import traceback
 
