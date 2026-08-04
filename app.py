@@ -30,11 +30,6 @@ print("RESEND_API_KEY exists:", os.getenv("RESEND_API_KEY") is not None)
 
 @app.route("/")
 def home():
-    import sqlite3
-
-
-@app.route("/")
-def home():
 
     conn = sqlite3.connect("pool.db")
 
