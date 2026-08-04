@@ -41,6 +41,8 @@ def test():
 import traceback
 
 
+import base64
+
 def send_email(to_email, subject, body, attachment=None):
     print("=== send_email() CALLED ===")
     print("To:", to_email)
@@ -55,7 +57,7 @@ def send_email(to_email, subject, body, attachment=None):
 
         if attachment:
             with open(attachment, "rb") as f:
-                pdf_content = f.read()
+                pdf_content = base64.b64encode(f.read()).decode("utf-8")
 
             params["attachments"] = [
                 {
