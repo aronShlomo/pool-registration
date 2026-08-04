@@ -63,6 +63,74 @@ def test():
 
 
 
+@app.route("/schedule")
+def schedule():
+
+    import sqlite3
+
+    conn = sqlite3.connect("pool.db")
+    cursor = conn.cursor()
+
+
+    cursor.execute("""
+        SELECT id, lesson_date, lesson_time, class_name, booked
+        FROM schedule
+    """)
+
+
+    rows = cursor.fetchall()
+
+    conn.close()
+
+
+    events = []
+
+
+    for row in rows:
+
+        slot_id = row[0]
+        date = row[1]
+        time = row[2]
+        class_name = row[3]
+        booked = row[4]
+
+
+        if booked == 1:
+
+            color = "black"
+            title = "Booked"
+            available = False
+
+        else:
+
+            color = "green"
+            title = class_name
+            available = True
+
+
+
+        events.append({
+
+            "id": slot_id,
+
+            "title": title,
+
+            "start": f"{date}T{time}",
+
+            "color": color,
+
+            "extendedProps": {
+
+                "available": available
+
+            }
+
+        })
+
+
+    return events
+
+
 
 
 def send_email(to_email, subject, body, attachment=None):
@@ -161,6 +229,7 @@ def register():
     
     first_name = request.form.get("first_name")
     parent_email = request.form.get("parent_email")
+    schedule_id = request.form.get("schedule_id")
 
     pdf_file = create_registration_pdf(form_data)
 
@@ -223,40 +292,44 @@ Millrod Swim Team
         print("No parent email found.")
         
         
-    schedule_id = request.form.get("schedule_id")
-
 
     conn = sqlite3.connect("pool.db")
-
     cursor = conn.cursor()
 
 
-    cursor.execute("""
-    SELECT booked
-    FROM schedule
-    WHERE id=?
-    """,(schedule_id,))
-
+    # Check if already booked
+    cursor.execute(
+        """
+        SELECT booked 
+        FROM schedule
+        WHERE id=?
+        """,
+        (schedule_id,)
+    )
 
     slot = cursor.fetchone()
 
 
-    if slot[0] == 1:
+    if slot and slot[0] == 1:
+        conn.close()
+        return "This time is already booked. Please choose another time."
 
-        return "Sorry, this time was already taken"
 
-
-    cursor.execute("""
-    UPDATE schedule
-    SET booked=1
-    WHERE id=?
-    """,(schedule_id,))
+    # Mark as booked
+    cursor.execute(
+        """
+        UPDATE schedule
+        SET booked = 1
+        WHERE id=?
+        """,
+        (schedule_id,)
+    )
 
 
     conn.commit()
-
     conn.close()
-        
+
+    
         
 
     return "Registration submitted successfully!"

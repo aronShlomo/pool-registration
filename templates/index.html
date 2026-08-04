@@ -130,6 +130,8 @@
       </p>
 
       <form action="/register" method="POST">
+        <input type="hidden" id="schedule_id" name="schedule_id" />
+
         <div class="section">
           <h2>Participant Information</h2>
 
@@ -382,3 +384,30 @@
     </div>
   </body>
 </html>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var calendarEl = document.getElementById("calendar");
+
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: "dayGridMonth",
+
+      events: "/schedule",
+
+      eventClick: function (info) {
+        if (info.event.extendedProps.available) {
+          // Put selected schedule ID into your form
+          document.getElementById("schedule_id").value = info.event.id;
+
+          alert("Selected: " + info.event.title);
+        } else {
+          alert(
+            "This lesson time is already booked. Please choose another time.",
+          );
+        }
+      },
+    });
+
+    calendar.render();
+  });
+</script>
