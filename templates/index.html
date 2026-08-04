@@ -352,7 +352,7 @@
         <div class="section">
           <h2>Schedule</h2>
 
-          <label> Choose Swimming Time </label>
+          {% comment %} <label> Choose Swimming Time </label>
 
           <select name="schedule_id" id="schedule_id">
             {% for slot in slots %}
@@ -363,6 +363,12 @@
 
             {% endfor %}
           </select>
+          {% endcomment %}
+          <label>Choose Swimming Time</label>
+
+          <input type="hidden" name="schedule_id" id="schedule_id" />
+
+          <p id="selected_schedule">Please choose a time from the calendar</p>
         </div>
 
         <div class="section">
