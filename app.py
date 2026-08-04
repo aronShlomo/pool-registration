@@ -141,7 +141,7 @@ def send_email(to_email, subject, body, attachment=None):
         params = {
             "from": "Millrod Swim <info@millrodswim.com>",
             "to": [to_email],
-            "bbc": [OWNER_EMAIL],
+            "bcc": [OWNER_EMAIL],
             "subject": subject,
             "text": body,
         }
@@ -230,7 +230,12 @@ def register():
     first_name = request.form.get("first_name")
     parent_email = request.form.get("parent_email")
     schedule_id = request.form.get("schedule_id")
+
+    print("SELECTED SCHEDULE ID:", schedule_id)
     
+    conn = sqlite3.connect("pool.db")
+    cursor = conn.cursor()
+
         
     cursor.execute("""
         SELECT lesson_date, lesson_time, class_name
@@ -312,10 +317,6 @@ Millrod Swim Team
         print("No parent email found.")
         
         
-
-    conn = sqlite3.connect("pool.db")
-    cursor = conn.cursor()
-
 
     # Check if already booked
     cursor.execute(
