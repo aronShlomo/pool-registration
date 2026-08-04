@@ -33,19 +33,18 @@ import traceback
 
 
 def send_email(to_email, subject, body, attachment=None):
-    try:
-        print("=== SENDING EMAIL ===")
-        print("To:", to_email)
+    print("=== send_email() CALLED ===")
+    print("To:", to_email)
 
+    try:
         params = {
-            "from": "Millrod Swim <onboarding@resend.dev>",  # or your verified domain
+            "from": "onboarding@resend.dev",   # or your verified domain
             "to": [to_email],
             "subject": subject,
             "text": body,
         }
 
         response = resend.Emails.send(params)
-
         print("RESEND RESPONSE:", response)
 
     except Exception as e:
