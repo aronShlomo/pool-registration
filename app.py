@@ -8,6 +8,9 @@ import uuid
 from xml.sax.saxutils import escape
 import resend
 import sqlite3
+import traceback
+import base64
+
 
 
 
@@ -20,7 +23,6 @@ import os
 load_dotenv()
 
 OWNER_EMAIL = os.getenv("POOL_EMAIL")
-
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 resend.api_key = os.getenv("RESEND_API_KEY")
 
@@ -40,11 +42,6 @@ def home():
 def test():
     return "Flask is working!"
 
-
-import traceback
-
-
-import base64
 
 def send_email(to_email, subject, body, attachment=None):
     print("=== send_email() CALLED ===")
