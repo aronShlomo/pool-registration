@@ -265,6 +265,13 @@ def register():
 
     schedule_id = request.form.get("schedule_id")
 
+    
+    schedule_id = request.form.get("schedule_id")
+
+    print("========== SCHEDULE DEBUG ==========")
+    print("schedule_id received:", schedule_id)
+    print("ALL FORM DATA:", request.form)
+    print("====================================")
 
 
     print("SELECTED SCHEDULE ID:", schedule_id)
