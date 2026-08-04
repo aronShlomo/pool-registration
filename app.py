@@ -1,210 +1,103 @@
 from flask import Flask, request, render_template
+import smtplib
+from email.message import EmailMessage
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
-from xml.sax.saxutils import escape
-from dotenv import load_dotenv
-
-import os
 import uuid
-import sqlite3
-import base64
+from xml.sax.saxutils import escape
 import resend
+import sqlite3
+
+
 
 
 app = Flask(__name__)
 
+from dotenv import load_dotenv
+import os
 
 load_dotenv()
 
-
 OWNER_EMAIL = os.getenv("POOL_EMAIL")
+EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 resend.api_key = os.getenv("RESEND_API_KEY")
 
-
 print("POOL_EMAIL:", OWNER_EMAIL)
+print("EMAIL_PASSWORD exists:", EMAIL_PASSWORD is not None)
 print("RESEND_API_KEY exists:", os.getenv("RESEND_API_KEY") is not None)
 
 
 
-# ---------------- HOME PAGE ----------------
-
 @app.route("/")
 def home():
-
-    conn = sqlite3.connect("pool.db")
-    cursor = conn.cursor()
-
-
-    cursor.execute("""
-        SELECT id, lesson_date, lesson_time, class_name
-        FROM schedule
-        WHERE booked = 0
-        ORDER BY lesson_date, lesson_time
-    """)
-
-
-    slots = cursor.fetchall()
-
-    conn.close()
-
-
-    return render_template(
-        "index.html",
-        slots=slots
-    )
+    return render_template("index.html")
 
 
 
-# ---------------- CALENDAR DATA ----------------
-
-@app.route("/schedule")
-def schedule():
-
-    conn = sqlite3.connect("pool.db")
-    cursor = conn.cursor()
+@app.route("/test")
+def test():
+    return "Flask is working!"
 
 
-    cursor.execute("""
-        SELECT id,
-               lesson_date,
-               lesson_time,
-               class_name,
-               booked
-        FROM schedule
-    """)
+import traceback
 
 
-    rows = cursor.fetchall()
-
-    conn.close()
-
-
-    events = []
-
-
-    for row in rows:
-
-        slot_id = row[0]
-        date = row[1]
-        time = row[2]
-        class_name = row[3]
-        booked = row[4]
-
-
-        if booked == 1:
-
-            color = "black"
-            title = "Booked"
-            available = False
-
-        else:
-
-            color = "green"
-            title = class_name
-            available = True
-
-
-
-        events.append({
-
-            "id": slot_id,
-
-            "title": title,
-
-            "start": f"{date}T{time}",
-
-            "color": color,
-
-            "extendedProps": {
-                "available": available
-            }
-
-        })
-
-
-    return events
-
-
-
-
-# ---------------- SEND EMAIL ----------------
+import base64
 
 def send_email(to_email, subject, body, attachment=None):
-
     print("=== send_email() CALLED ===")
     print("To:", to_email)
 
-
     try:
-
         params = {
-
             "from": "Millrod Swim <info@millrodswim.com>",
-
             "to": [to_email],
-
-            "bcc": [OWNER_EMAIL],
-
+            "bbc": [OWNER_EMAIL],
             "subject": subject,
-
-            "text": body
-
+            "text": body,
         }
 
-
         if attachment:
-
             with open(attachment, "rb") as f:
-
-                pdf_content = base64.b64encode(
-                    f.read()
-                ).decode("utf-8")
-
+                pdf_content = base64.b64encode(f.read()).decode("utf-8")
 
             params["attachments"] = [
-
                 {
                     "filename": "pool_registration.pdf",
                     "content": pdf_content
                 }
-
             ]
-
 
         response = resend.Emails.send(params)
 
-
-        print("EMAIL SENT")
+        print("SUCCESS!")
         print(response)
 
-
     except Exception as e:
-
+        import traceback
+        traceback.print_exc()
         print("EMAIL ERROR:", repr(e))
 
 
 
-
-
-# ---------------- CREATE PDF ----------------
+     
 
 def create_registration_pdf(data):
 
-    filename = f"pool_registration_{uuid.uuid4()}.pdf"
+    import uuid
+    from xml.sax.saxutils import escape
 
+    filename = f"pool_registration_{uuid.uuid4()}.pdf"
 
     doc = SimpleDocTemplate(
         filename,
         pagesize=letter
     )
 
-
     styles = getSampleStyleSheet()
 
-
     content = []
-
 
     content.append(
         Paragraph(
@@ -213,31 +106,15 @@ def create_registration_pdf(data):
         )
     )
 
-
-    content.append(
-        Spacer(1,20)
-    )
-
-
-    # Fields to hide from the customer PDF
-    hidden_fields = [
-        "schedule_id"
-    ]
+    content.append(Spacer(1,20))
 
 
     for field, value in data.items():
-
-
-        # Skip hidden/internal fields
-        if field in hidden_fields:
-            continue
-
 
         text = (
             f"<b>{field.replace('_',' ').title()}:</b> "
             f"{escape(str(value))}"
         )
-
 
         content.append(
             Paragraph(
@@ -246,7 +123,6 @@ def create_registration_pdf(data):
             )
         )
 
-
         content.append(
             Spacer(1,10)
         )
@@ -254,217 +130,86 @@ def create_registration_pdf(data):
 
     doc.build(content)
 
-
     return filename
 
 
 
-
-# ---------------- REGISTER ----------------
-
 @app.route("/register", methods=["POST"])
 def register():
 
-
     form_data = request.form.to_dict()
-
-
-    first_name = request.form.get("first_name")
-
-    parent_email = request.form.get("parent_email")
-
-    schedule_id = request.form.getlist("schedule_id")[-1]
-
     
-
-    print("========== SCHEDULE DEBUG ==========")
-    print("schedule_id received:", schedule_id)
-    print("ALL FORM DATA:", request.form)
-    print("====================================")
-
-
-    print("SELECTED SCHEDULE ID:", schedule_id)
-
-
-
-    conn = sqlite3.connect("pool.db")
-
-    cursor = conn.cursor()
-
-
-
-    # Check if slot already booked
-
-    cursor.execute("""
-        SELECT booked
-        FROM schedule
-        WHERE id=?
-    """,
-    (schedule_id,))
-
-
-    slot = cursor.fetchone()
-
-
-
-    if not slot:
-
-        conn.close()
-
-        return "Invalid schedule selected"
-
-
-
-    if slot[0] == 1:
-
-        conn.close()
-
-        return "This lesson time is already booked. Please choose another time."
-
-
-
-
-
-    # Get selected lesson information
-
-    cursor.execute("""
-        SELECT lesson_date,
-               lesson_time,
-               class_name
-        FROM schedule
-        WHERE id=?
-    """,
-    (schedule_id,))
-
-
-    selected_schedule = cursor.fetchone()
-
-
-
-    if selected_schedule:
-
-
-        form_data["Swimming Date"] = selected_schedule[0]
-
-        form_data["Swimming Time"] = selected_schedule[1]
-
-        form_data["Swimming Class"] = selected_schedule[2]
-
-
-
-
-    # Create PDF
+    first_name = request.form.get("first_name")
+    parent_email = request.form.get("parent_email")
 
     pdf_file = create_registration_pdf(form_data)
 
-
-
-
-
-    owner_message = """
-
+    registration_email = """
 New Swimming Registration
-
 
 A new registration was submitted.
 
-The registration PDF is attached.
-
+The complete registration form is attached as a PDF.
 """
 
 
-
-    parent_message = f"""
-
+    thank_you_email = f"""
 Dear Parent/Guardian,
-
 
 Thank you for registering {first_name} with Millrod Swim!
 
+We have successfully received your registration.
 
-We received your registration.
+Our team will review your information and contact you soon with the next steps.
 
-Our team will review your information and contact you soon.
-
-
-Thank you!
-
+Thank you for choosing Millrod Swim!
 
 Millrod Swim Team
-
 """
 
-
-
-
-    # Send owner email
-
+    # Send email to owner
     send_email(
-
         OWNER_EMAIL,
-
         "New Pool Registration",
-
-        owner_message,
-
+        registration_email,
         pdf_file
-
     )
 
 
+    # # Send confirmation to parent
+    # print("PARENT EMAIL:", parent_email)
+
+    # if parent_email:
+    #     send_email(
+    #         parent_email,
+    #         "Thank you for your registration",
+    #         thank_you_email
+    #     )
 
 
-    # Send parent email
+    print("PARENT EMAIL:", parent_email)
 
     if parent_email:
-
+        print("Sending confirmation email to parent...")
 
         send_email(
-
             parent_email,
-
             "Thank you for your registration",
-
-            parent_message
-
+            thank_you_email
         )
 
+        print("Finished sending confirmation email.")
+    else:
+        print("No parent email found.")
+        
+        
 
-
-
-
-    # Mark schedule as booked
-
-    cursor.execute("""
-        UPDATE schedule
-        SET booked = 1
-        WHERE id=?
-    """,
-    (schedule_id,))
-
-
-
-    conn.commit()
-
-    conn.close()
-
-
+            
+        
 
     return "Registration submitted successfully!"
 
 
-
-
-
 if __name__ == "__main__":
-
-
-    port = int(
-        os.environ.get("PORT",5000)
-    )
-
-
-    app.run(
-        host="0.0.0.0",
-        port=port
-    )
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
