@@ -23,7 +23,7 @@ resend.api_key = os.getenv("RESEND_API_KEY")
 
 print("POOL_EMAIL:", OWNER_EMAIL)
 print("EMAIL_PASSWORD exists:", EMAIL_PASSWORD is not None)
-
+print("RESEND_API_KEY exists:", os.getenv("RESEND_API_KEY") is not None)
 
 @app.route("/")
 def home():
@@ -31,57 +31,34 @@ def home():
 
 import traceback
 
-def send_email(to_email, subject, body, attachment=None):
-    try:
-        print("=== EMAIL START ===")
-        print("FROM:", OWNER_EMAIL)
-        print("TO:", to_email)
 
-        msg = EmailMessage()
-        msg["From"] = OWNER_EMAIL
-        msg["To"] = to_email
-        msg["Subject"] = subject
-        msg.set_content(body)
+def send_email(to_email, subject, body, attachment=None):
+
+    try:
+        params = {
+            "from": "onboarding@resend.dev",
+            "to": [to_email],
+            "subject": subject,
+            "text": body
+        }
 
         if attachment:
-            print("ATTACHMENT:", attachment)
+            with open(attachment, "rb") as f:
+                file_data = f.read()
 
-            with open(attachment, "rb") as file:
-                file_data = file.read()
+            params["attachments"] = [
+                {
+                    "filename": "Swimming_Registration.pdf",
+                    "content": file_data
+                }
+            ]
 
-            msg.add_attachment(
-                file_data,
-                maintype="application",
-                subtype="pdf",
-                filename="Swimming_Registration.pdf"
-            )
+        email = resend.Emails.send(params)
 
-        print("Connecting Gmail SMTP")
-
-        with smtplib.SMTP("smtp.gmail.com", 587, timeout=15) as server:
-
-            server.starttls()
-
-            print("Trying Gmail login")
-
-            server.login(
-                OWNER_EMAIL,
-                EMAIL_PASSWORD
-            )
-
-            print("Gmail login successful")
-
-            server.send_message(msg)
-
-            print("EMAIL SENT")
-
-        print("=== EMAIL END ===")
+        print("Email sent:", email)
 
     except Exception as e:
-        print("EMAIL FAILED:", repr(e))
-        traceback.print_exc()
-
-
+        print("EMAIL ERROR:", repr(e))
 
 
 # def create_registration_pdf(data):
