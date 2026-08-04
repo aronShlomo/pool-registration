@@ -78,40 +78,6 @@ def send_email(to_email, subject, body, attachment=None):
         print("EMAIL ERROR:", repr(e))
 
 
-first_name = request.form.get("first_name")
-
-thank_you_email = f"""
-Dear Parent/Guardian,
-
-Thank you for registering {first_name} with Millrod Swim!
-
-We have successfully received your registration.
-
-Our team will review the information and will contact you shortly with the next steps, class schedule, and any additional details.
-
-We appreciate the opportunity to help {first_name} build confidence and skills in the water.
-
-If you have any questions, simply reply to this email.
-
-Thank you for choosing Millrod Swim!
-
-Sincerely,
-
-Millrod Swim Team
-"""     
-     
-
-
-parent_email = request.form.get("parent_email")
-
-if parent_email:
-    send_email(
-        parent_email,
-        "Thank You for Registering with Millrod Swim",
-        thank_you_email
-    )
-
-
 
      
 
@@ -170,6 +136,9 @@ def create_registration_pdf(data):
 def register():
 
     form_data = request.form.to_dict()
+    
+    first_name = request.form.get("first_name")
+    parent_email = request.form.get("parent_email")
 
     pdf_file = create_registration_pdf(form_data)
 
@@ -181,16 +150,19 @@ A new registration was submitted.
 The complete registration form is attached as a PDF.
 """
 
-    thank_you_email = """
-Thank you for your registration!
 
-We received your swimming registration form.
+    thank_you_email = f"""
+Dear Parent/Guardian,
 
-Our team will review your information and get back to you as soon as possible.
+Thank you for registering {first_name} with Millrod Swim!
 
-Thank you.
+We have successfully received your registration.
 
-Millrod Swim
+Our team will review your information and contact you soon with the next steps.
+
+Thank you for choosing Millrod Swim!
+
+Millrod Swim Team
 """
 
     # Send email to owner
@@ -203,8 +175,6 @@ Millrod Swim
 
 
     # Send confirmation to parent
-    parent_email = request.form.get("parent_email")
-
     print("PARENT EMAIL:", parent_email)
 
     if parent_email:
