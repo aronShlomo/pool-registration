@@ -8,7 +8,8 @@ cursor = conn.cursor()
 
 
 # Remove old schedule entries
-cursor.execute("DELETE FROM schedule")
+# Keep this only for testing
+# cursor.execute("DELETE FROM schedule")
 
 
 # Get today's date
@@ -30,6 +31,7 @@ schedule = []
 
 current_date = today
 
+
 while current_date <= max_date:
 
     # Skip Sunday
@@ -47,9 +49,11 @@ while current_date <= max_date:
                 (
                     current_date.strftime("%Y-%m-%d"),
                     hour,
-                    class_name
+                    class_name,
+                    0   # Available
                 )
             )
+
 
     current_date += timedelta(days=1)
 
@@ -58,8 +62,15 @@ while current_date <= max_date:
 cursor.executemany(
 """
 INSERT INTO schedule
-(lesson_date, lesson_time, class_name)
-VALUES (?,?,?)
+(
+    lesson_date,
+    lesson_time,
+    class_name,
+    booked
+)
+
+VALUES (?,?,?,?)
+
 """,
 schedule
 )
