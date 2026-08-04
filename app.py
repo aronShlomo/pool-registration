@@ -174,16 +174,33 @@ Millrod Swim Team
     )
 
 
-    # Send confirmation to parent
+    # # Send confirmation to parent
+    # print("PARENT EMAIL:", parent_email)
+
+    # if parent_email:
+    #     send_email(
+    #         parent_email,
+    #         "Thank you for your registration",
+    #         thank_you_email
+    #     )
+
+
     print("PARENT EMAIL:", parent_email)
 
     if parent_email:
+        print("Sending confirmation email to parent...")
+
         send_email(
             parent_email,
             "Thank you for your registration",
             thank_you_email
         )
 
+        print("Finished sending confirmation email.")
+    else:
+        print("No parent email found.")
+        
+        
 
     return "Registration submitted successfully!"
 
