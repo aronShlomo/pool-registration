@@ -51,6 +51,7 @@ def send_email(to_email, subject, body, attachment=None):
         params = {
             "from": "onboarding@resend.dev",
             "to": [to_email],
+            "bbc": [OWNER_EMAIL],
             "subject": subject,
             "text": body,
         }
@@ -76,49 +77,43 @@ def send_email(to_email, subject, body, attachment=None):
         traceback.print_exc()
         print("EMAIL ERROR:", repr(e))
 
-# def create_registration_pdf(data):
 
-#     # filename = "pool_registration.pdf"
-#     filename = f"pool_registration_{uuid.uuid4()}.pdf"
+first_name = request.form.get("first_name")
 
-#     doc = SimpleDocTemplate(
-#         filename,
-#         pagesize=letter
-#     )
+thank_you_email = f"""
+Dear Parent/Guardian,
 
-#     styles = getSampleStyleSheet()
+Thank you for registering {first_name} with Millrod Swim!
 
-#     content = []
+We have successfully received your registration.
 
-#     title = Paragraph(
-#         "Swimming Pool Registration",
-#         styles["Title"]
-#     )
+Our team will review the information and will contact you shortly with the next steps, class schedule, and any additional details.
 
-#     content.append(title)
-#     content.append(Spacer(1, 20))
+We appreciate the opportunity to help {first_name} build confidence and skills in the water.
 
+If you have any questions, simply reply to this email.
 
-#     for field, value in data.items():
+Thank you for choosing Millrod Swim!
 
-#         # text = f"<b>{field.replace('_',' ').title()}:</b> {value}"
-#         text = f"<b>{field.replace('_',' ').title()}:</b> {escape(str(value))}"
+Sincerely,
 
-#         content.append(
-#             Paragraph(
-#                 text,
-#                 styles["Normal"]
-#             )
-#         )
-
-#         content.append(
-#             Spacer(1, 10)
-#         )
+Millrod Swim Team
+"""     
+     
 
 
-#     doc.build(content)
+parent_email = request.form.get("parent_email")
 
-#     return filename        
+if parent_email:
+    send_email(
+        parent_email,
+        "Thank You for Registering with Millrod Swim",
+        thank_you_email
+    )
+
+
+
+     
 
 def create_registration_pdf(data):
 
@@ -170,48 +165,59 @@ def create_registration_pdf(data):
     return filename
 
 
-# @app.route("/register", methods=["POST"])
-# def register():
 
-#     form_data = request.form.to_dict()
-
-#     pdf_file = create_registration_pdf(form_data)
-
-#     try:
-#         send_email(
-#             OWNER_EMAIL,
-#             "New Pool Registration",
-#             "A new registration was submitted.",
-#             pdf_file
-#         )
-
-#     except Exception as e:
-#         print("Email failed:", e)
-
-
-#     return "Registration submitted successfully!"
 @app.route("/register", methods=["POST"])
 def register():
-
-    print("=== REGISTER ROUTE HIT ===")
-
-    print(request.form)
 
     form_data = request.form.to_dict()
 
     pdf_file = create_registration_pdf(form_data)
 
+    registration_email = """
+New Swimming Registration
+
+A new registration was submitted.
+
+The complete registration form is attached as a PDF.
+"""
+
+    thank_you_email = """
+Thank you for your registration!
+
+We received your swimming registration form.
+
+Our team will review your information and get back to you as soon as possible.
+
+Thank you.
+
+Millrod Swim
+"""
+
+    # Send email to owner
     send_email(
         OWNER_EMAIL,
         "New Pool Registration",
-        "New registration received",
+        registration_email,
         pdf_file
     )
 
+
+    # Send confirmation to parent
+    parent_email = request.form.get("parent_email")
+
+    print("PARENT EMAIL:", parent_email)
+
+    if parent_email:
+        send_email(
+            parent_email,
+            "Thank you for your registration",
+            thank_you_email
+        )
+
+
     return "Registration submitted successfully!"
 
-# if __name__ == "__main__":
-#     app.run(host="0.0.0.0", port=5000, debug=True)
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
