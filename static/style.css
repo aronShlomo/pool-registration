@@ -22,43 +22,43 @@ body {
 /* ==============================
    INSTRUCTOR PROFILE
 ============================== */
-
 .instructor-profile {
   display: grid;
-
-  grid-template-columns: 1fr;
-
-  gap: 30px;
-
+  grid-template-columns: 280px 1fr;
+  gap: 40px;
   align-items: center;
-
-  text-align: center;
 }
 
 .instructor-image {
   display: flex;
-
   justify-content: center;
+  align-items: center;
 }
 
 .instructor-image img {
-  width: 220px;
-
-  height: 220px;
-
+  width: 240px;
+  height: 240px;
   object-fit: cover;
 
   border-radius: 50%;
 
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+
+  transform: translateY(-30px);
 }
 
-.instructor-info h3 {
-  font-size: 30px;
+.instructor-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 
-  color: #0077b6;
-
-  margin-bottom: 20px;
+@media (max-width: 800px) {
+  .instructor-image img {
+    width: 220px;
+    height: 220px;
+    transform: none;
+  }
 }
 
 .instructor-info p {
