@@ -36,15 +36,15 @@ body {
 }
 
 .instructor-image img {
-  width: 240px;
-  height: 240px;
+  width: 260px;
+  height: 260px;
+
   object-fit: cover;
+  object-position: center 25%;
 
   border-radius: 50%;
 
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-
-  transform: translateY(-30px);
 }
 
 .instructor-info {
