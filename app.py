@@ -10,8 +10,7 @@ import resend
 import sqlite3
 import traceback
 import base64
-
-
+from datetime import datetime
 
 
 
@@ -30,6 +29,47 @@ print("POOL_EMAIL:", OWNER_EMAIL)
 print("EMAIL_PASSWORD exists:", EMAIL_PASSWORD is not None)
 print("RESEND_API_KEY exists:", os.getenv("RESEND_API_KEY") is not None)
 
+
+
+
+# ==================================
+# ADD DATABASE HERE
+# ==================================
+
+DATABASE = "bookings.db"
+
+
+def init_database():
+
+    conn = sqlite3.connect(DATABASE)
+
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS bookings (
+
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+        student_name TEXT,
+        parent_name TEXT,
+        email TEXT,
+        phone TEXT,
+
+        lesson_date TEXT,
+        lesson_time TEXT,
+
+        lesson_type TEXT,
+
+        created_at TEXT
+
+    )
+    """)
+
+    conn.commit()
+
+    conn.close()
+
+init_database()
 
 
 @app.route("/")
