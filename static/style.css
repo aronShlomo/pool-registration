@@ -54,14 +54,6 @@ body {
   justify-content: center;
 }
 
-@media (max-width: 800px) {
-  .instructor-image img {
-    width: 220px;
-    height: 220px;
-    transform: none;
-  }
-}
-
 .instructor-info p {
   max-width: 800px;
 
@@ -92,15 +84,29 @@ body {
   color: #003b5c;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 768px) {
   .instructor-profile {
-    grid-template-columns: 1fr;
-
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
     text-align: center;
   }
 
-  .instructor-badges {
-    justify-content: center;
+  .instructor-image {
+    order: 1;
+    width: 100%;
+  }
+
+  .instructor-content {
+    order: 2;
+    width: 100%;
+  }
+
+  .instructor-image img {
+    width: 85%;
+    height: auto;
+    margin: 0 auto;
+    display: block;
   }
 }
 
