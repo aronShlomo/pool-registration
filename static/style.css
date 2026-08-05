@@ -19,6 +19,17 @@ body {
   line-height: 1.6;
 }
 
+.contact-box a {
+  color: #0077b6;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.contact-box a:hover {
+  color: #00a8e8;
+  text-decoration: underline;
+}
+
 .container {
   width: 90%;
   max-width: 1200px;
