@@ -1,45 +1,621 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Millrod Swim Academy</title>
-<style>
-body{margin:0;font-family:Arial,sans-serif;background:#eef8ff;color:#234}
-header{background:linear-gradient(135deg,#0077b6,#00b4d8);color:#fff;padding:70px 20px;text-align:center}
-nav{background:#fff;padding:14px;position:sticky;top:0;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.15)}
-nav a{margin:0 12px;text-decoration:none;color:#0077b6;font-weight:bold}
-section{max-width:1100px;margin:30px auto;background:#fff;padding:30px;border-radius:14px;box-shadow:0 6px 18px rgba(0,0,0,.1)}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
-.card{background:#f4fbff;border-left:5px solid #0077b6;padding:18px;border-radius:10px}
-input,select,textarea{width:100%;padding:10px;margin:8px 0 14px;border:1px solid #bbb;border-radius:8px}
-button{background:#0077b6;color:#fff;border:0;padding:14px 20px;border-radius:8px;width:100%;font-size:18px}
-footer{text-align:center;background:#023e8a;color:#fff;padding:24px;margin-top:30px}
-</style>
-</head>
-<body>
-<header><h1>🏊 Millrod Swim Academy</h1><p>Certified Swimming Instructor • Water Safety • Confidence • Skill Development</p></header>
-<nav><a href="#about">About</a><a href="#programs">Programs</a><a href="#book">Book</a><a href="#contact">Contact</a></nav>
-<section id="about"><h2>About</h2><p>Professional swimming lessons for children and adults with a focus on safety, confidence and technique.</p></section>
-<section id="programs"><h2>Programs</h2><div class="grid">
-<div class="card"><h3>Beginner</h3><p>Learn water confidence and basic skills.</p></div>
-<div class="card"><h3>Intermediate</h3><p>Improve strokes and endurance.</p></div>
-<div class="card"><h3>Advanced</h3><p>Refine technique and performance.</p></div>
-<div class="card"><h3>Private Lessons</h3><p>One-on-one personalized instruction.</p></div>
-</div></section>
-<section id="book">
-<h2>Lesson Booking</h2>
-<form action="/register" method="POST">
-<label>Name</label><input name="name" required>
-<label>Email</label><input type="email" name="email" required>
-<label>Phone</label><input name="phone" required>
-<label>Program</label><select name="program"><option>Beginner</option><option>Intermediate</option><option>Advanced</option><option>Private Lesson</option></select>
-<label>Date</label><input type="date" name="lesson_date" required>
-<label>Time</label><select name="lesson_time"><option>9:00 AM</option><option>10:00 AM</option><option>4:00 PM</option><option>5:00 PM</option></select>
-<p><strong>Note:</strong> Connect this form to your Flask backend to prevent double bookings and display "This time is already booked."</p>
-<button type="submit">Book Lesson</button>
-</form>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Millrod Swim Academy | Professional Swimming Lessons</title>
+
+    <meta
+      name="description"
+      content="Millrod Swim Academy offers professional swimming lessons for children and adults with certified swimming instruction."
+    />
+
+    <!-- CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+
+    <!-- FullCalendar -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <!-- ================= HEADER ================= -->
+
+    <header class="navbar">
+      <div class="logo">
+        <span>🏊</span>
+        Millrod Swim Academy
+      </div>
+
+      <nav>
+        <a href="#home">Home</a>
+        <a href="#experience">Experience</a>
+        <a href="#programs">Programs</a>
+        <a href="#booking">Book Lesson</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <!-- ================= HERO SECTION ================= -->
+
+    <section id="home" class="hero">
+      <div class="hero-content">
+        <h1>
+          Professional Swimming Lessons
+          <br />
+          For Every Level
+        </h1>
+
+        <p>
+          Learn confidence, safety, and advanced swimming skills with certified
+          instruction at Millrod Swim Academy.
+        </p>
+
+        <a href="#booking" class="btn"> Book Your Lesson </a>
+      </div>
+    </section>
+
+    <!-- ================= ABOUT SECTION ================= -->
+
+    <section id="experience" class="section">
+      <div class="container">
+        <h2>Swimming Experience You Can Trust</h2>
+
+        <p class="intro">
+          At Millrod Swim Academy, we provide professional swimming instruction
+          designed for beginners, intermediate swimmers, and advanced students.
+          Our goal is to create a safe, positive, and encouraging environment
+          where every swimmer can improve their skills and build confidence in
+          the water.
+        </p>
+
+        <div class="cards">
+          <div class="card">
+            <h3>🏅 Certified Instructor</h3>
+
+            <p>
+              Professional swimming instruction focused on water safety,
+              technique, and confidence.
+            </p>
+          </div>
+
+          <div class="card">
+            <h3>🌊 Years of Experience</h3>
+
+            <p>
+              Helping swimmers develop strong foundations and lifelong swimming
+              skills.
+            </p>
+          </div>
+
+          <div class="card">
+            <h3>👨‍👩‍👧 All Ages Welcome</h3>
+
+            <p>Lessons available for children, teens, and adults.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>
+<!-- ================= PROGRAMS SECTION ================= -->
+
+<section id="programs" class="section programs">
+  <div class="container">
+    <h2>Our Swimming Programs</h2>
+
+    <p class="intro">
+      Choose the lesson program that fits your goals. Every lesson is
+      personalized to improve skills, confidence, and water safety.
+    </p>
+
+    <div class="cards">
+      <div class="card program-card">
+        <h3>🐬 Beginner Swimming</h3>
+
+        <p>
+          Perfect for children and adults who are learning the basics of
+          swimming.
+        </p>
+
+        <ul>
+          <li>Water confidence</li>
+          <li>Floating techniques</li>
+          <li>Breathing control</li>
+          <li>Basic swimming strokes</li>
+        </ul>
+      </div>
+
+      <div class="card program-card">
+        <h3>🏊 Intermediate Training</h3>
+
+        <p>For swimmers who want to improve their technique and endurance.</p>
+
+        <ul>
+          <li>Stroke improvement</li>
+          <li>Swimming efficiency</li>
+          <li>Breathing techniques</li>
+          <li>Lap swimming skills</li>
+        </ul>
+      </div>
+
+      <div class="card program-card">
+        <h3>🏆 Advanced Coaching</h3>
+
+        <p>
+          Advanced swimmers looking to improve speed, technique, and
+          performance.
+        </p>
+
+        <ul>
+          <li>Advanced stroke correction</li>
+          <li>Performance training</li>
+          <li>Competition preparation</li>
+          <li>Personal coaching</li>
+        </ul>
+      </div>
+    </div>
+  </div>
 </section>
-<section id="contact"><h2>Contact</h2><p>Email: themillrodswim@gmail.com</p></section>
-<footer>© 2026 Millrod Swim Academy</footer>
-</body></html>
+
+<!-- ================= BENEFITS SECTION ================= -->
+
+<section class="benefits">
+  <div class="container">
+    <h2>Why Choose Millrod Swim Academy?</h2>
+
+    <div class="benefit-grid">
+      <div>
+        <h3>✅ Safety First</h3>
+
+        <p>
+          Teaching proper water safety skills and confidence in every lesson.
+        </p>
+      </div>
+
+      <div>
+        <h3>✅ Personalized Lessons</h3>
+
+        <p>
+          Every swimmer receives instruction based on their individual ability.
+        </p>
+      </div>
+
+      <div>
+        <h3>✅ Professional Coaching</h3>
+
+        <p>Learn with experienced and certified swimming instruction.</p>
+      </div>
+
+      <div>
+        <h3>✅ Positive Environment</h3>
+
+        <p>
+          A supportive atmosphere where students enjoy learning and improving.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= BOOKING SECTION ================= -->
+
+<section id="booking" class="section booking-section">
+  <div class="container">
+    <h2>Book Your Swimming Lesson</h2>
+
+    <p class="intro">
+      Select your preferred date and time. If another swimmer already booked
+      that time, the system will notify you that the appointment is unavailable.
+    </p>
+
+    <div class="booking-layout">
+      <!-- Calendar -->
+
+      <div class="calendar-box">
+        <h3>Available Schedule</h3>
+
+        <div id="calendar"></div>
+      </div>
+
+      <!-- Registration Form -->
+
+      <div class="form-box">
+        <h3>Lesson Registration</h3>
+
+        <form id="bookingForm" action="/register" method="POST">
+          <label> Full Name </label>
+
+          <input
+            type="text"
+            name="name"
+            placeholder="Enter your name"
+            required
+          />
+
+          <label> Email Address </label>
+
+          <input
+            type="email"
+            name="email"
+            placeholder="Enter your email"
+            required
+          />
+
+          <label> Phone Number </label>
+
+          <input
+            type="tel"
+            name="phone"
+            placeholder="Enter your phone number"
+            required
+          />
+
+          <label> Select Lesson Type </label>
+
+          <select name="lesson_type" required>
+            <option value="">Choose lesson</option>
+
+            <option>Beginner Swimming</option>
+
+            <option>Intermediate Training</option>
+
+            <option>Advanced Coaching</option>
+          </select>
+
+          <label> Choose Date </label>
+
+          <input type="date" id="lesson_date" name="date" required />
+
+          <label> Choose Time </label>
+
+          <select id="lesson_time" name="time" required>
+            <option value="">Select available time</option>
+
+            <option>9:00 AM</option>
+
+            <option>10:00 AM</option>
+
+            <option>11:00 AM</option>
+
+            <option>12:00 PM</option>
+
+            <option>1:00 PM</option>
+
+            <option>2:00 PM</option>
+
+            <option>3:00 PM</option>
+
+            <option>4:00 PM</option>
+          </select>
+
+          <button type="submit" class="btn">Reserve Lesson</button>
+        </form>
+
+        <div id="bookingMessage"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT SECTION ================= -->
+
+<section id="contact" class="section contact">
+
+
+<div class="container">
+
+
+<h2>
+Contact Millrod Swim Academy
+</h2>
+
+
+
+<div class="contact-grid">
+
+
+
+<div class="contact-box">
+
+
+<h3>
+📍 Location
+</h3>
+
+
+<p>
+Professional swimming lessons available
+at our private swimming location.
+</p>
+
+
+</div>
+
+
+
+
+
+<div class="contact-box">
+
+
+<h3>
+📞 Phone
+</h3>
+
+
+<p>
+Contact us to schedule your first lesson.
+</p>
+
+
+</div>
+
+
+
+
+
+<div class="contact-box">
+
+
+<h3>
+✉️ Email
+</h3>
+
+
+<p>
+We will respond quickly to all lesson inquiries.
+</p>
+
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+<!-- ================= FOOTER ================= -->
+
+
+<footer>
+
+
+<div class="container">
+
+
+<h3>
+🏊 Millrod Swim Academy
+</h3>
+
+
+<p>
+Professional Swimming Instruction |
+Safety | Confidence | Skill Development
+</p>
+
+
+
+<p class="copyright">
+
+© 2026 Millrod Swim Academy.
+All Rights Reserved.
+
+</p>
+
+
+</div>
+
+
+</footer>
+
+
+
+
+
+
+<!-- ================= SCRIPTS ================= -->
+
+
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+
+
+</body>
+
+
+</html>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+
+    const calendarElement = document.getElementById("calendar");
+
+
+    if (calendarElement) {
+
+
+        const calendar = new FullCalendar.Calendar(calendarElement, {
+
+
+            initialView: "dayGridMonth",
+
+
+            selectable: true,
+
+
+            height: "auto",
+
+
+
+            headerToolbar: {
+
+                left: "prev,next today",
+
+                center: "title",
+
+                right: ""
+
+            },
+
+
+
+            // Load booked appointments from Flask
+
+            events: "/bookings",
+
+
+
+
+            dateClick: function(info) {
+
+
+                document.getElementById("lesson_date").value = info.dateStr;
+
+
+                window.location.hash = "booking";
+
+
+            }
+
+
+
+        });
+
+
+
+        calendar.render();
+
+
+
+    }
+
+
+
+
+
+    // ==============================
+    // Booking Form Validation
+    // ==============================
+
+
+    const bookingForm = document.getElementById("bookingForm");
+
+
+
+    if (bookingForm) {
+
+
+
+        bookingForm.addEventListener("submit", async function(event) {
+
+
+
+            event.preventDefault();
+
+
+
+            const formData = new FormData(bookingForm);
+
+
+
+            const response = await fetch("/register", {
+
+
+                method: "POST",
+
+
+                body: formData
+
+
+
+            });
+
+
+
+            const result = await response.json();
+
+
+
+
+            const message =
+                document.getElementById("bookingMessage");
+
+
+
+
+            if (result.success) {
+
+
+                message.innerHTML = `
+
+                <div class="success-message">
+
+                ✅ Your lesson has been booked successfully!
+
+                </div>
+
+                `;
+
+
+                bookingForm.reset();
+
+
+                if (calendar) {
+
+                    calendar.refetchEvents();
+
+                }
+
+
+
+            } else {
+
+
+
+                message.innerHTML = `
+
+
+                <div class="error-message">
+
+                ❌ ${result.message}
+
+                </div>
+
+
+                `;
+
+
+            }
+
+
+
+        });
+
+
+
+    }
+
+
+
+});
