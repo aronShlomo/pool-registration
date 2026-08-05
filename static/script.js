@@ -29,7 +29,7 @@ if (form) {
         form.reset();
 
         if (window.calendar) {
-          calendar.refetchEvents();
+          window.calendar.refetchEvents();
         }
       } else {
         message.style.color = "red";
