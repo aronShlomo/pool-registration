@@ -137,6 +137,31 @@ def bookings():
     return jsonify(events)
 
 
+@app.route("/booked-slots")
+def booked_slots():
+
+    conn = sqlite3.connect(DATABASE)
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT lesson_date, lesson_time
+        FROM bookings
+    """)
+
+    rows = cursor.fetchall()
+
+    conn.close()
+
+    return jsonify([
+        {
+            "date": row[0],
+            "time": row[1]
+        }
+        for row in rows
+    ])
+
+
+
 def send_email(to_email, subject, body, attachment=None):
     print("=== send_email() CALLED ===")
     print("To:", to_email)
