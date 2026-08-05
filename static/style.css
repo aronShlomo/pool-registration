@@ -402,7 +402,7 @@ h2 {
 }
 
 .calendar-layout {
-  width: 650px;
+  width: 100%;
   max-width: 90%;
   margin: 0 auto;
 }
