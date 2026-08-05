@@ -73,7 +73,6 @@ function initializeCalendar() {
 // ================================
 
 const dateInput = document.getElementById("lesson_date");
-
 const timeSelect = document.getElementById("lesson_time");
 
 if (dateInput && timeSelect) {
@@ -87,9 +86,10 @@ if (dateInput && timeSelect) {
         return;
       }
 
+      // RESET EVERY TIME USER CHANGES DATE
       option.disabled = false;
 
-      option.text = option.value;
+      option.textContent = option.value;
 
       const booked = bookedSlots.some(
         (slot) => slot.date === selectedDate && slot.time === option.value,
@@ -98,7 +98,7 @@ if (dateInput && timeSelect) {
       if (booked) {
         option.disabled = true;
 
-        option.text = option.value + " (Booked)";
+        option.textContent = option.value + " (Booked)";
       }
     });
   });
@@ -164,6 +164,10 @@ if (form) {
         message.innerHTML = "✅ " + data.message;
 
         form.reset();
+
+        if (dateInput) {
+          dateInput.dispatchEvent(new Event("change"));
+        }
 
         await loadBookedSlots();
 
