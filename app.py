@@ -1,4 +1,3 @@
-from flask import Flask, request, render_template
 import smtplib
 from email.message import EmailMessage
 from reportlab.lib.pagesizes import letter
@@ -11,6 +10,7 @@ import sqlite3
 import traceback
 import base64
 from datetime import datetime
+from flask import Flask, request, render_template, jsonify
 
 
 
@@ -46,24 +46,41 @@ def init_database():
     cursor = conn.cursor()
 
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS bookings (
+CREATE TABLE IF NOT EXISTS bookings (
 
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+id INTEGER PRIMARY KEY AUTOINCREMENT,
 
-        student_name TEXT,
-        parent_name TEXT,
-        email TEXT,
-        phone TEXT,
+student_name TEXT,
+dob TEXT,
+age TEXT,
 
-        lesson_date TEXT,
-        lesson_time TEXT,
+parent_name TEXT,
+email TEXT,
+phone TEXT,
 
-        lesson_type TEXT,
+emergency_name TEXT,
+emergency_phone TEXT,
 
-        created_at TEXT
+level TEXT,
+experience TEXT,
+goal TEXT,
 
-    )
-    """)
+lesson_type TEXT,
+number_lessons TEXT,
+instructor TEXT,
+
+lesson_date TEXT,
+lesson_time TEXT,
+
+medical TEXT,
+notes TEXT,
+
+agreement TEXT,
+
+created_at TEXT
+
+)
+""")
 
     conn.commit()
 
@@ -81,6 +98,43 @@ def home():
 @app.route("/test")
 def test():
     return "Flask is working!"
+
+
+
+@app.route("/bookings")
+def bookings():
+
+    conn = sqlite3.connect(DATABASE)
+
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT lesson_date, lesson_time
+        FROM bookings
+    """)
+
+    rows = cursor.fetchall()
+
+    conn.close()
+
+
+    events = []
+
+
+    for row in rows:
+
+        events.append({
+
+            "title": "Booked - " + row[1],
+
+            "start": row[0],
+
+            "allDay": True
+
+        })
+
+
+    return jsonify(events)
 
 
 def send_email(to_email, subject, body, attachment=None):
@@ -181,68 +235,244 @@ def create_registration_pdf(data):
 @app.route("/register", methods=["POST"])
 def register():
 
+
     form_data = request.form.to_dict()
-    
-    first_name = request.form.get("first_name")
-    parent_email = request.form.get("parent_email")
+
+
+    student_name = form_data.get("student_name")
+
+    parent_email = form_data.get("email")
+
+    lesson_date = form_data.get("lesson_date")
+
+    lesson_time = form_data.get("lesson_time")
+
+
+
+
+    # ==============================
+    # CHECK EXISTING BOOKINGS
+    # ==============================
+
+
+    conn = sqlite3.connect(DATABASE)
+
+    cursor = conn.cursor()
+
+
+
+    cursor.execute("""
+        SELECT * FROM bookings
+        WHERE lesson_date = ?
+        AND lesson_time = ?
+
+    """,
+    (
+        lesson_date,
+        lesson_time
+    ))
+
+
+
+    existing = cursor.fetchone()
+
+
+
+    if existing:
+
+        conn.close()
+
+        return jsonify({
+
+            "success": False,
+
+            "message": "This date and time is already booked. Please choose another lesson time."
+
+        })
+
+
+
+
+
+    # ==============================
+    # SAVE BOOKING
+    # ==============================
+
+
+    cursor.execute("""
+    INSERT INTO bookings
+    (
+    student_name,
+    dob,
+    age,
+
+    parent_name,
+    email,
+    phone,
+
+    emergency_name,
+    emergency_phone,
+
+    level,
+    experience,
+    goal,
+
+    lesson_type,
+    number_lessons,
+    instructor,
+
+    lesson_date,
+    lesson_time,
+
+    medical,
+    notes,
+
+    agreement,
+
+    created_at
+
+    )
+
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+
+    """,
+    (
+
+    form_data.get("student_name"),
+
+    form_data.get("dob"),
+
+    form_data.get("age"),
+
+
+    form_data.get("parent_name"),
+
+    form_data.get("email"),
+
+    form_data.get("phone"),
+
+
+    form_data.get("emergency_name"),
+
+    form_data.get("emergency_phone"),
+
+
+    form_data.get("level"),
+
+    form_data.get("experience"),
+
+    form_data.get("goal"),
+
+
+    form_data.get("lesson_type"),
+
+    form_data.get("number_lessons"),
+
+    form_data.get("instructor"),
+
+
+    lesson_date,
+
+    lesson_time,
+
+
+    form_data.get("medical"),
+
+    form_data.get("notes"),
+
+
+    form_data.get("agreement"),
+
+
+    datetime.now().isoformat()
+
+    ))
+
+
+
+    conn.commit()
+
+    conn.close()
+
+
+
+
+
+    # ==============================
+    # CREATE PDF
+    # ==============================
+
 
     pdf_file = create_registration_pdf(form_data)
 
-    registration_email = """
-New Swimming Registration
-
-A new registration was submitted.
-
-The complete registration form is attached as a PDF.
-"""
 
 
-    thank_you_email = f"""
-Dear Parent/Guardian,
 
-Thank you for registering {first_name} with Millrod Swim!
 
-We have successfully received your registration.
+    # ==============================
+    # SEND OWNER EMAIL
+    # ==============================
 
-Our team will review your information and contact you soon with the next steps.
 
-Thank you for choosing Millrod Swim!
-
-Millrod Swim Team
-"""
-
-    # Send email to owner
     send_email(
+
         OWNER_EMAIL,
-        "New Pool Registration",
-        registration_email,
+
+        "New Millrod Swim Registration",
+
+        "A new swimming lesson registration was received.",
+
         pdf_file
+
     )
 
 
 
-    print("PARENT EMAIL:", parent_email)
+
+
+    # ==============================
+    # SEND PARENT CONFIRMATION
+    # ==============================
+
 
     if parent_email:
-        print("Sending confirmation email to parent...")
+
 
         send_email(
+
             parent_email,
-            "Thank you for your registration",
-            thank_you_email
+
+            "Millrod Swim Registration Confirmation",
+
+            f"""
+Dear Parent/Guardian,
+
+Thank you for registering {student_name} with Millrod Swim Academy.
+
+Your requested lesson:
+
+Date: {lesson_date}
+Time: {lesson_time}
+
+We will contact you soon with confirmation.
+
+Thank you,
+
+Millrod Swim Academy
+"""
+
         )
 
-        print("Finished sending confirmation email.")
-    else:
-        print("No parent email found.")
-        
-        
 
-            
-        
 
-    return "Registration submitted successfully!"
 
+    return jsonify({
+
+    "success": True,
+
+    "message": "Registration submitted successfully!"
+
+})
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
