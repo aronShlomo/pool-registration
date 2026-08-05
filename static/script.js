@@ -1,70 +1,45 @@
-document.addEventListener("DOMContentLoaded", function () {
-  // =========================
-  // FULL CALENDAR
-  // =========================
+const form = document.getElementById("bookingForm");
 
-  let calendarElement = document.getElementById("calendar");
+if (form) {
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
 
-  if (calendarElement) {
-    window.calendar = new FullCalendar.Calendar(calendarElement, {
-      initialView: "dayGridMonth",
+    const message = document.getElementById("bookingMessage");
 
-      selectable: true,
+    message.innerHTML = "Submitting registration...";
 
-      events: "/bookings",
+    const formData = new FormData(form);
 
-      dateClick: function (info) {
-        document.getElementById("lesson_date").value = info.dateStr;
-
-        document.getElementById("bookingForm").scrollIntoView({
-          behavior: "smooth",
-        });
-      },
-    });
-
-    calendar.render();
-  }
-
-  // =========================
-  // BOOKING FORM SUBMIT
-  // =========================
-
-  const form = document.getElementById("bookingForm");
-
-  if (form) {
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-
-      let formData = new FormData(form);
-
-      fetch("/register", {
+    try {
+      const response = await fetch("/register", {
         method: "POST",
 
         body: formData,
-      })
-        .then((response) => response.json())
+      });
 
-        .then((data) => {
-          let message = document.getElementById("bookingMessage");
+      const data = await response.json();
 
-          message.innerHTML = data.message;
+      console.log(data);
 
-          if (data.success) {
-            message.style.color = "green";
+      message.innerHTML = data.message;
 
-            form.reset();
+      if (data.success) {
+        message.style.color = "green";
 
-            if (window.calendar) {
-              window.calendar.refetchEvents();
-            }
-          } else {
-            message.style.color = "red";
-          }
-        })
+        form.reset();
 
-        .catch((error) => {
-          console.error("Error:", error);
-        });
-    });
-  }
-});
+        if (window.calendar) {
+          calendar.refetchEvents();
+        }
+      } else {
+        message.style.color = "red";
+      }
+    } catch (error) {
+      console.error(error);
+
+      message.innerHTML = "Server error. Check Flask console.";
+
+      message.style.color = "red";
+    }
+  });
+}
