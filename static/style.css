@@ -23,12 +23,13 @@ body {
    INSTRUCTOR PROFILE
 ============================== */
 .instructor-profile {
-  display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 40px;
+  display: flex;
+  justify-content: center;
   align-items: center;
+  gap: 50px;
+  max-width: 1000px;
+  margin: auto;
 }
-
 .instructor-image {
   display: flex;
   justify-content: center;
@@ -40,7 +41,7 @@ body {
   height: 260px;
 
   object-fit: cover;
-  object-position: center 25%;
+  object-position: center 35%;
 
   border-radius: 50%;
 
