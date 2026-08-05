@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Swimming Pool Registration Form</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      body {
+        background: #e9f7ff;
+        padding: 40px;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: auto;
+        background: white;
+        padding: 35px;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      }
+
+      h1 {
+        color: #0077b6;
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #666;
+        margin-bottom: 30px;
+      }
+
+      .section {
+        margin-top: 30px;
+      }
+
+      .section h2 {
+        color: #0077b6;
+        border-bottom: 2px solid #0077b6;
+        padding-bottom: 8px;
+        margin-bottom: 20px;
+      }
+
+      .form-group {
+        margin-bottom: 18px;
+      }
+
+      label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 8px;
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 15px;
+      }
+
+      textarea {
+        resize: vertical;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+
+      .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .checkbox-group input {
+        width: auto;
+      }
+
+      button {
+        margin-top: 25px;
+        width: 100%;
+        padding: 15px;
+        background: #0077b6;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 18px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background: #005f8f;
+      }
+
+      @media (max-width: 700px) {
+        .row {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🏊 Swimming Pool Registration Form</h1>
+
+      <p class="subtitle">
+        Please complete all required information before submitting your
+        registration.
+      </p>
+
+      <form action="/register" method="POST">
+        <div class="section">
+          <h2>Participant Information</h2>
+
+          <div class="row">
+            <div class="form-group">
+              <label>First Name</label>
+              <input type="text" name="first_name" required />
+            </div>
+
+            <div class="form-group">
+              <label>Last Name</label>
+              <input type="text" name="last_name" required />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group">
+              <label>Date of Birth</label>
+              <input type="date" name="date_of_birth" required />
+            </div>
+
+            <div class="form-group">
+              <label>Gender</label>
+
+              <select name="gender" required>
+                <option value="">Select</option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Prefer not to say</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" name="email" required />
+            </div>
+
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="tel" name="phone_number" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Home Address</label>
+            <textarea rows="3" name="home_address"></textarea>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Parent / Guardian (For Minors)</h2>
+
+          <div class="row">
+            <div class="form-group">
+              <label>Parent/Guardian Name</label>
+              <input type="text" name="parent_guardian" />
+            </div>
+
+            <div class="form-group">
+              <label>Relationship</label>
+              <input type="text" name="relationship" />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group">
+              <label>Parent Phone</label>
+              <input type="tel" name="parent_phone" />
+            </div>
+
+            <div class="form-group">
+              <label>Parent Email</label>
+              <input type="email" name="parent_email" required />
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Emergency Contact</h2>
+
+          <div class="row">
+            <div class="form-group">
+              <label>Emergency Contact Name</label>
+              <input type="text" name="emergency_contact_name" required />
+            </div>
+
+            <div class="form-group">
+              <label>Emergency Phone</label>
+              <input type="tel" name="rmergency_phone" required />
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Swimming Experience</h2>
+
+          <div class="form-group">
+            <label>
+              Has your child ever had a negative or scary experience with water?
+            </label>
+
+            <select id="waterExperience" name="waterExperience">
+              <option value="">Select</option>
+              <option value="No">No</option>
+              <option value="Yes">Yes</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label> If yes, please describe briefly: </label>
+
+            <textarea
+              rows="4"
+              name="describe_briefly"
+              placeholder="Please describe the experience and any concerns your child may have with water..."
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label> What are your child's swimming goals? </label>
+
+            <textarea
+              rows="3"
+              name="swimming_goals"
+              placeholder="Example: learn water safety, overcome fear, improve swimming skills..."
+            >
+            </textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Swimming Level</label>
+
+            <select name="swimming_level" required>
+              <option value="">Choose One</option>
+
+              <option>Never Swam Before</option>
+
+              <option>Beginner</option>
+
+              <option>Intermediate</option>
+
+              <option>Advanced</option>
+
+              <option>Competitive Swimmer</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Have you taken swimming lessons before?</label>
+
+            <select name="swimming_lessons_before">
+              <option>No</option>
+
+              <option>Yes</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Can you swim without assistance?</label>
+
+            <select name="swim_without_assistance">
+              <option>No</option>
+
+              <option>Yes</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Describe your swimming experience</label>
+
+            <textarea
+              rows="5"
+              name="swimming_experience"
+              placeholder="Tell us about your swimming skills, certifications, competitions, or previous lessons..."
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Medical Information</h2>
+
+          <div class="form-group">
+            <label
+              >Do you have any medical conditions, allergies, or
+              injuries?</label
+            >
+
+            <textarea name="medical_conditions_allergies" rows="4"></textarea>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Class Registration</h2>
+
+          <div class="form-group">
+            <label>Select Program</label>
+
+            <select name="class_registration" required>
+              <option value="">Choose a Class</option>
+
+              <option>Kids Beginner Class</option>
+
+              <option>Kids Intermediate Class</option>
+
+              <option>Kids Advanced Class</option>
+
+              <option>Adult Beginner Class</option>
+
+              <option>Adult Fitness Swimming</option>
+
+              <option>Private Lessons</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Agreement</h2>
+
+          <div class="checkbox-group">
+            <input name="agreement" type="checkbox" required />
+
+            <label>
+              I certify that all information provided is accurate. I understand
+              that swimming activities involve inherent risks, and I agree to
+              follow all pool safety rules.
+            </label>
+          </div>
+        </div>
+
+        <button type="submit">Submit Registration</button>
+      </form>
+    </div>
+  </body>
+</html>
