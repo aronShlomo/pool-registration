@@ -127,14 +127,35 @@ def bookings():
 
             "title": "Booked - " + row[1],
 
-            "start": row[0],
-
-            "allDay": True
+            "start": row[0] + "T" + convert_time(row[1]),
 
         })
 
 
     return jsonify(events)
+
+
+@app.route("/view-bookings")
+def view_bookings():
+
+    conn = sqlite3.connect(DATABASE)
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM bookings")
+
+    rows = cursor.fetchall()
+
+    conn.close()
+
+    return jsonify(rows)
+
+
+def convert_time(time):
+
+    return datetime.strptime(
+        time,
+        "%I:%M %p"
+    ).strftime("%H:%M:%S")
 
 
 @app.route("/booked-slots")
