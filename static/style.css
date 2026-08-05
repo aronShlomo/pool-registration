@@ -368,35 +368,6 @@ h2 {
   background: white;
 }
 
-.booking-container {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-#calendar {
-  max-width: 650px;
-  margin: 0 auto;
-}
-.fc-daygrid-day {
-  height: 70px !important;
-}
-.fc {
-  font-size: 14px;
-}
-
-.booking-section {
-  display: flex;
-  justify-content: center;
-}
-
-.calendar-container {
-  width: 650px;
-  max-width: 90%;
-  margin: 0 auto;
-}
-
 .booking-layout {
   display: grid;
 
@@ -407,31 +378,6 @@ h2 {
   align-items: start;
 }
 
-/* Desktop calendar size and position */
-.booking-calendar {
-  width: 650px;
-  max-width: 100%;
-  margin: 40px auto;
-}
-
-#calendar {
-  width: 100%;
-  background: white;
-  border-radius: 20px;
-  padding: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-}
-
-.booking-section {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.fc {
-  max-width: 650px;
-  margin: auto;
-}
 .calendar-box,
 .form-box {
   background: #ffffff;
@@ -441,6 +387,24 @@ h2 {
   border-radius: 20px;
 
   box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+}
+
+.booking-layout {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.booking-section {
+  display: flex;
+  justify-content: center;
+}
+
+.calendar-layout {
+  width: 650px;
+  max-width: 90%;
+  margin: 0 auto;
 }
 
 .calendar-box h3,
