@@ -368,6 +368,35 @@ h2 {
   background: white;
 }
 
+.booking-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#calendar {
+  max-width: 650px;
+  margin: 0 auto;
+}
+.fc-daygrid-day {
+  height: 70px !important;
+}
+.fc {
+  font-size: 14px;
+}
+
+.booking-section {
+  display: flex;
+  justify-content: center;
+}
+
+.calendar-container {
+  width: 650px;
+  max-width: 90%;
+  margin: 0 auto;
+}
+
 .booking-layout {
   display: grid;
 
