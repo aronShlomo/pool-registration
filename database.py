@@ -94,3 +94,9 @@ def init_database():
 def create_booking_table():
 
     init_database()
+    
+    
+    
+    
+   # Keep old imports working
+    init_db = init_database 
