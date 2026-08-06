@@ -1,6 +1,8 @@
 import os
 
-from flask import Flask, render_template, jsonify
+import stripe
+
+from flask import Flask, render_template, jsonify, request
 
 from config import Config
 
@@ -22,11 +24,15 @@ from reminder_service import send_lesson_reminders
 
 
 
+
 # ==========================
 # CREATE APPLICATION
 # ==========================
 
 app = Flask(__name__)
+
+stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
+print("Stripe key loaded:", stripe.api_key[:10] if stripe.api_key else "NONE")
 
 scheduler = BackgroundScheduler()
 

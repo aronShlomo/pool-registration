@@ -59,66 +59,46 @@
 
     <!-- ================= ABOUT ================= -->
 
-   <section class="section" id="about">
+    <section class="section" id="about">
+      <div class="container">
+        <h2>Meet Your Swimming Instructor</h2>
 
-<div class="container">
+        <div class="instructor-profile">
+          <div class="instructor-image">
+            <img
+              src="{{ url_for('static', filename='images/instructor.jpg') }}"
+              alt="Certified Swimming Instructor at Millrod Swim Academy"
+            />
+          </div>
 
-<h2>Meet Your Swimming Instructor</h2>
+          <div class="instructor-info">
+            <h3>Certified Swimming Instructor</h3>
 
+            <p>
+              Welcome to Millrod Swim Academy. I provide professional swimming
+              instruction focused on water safety, confidence, and proper
+              swimming technique.
+            </p>
 
-<div class="instructor-profile">
+            <p>
+              With experience teaching swimmers of different ages and skill
+              levels, my goal is to help every student become comfortable and
+              confident in the water.
+            </p>
 
+            <div class="instructor-badges">
+              <span> 🏅 Certified Instructor </span>
 
-<div class="instructor-image">
+              <span> 🌊 Water Safety Focus </span>
 
-<img 
-src="{{ url_for('static', filename='images/instructor.jpg') }}"
-alt="Certified Swimming Instructor at Millrod Swim Academy">
-
-</div>
-
-
-
-<div class="instructor-info">
-
-
-<h3>Certified Swimming Instructor</h3>
-
-
-<p>
-Welcome to Millrod Swim Academy. I provide professional swimming instruction
-focused on water safety, confidence, and proper swimming technique.
-</p>
-
-
-<p>
-With experience teaching swimmers of different ages and skill levels,
-my goal is to help every student become comfortable and confident in the water.
-</p>
-
-
-
-<div class="instructor-badges">
-
-<span>🏅 Certified Instructor</span>
-
-<span>🌊 Water Safety Focus</span>
-
-<span>🏊 Children & Adults</span>
-
-</div>
-
-
-</div>
-
-
-</div>
-
-
-</div>
-
-</section>
-
+              <span> 🏊 Children & Adults </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>
 <!-- ================= PROGRAMS ================= -->
 
 <section class="section" id="programs">
@@ -231,186 +211,174 @@ my goal is to help every student become comfortable and confident in the water.
       Unavailable appointments will be blocked automatically.
     </p>
 
-    <div class="booking-layout">
-      <!-- CALENDAR -->
+    <div class="calendar-box">
+      <h3>Available Schedule</h3>
 
-      <div class="calendar-box">
-        <h3>Available Schedule</h3>
+      <div id="calendar"></div>
+    </div>
 
-        <div id="calendar"></div>
-      </div>
+    <!-- ================= REGISTRATION FORM ================= -->
+
+    <div class="form-box">
+      <h3>Swimming Lesson Registration</h3>
+
+      <form id="bookingForm">
+        <h4>Student Information</h4>
+
+        <label> Student Full Name </label>
+
+        <input
+          type="text"
+          name="student_name"
+          placeholder="Student Full Name"
+          required
+        />
+
+        <label> Date of Birth </label>
+
+        <input type="date" name="dob" />
+
+        <label> Student Age </label>
+
+        <input type="number" name="age" placeholder="Age" required />
+
+        <h4>Parent / Guardian Information</h4>
+
+        <label> Parent / Guardian Name </label>
+
+        <input
+          type="text"
+          name="parent_name"
+          placeholder="Parent or Guardian Name"
+          required
+        />
+
+        <label> Phone Number </label>
+
+        <input type="tel" name="phone" placeholder="Phone Number" required />
+
+        <label> Email Address </label>
+
+        <input type="email" name="email" placeholder="Email Address" required />
+
+        <h4>Emergency Contact</h4>
+
+        <label> Emergency Contact Name </label>
+
+        <input
+          type="text"
+          name="emergency_name"
+          placeholder="Emergency Contact Name"
+        />
+
+        <label> Emergency Contact Phone </label>
+
+        <input
+          type="tel"
+          name="emergency_phone"
+          placeholder="Emergency Contact Phone"
+        />
+
+        <h4>Swimming Experience</h4>
+
+        <label> Current Swimming Level </label>
+
+        <select name="level" required>
+          <option value="">Select Level</option>
+
+          <option>Beginner</option>
+
+          <option>Intermediate</option>
+
+          <option>Advanced</option>
+        </select>
+
+        <label> Previous Swimming Experience </label>
+
+        <textarea
+          name="experience"
+          rows="4"
+          placeholder="Describe previous swimming experience"
+        ></textarea>
+
+        <label> Swimming Goals </label>
+
+        <select name="goal">
+          <option>Learn To Swim</option>
+
+          <option>Water Safety</option>
+
+          <option>Stroke Improvement</option>
+
+          <option>Advanced Training</option>
+        </select>
+
+        <h4>Lesson Details</h4>
+
+        <label> Lesson Type </label>
+
+        <select id="lesson_type" name="lesson_type" required>
+          <option value="">Select Lesson Type</option>
+
+          <option>Private Lesson</option>
+
+          <option>Semi-Private Lesson</option>
+
+          <option>Group Lesson</option>
+        </select>
+
+        <label> Number of Lessons </label>
+
+        <select id="package" name="package">
+          <option>Single Lesson</option>
+
+          <option>4 Lessons Package</option>
+
+          <option>8 Lessons Package</option>
+
+          <option>Monthly Program</option>
+        </select>
+
+        <label> Preferred Instructor </label>
+
+        <select name="instructor">
+          <option>No Preference</option>
+
+          <option>Certified Instructor</option>
+        </select>
+
+        <h4>Schedule Your Lesson</h4>
+
+        <label> Choose Date </label>
+
+        <input type="date" id="lesson_date" name="lesson_date" required />
+
+        <label> Choose Time </label>
+
+        <select id="lesson_time" name="lesson_time" required>
+          <option value="">Select Time</option>
+
+          <option>9:00 AM</option>
+
+          <option>10:00 AM</option>
+
+          <option>11:00 AM</option>
+
+          <option>12:00 PM</option>
+
+          <option>1:00 PM</option>
+
+          <option>2:00 PM</option>
+
+          <option>3:00 PM</option>
+
+          <option>4:00 PM</option>
+        </select>
+      </form>
     </div>
   </div>
 </section>
-<!-- ================= REGISTRATION FORM ================= -->
 
-<div class="form-box">
-  <h3>Swimming Lesson Registration</h3>
-
-<form id="bookingForm">
-  <!-- STUDENT INFORMATION -->
-
-    <h4>Student Information</h4>
-
-    <label> Student Full Name </label>
-
-    <input
-      type="text"
-      name="student_name"
-      placeholder="Student Full Name"
-      required
-    />
-
-    <label> Date of Birth </label>
-
-    <input type="date" name="dob" />
-
-    <label> Student Age </label>
-
-    <input type="number" name="age" placeholder="Age" required />
-
-    <!-- PARENT INFORMATION -->
-
-    <h4>Parent / Guardian Information</h4>
-
-    <label> Parent / Guardian Name </label>
-
-    <input
-      type="text"
-      name="parent_name"
-      placeholder="Parent or Guardian Name"
-      required
-    />
-
-    <label> Phone Number </label>
-
-    <input type="tel" name="phone" placeholder="Phone Number" required />
-
-    <label> Email Address </label>
-
-    <input type="email" name="email" placeholder="Email Address" required />
-
-    <!-- EMERGENCY CONTACT -->
-
-    <h4>Emergency Contact</h4>
-
-    <label> Emergency Contact Name </label>
-
-    <input
-      type="text"
-      name="emergency_name"
-      placeholder="Emergency Contact Name"
-    />
-
-    <label> Emergency Contact Phone </label>
-
-    <input
-      type="tel"
-      name="emergency_phone"
-      placeholder="Emergency Contact Phone"
-    />
-
-    <!-- SWIMMING EXPERIENCE -->
-
-    <h4>Swimming Experience</h4>
-
-    <label> Current Swimming Level </label>
-
-    <select name="level" required>
-      <option value="">Select Level</option>
-
-      <option>Beginner</option>
-
-      <option>Intermediate</option>
-
-      <option>Advanced</option>
-    </select>
-
-    <label> Previous Swimming Experience </label>
-
-    <textarea
-      name="experience"
-      rows="4"
-      placeholder="Describe previous swimming experience"
-    ></textarea>
-
-    <label> Swimming Goals </label>
-
-    <select name="goal">
-      <option>Learn To Swim</option>
-
-      <option>Water Safety</option>
-
-      <option>Stroke Improvement</option>
-
-      <option>Advanced Training</option>
-    </select>
-
-    <!-- LESSON DETAILS -->
-
-    <h4>Lesson Details</h4>
-
-    <label> Lesson Type </label>
-
-    <select name="lesson_type" required>
-      <option value="">Select Lesson Type</option>
-
-      <option>Private Lesson</option>
-
-      <option>Semi-Private Lesson</option>
-
-      <option>Group Lesson</option>
-    </select>
-
-    <label> Number of Lessons </label>
-
-    <select name="number_lessons">
-      <option>Single Lesson</option>
-
-      <option>4 Lessons Package</option>
-
-      <option>8 Lessons Package</option>
-
-      <option>Monthly Program</option>
-    </select>
-
-    <label> Preferred Instructor </label>
-
-    <select name="instructor">
-      <option>No Preference</option>
-
-      <option>Certified Instructor</option>
-    </select>
-
-    <!-- BOOKING DATE/TIME -->
-
-    <h4>Schedule Your Lesson</h4>
-
-    <label> Choose Date </label>
-
-    <input type="date" id="lesson_date" name="lesson_date" required />
-
-    <label> Choose Time </label>
-
-    <select id="lesson_time" name="lesson_time" required>
-      <option value="">Select Time</option>
-
-      <option>9:00 AM</option>
-
-      <option>10:00 AM</option>
-
-      <option>11:00 AM</option>
-
-      <option>12:00 PM</option>
-
-      <option>1:00 PM</option>
-
-      <option>2:00 PM</option>
-
-      <option>3:00 PM</option>
-
-      <option>4:00 PM</option>
-    </select>
 
 <!-- ================= SAFETY INFORMATION ================= -->
 
@@ -432,10 +400,9 @@ name="medical"
 
 rows="4"
 
-placeholder="Please list any medical conditions, allergies, or important information">
+placeholder="Please list any medical conditions, allergies, or important information"
 
-</textarea>
-
+></textarea>
 
 
 
@@ -451,22 +418,21 @@ name="notes"
 
 rows="4"
 
-placeholder="Anything else we should know about the swimmer">
+placeholder="Anything else we should know about the swimmer"
 
-</textarea>
-
-
+></textarea>
 
 
 
 
-<!-- AGREEMENTS -->
+
+
+<!-- ================= AGREEMENT ================= -->
 
 
 <h4>
 Agreement
 </h4>
-
 
 
 
@@ -484,8 +450,7 @@ required
 >
 
 
-I confirm that the information provided is accurate
-and agree to the swimming lesson safety rules.
+I confirm that the information provided is accurate and agree to the swimming lesson safety rules.
 
 
 </label>
@@ -494,14 +459,24 @@ and agree to the swimming lesson safety rules.
 
 
 
+<!-- IMPORTANT: Stripe button ID matches script.js -->
+
+
 <button
+
 type="button"
-id="payButton"
-class="btn">
+
+id="bookLessonBtn"
+
+class="btn"
+
+>
 
 Pay & Reserve Swimming Lesson
 
 </button>
+
+
 
 
 <div id="bookingMessage"></div>
@@ -517,12 +492,7 @@ Pay & Reserve Swimming Lesson
 </div>
 
 
-</div>
-
-
 </section>
-
-
 
 
 
@@ -547,9 +517,7 @@ Contact Millrod Swim Academy
 <div class="contact-grid">
 
 
-
 <div class="contact-box">
-
 
 <h3>
 🏊 Swimming Lessons
@@ -557,10 +525,7 @@ Contact Millrod Swim Academy
 
 
 <p>
-
-Professional swimming instruction
-for children and adults.
-
+Professional swimming instruction for children and adults.
 </p>
 
 
@@ -579,15 +544,11 @@ for children and adults.
 
 
 <p>
-
-Questions about lessons?
-Send us a message.
-
+Questions about lessons? Send us a message.
 </p>
 
+
 </div>
-
-
 
 
 
@@ -595,24 +556,36 @@ Send us a message.
 
 <div class="contact-box">
 
+
 <h3>
 ✉️ Email
 </h3>
 
-<p>
-<a href="mailto:themillrodswim@gmail.com">
-themillrodswim@gmail.com
-</a>
-</p>
 
 <p>
-We respond quickly to all
-registration requests.
+
+<a href="mailto:themillrodswim@gmail.com">
+
+themillrodswim@gmail.com
+
+</a>
+
 </p>
+
+
+<p>
+We respond quickly to all registration requests.
+</p>
+
 
 </div>
 
 
+
+</div>
+
+
+</div>
 
 
 </section>
@@ -633,20 +606,14 @@ registration requests.
 
 
 <h3>
-
 🏊 Millrod Swim Academy
-
 </h3>
 
 
-
 <p>
-
 Professional Swimming Lessons |
 Safety | Confidence | Skills
-
 </p>
-
 
 
 <p class="copyright">
@@ -667,103 +634,10 @@ All Rights Reserved.
 
 
 
-
 <!-- ================= SCRIPTS ================= -->
 
 
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
-
-
-
-
-<script>
-
-document
-.getElementById("payButton")
-.addEventListener("click", function(){
-
-
-let form = document.getElementById("bookingForm");
-
-
-let formData = new FormData(form);
-
-
-let data = {};
-
-
-formData.forEach((value,key)=>{
-
-data[key]=value;
-
-});
-
-
-
-fetch("/create-checkout-session",{
-
-
-method:"POST",
-
-
-headers:{
-
-
-"Content-Type":"application/json"
-
-
-},
-
-
-body:JSON.stringify(data)
-
-
-})
-
-
-.then(response=>response.json())
-
-
-.then(data=>{
-
-
-if(data.checkout_url){
-
-
-window.location.href=data.checkout_url;
-
-
-}
-
-else{
-
-
-alert("Payment error. Please try again.");
-
-
-}
-
-
-})
-
-
-.catch(error=>{
-
-
-console.log(error);
-
-
-alert("Something went wrong");
-
-
-});
-
-
-
-});
-
-
-</script>
 
 
 <script src="{{ url_for('static', filename='script.js') }}"></script>
@@ -771,6 +645,5 @@ alert("Something went wrong");
 
 
 </body>
-
 
 </html>

@@ -40,29 +40,27 @@ class Config:
     )
 
 
-    # Pricing (in cents)
     LESSON_PRICES = {
-
         "Private Lesson": {
-            "Single Lesson": 6000,
-            "4 Lessons Package": 22000,
-            "8 Lessons Package": 42000,
-            "Monthly Program": 50000,
+            "Single Lesson": 8000,
+            "4 Lessons Package": 30000,
+            "8 Lessons Package": 56000,
+            "Monthly Program": 100000
         },
 
         "Semi-Private Lesson": {
-            "Single Lesson": 4500,
-            "4 Lessons Package": 16000,
-            "8 Lessons Package": 30000,
-            "Monthly Program": 36000,
+            "Single Lesson": 12000,
+            "4 Lessons Package": 45000,
+            "8 Lessons Package": 85000,
+            "Monthly Program": 150000
         },
 
         "Group Lesson": {
-            "Single Lesson": 3000,
-            "4 Lessons Package": 11000,
-            "8 Lessons Package": 20000,
-            "Monthly Program": 24000,
-        },
+            "Single Lesson": 6000,
+            "4 Lessons Package": 22000,
+            "8 Lessons Package": 40000,
+            "Monthly Program": 70000
+        }
     }
 
 

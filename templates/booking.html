@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Book Swimming Lesson | Millrod Swim Academy</title>
+
+    <!-- Full Calendar -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+
+  <body>
+    <header class="booking-header">
+      <h1>🏊 Millrod Swim Academy</h1>
+
+      <p>Book your swimming lesson</p>
+    </header>
+
+    <section class="booking-container">
+      <!-- Calendar -->
+
+      <div class="calendar-box">
+        <h2>Select Date</h2>
+
+        <div id="calendar"></div>
+      </div>
+
+      <!-- Booking Form -->
+
+      <div class="form-box">
+        <h2>Lesson Registration</h2>
+
+        <form id="bookingForm">
+          <div class="input-group">
+            <label> First Name </label>
+
+            <input type="text" name="first_name" required />
+          </div>
+
+          <div class="input-group">
+            <label> Last Name </label>
+
+            <input type="text" name="last_name" required />
+          </div>
+
+          <div class="input-group">
+            <label> Email </label>
+
+            <input type="email" name="email" required />
+          </div>
+
+          <div class="input-group">
+            <label> Phone </label>
+
+            <input type="tel" name="phone_number" />
+          </div>
+
+          <div class="input-group">
+            <label> Lesson Type </label>
+
+            <select id="lesson_type" name="lesson_type" required>
+              <option value="">Select lesson</option>
+
+              <option value="Private Lesson">Private Lesson</option>
+
+              <option value="Semi Private Lesson">Semi Private Lesson</option>
+
+              <option value="Kids Swimming Lesson">Kids Swimming Lesson</option>
+            </select>
+          </div>
+
+          <div class="input-group">
+            <label> Package </label>
+
+            <select id="package" name="package" required>
+              <option value="">Select package</option>
+
+              <option value="Single Lesson">Single Lesson</option>
+
+              <option value="5 Lessons Package">5 Lessons Package</option>
+
+              <option value="10 Lessons Package">10 Lessons Package</option>
+            </select>
+          </div>
+
+          <div class="input-group">
+            <label> Date </label>
+
+            <input type="date" id="lesson_date" name="lesson_date" required />
+          </div>
+
+          <div class="input-group">
+            <label> Time </label>
+
+            <select id="lesson_time" name="lesson_time" required>
+              <option value="">Select time</option>
+
+              <option value="09:00">09:00 AM</option>
+
+              <option value="10:00">10:00 AM</option>
+
+              <option value="11:00">11:00 AM</option>
+
+              <option value="12:00">12:00 PM</option>
+
+              <option value="13:00">01:00 PM</option>
+
+              <option value="14:00">02:00 PM</option>
+
+              <option value="15:00">03:00 PM</option>
+
+              <option value="16:00">04:00 PM</option>
+
+              <option value="17:00">05:00 PM</option>
+            </select>
+          </div>
+
+          <button type="button" id="bookLessonBtn">Pay & Book Lesson</button>
+
+          <div id="bookingMessage"></div>
+        </form>
+      </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+  </body>
+</html>

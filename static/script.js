@@ -66,7 +66,7 @@ if (bookButton) {
       });
 
       const bookingResult = await bookingResponse.json();
-
+      console.log("BOOKING RESULT:", bookingResult);
       if (!bookingResponse.ok || !bookingResult.success) {
         alert(bookingResult.error || "Unable to create booking.");
 
@@ -92,9 +92,15 @@ if (bookButton) {
       const paymentResult = await paymentResponse.json();
 
       if (paymentResponse.ok && paymentResult.checkout_url) {
+        console.log("Stripe URL:", paymentResult.checkout_url);
+
         window.location.href = paymentResult.checkout_url;
       } else {
-        alert(paymentResult.error || "Unable to start Stripe checkout.");
+        console.log("Stripe response status:", paymentResponse.status);
+
+        console.log("Stripe response data:", paymentResult);
+
+        alert("Stripe Error:\n" + JSON.stringify(paymentResult));
 
         bookButton.disabled = false;
         bookButton.innerText = "Pay & Book Lesson";
