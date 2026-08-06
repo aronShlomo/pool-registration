@@ -1,525 +1,173 @@
-import smtplib
-from email.message import EmailMessage
-from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
-from reportlab.lib.styles import getSampleStyleSheet
-import uuid
-from xml.sax.saxutils import escape
-import resend
-import sqlite3
-import traceback
-import base64
-from datetime import datetime
-from flask import Flask, request, render_template, jsonify
+import os
+
+from flask import Flask, render_template, jsonify
+
+from config import Config
+
+from database import init_database
+
+from routes.payment import payment_bp
+
+from routes.booking import booking_bp
+
+from database import init_db
+
+from routes.stripe_webhook import webhook_bp
+
+from routes.admin import admin_bp
+
+from apscheduler.schedulers.background import BackgroundScheduler
+
+from reminder_service import send_lesson_reminders
 
 
+
+# ==========================
+# CREATE APPLICATION
+# ==========================
 
 app = Flask(__name__)
 
-from dotenv import load_dotenv
-import os
-
-load_dotenv()
-
-OWNER_EMAIL = os.getenv("POOL_EMAIL")
-EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
-resend.api_key = os.getenv("RESEND_API_KEY")
-
-print("POOL_EMAIL:", OWNER_EMAIL)
-print("EMAIL_PASSWORD exists:", EMAIL_PASSWORD is not None)
-print("RESEND_API_KEY exists:", os.getenv("RESEND_API_KEY") is not None)
+scheduler = BackgroundScheduler()
 
 
-
-
-# ==================================
-# ADD DATABASE HERE
-# ==================================
-
-DATABASE = "bookings.db"
-
-
-def init_database():
-
-    conn = sqlite3.connect(DATABASE)
-
-    cursor = conn.cursor()
-
-    cursor.execute("""
-CREATE TABLE IF NOT EXISTS bookings (
-
-id INTEGER PRIMARY KEY AUTOINCREMENT,
-
-student_name TEXT,
-dob TEXT,
-age TEXT,
-
-parent_name TEXT,
-email TEXT,
-phone TEXT,
-
-emergency_name TEXT,
-emergency_phone TEXT,
-
-level TEXT,
-experience TEXT,
-goal TEXT,
-
-lesson_type TEXT,
-number_lessons TEXT,
-instructor TEXT,
-
-lesson_date TEXT,
-lesson_time TEXT,
-
-medical TEXT,
-notes TEXT,
-
-agreement TEXT,
-
-created_at TEXT
-
+scheduler.add_job(
+    func=send_lesson_reminders,
+    trigger="cron",
+    hour=9,
+    minute=0
 )
-""")
 
-    conn.commit()
 
-    conn.close()
+scheduler.start()
+
+
+init_db()
+
+app.config.from_object(Config)
+
+app.register_blueprint(payment_bp)
+
+app.register_blueprint(booking_bp)
+
+app.register_blueprint(webhook_bp)
+
+app.register_blueprint(admin_bp)
+
+app.config["SECRET_KEY"] = Config.SECRET_KEY
+
+
+# ==========================
+# INITIALIZE DATABASE
+# ==========================
 
 init_database()
 
 
+
+# ==========================
+# HOME PAGE
+# ==========================
+
 @app.route("/")
 def home():
+
     return render_template("index.html")
 
 
 
+# ==========================
+# TEST ROUTE
+# ==========================
+
 @app.route("/test")
 def test():
-    return "Flask is working!"
 
+    return "Millrod Swim Academy Flask Server Running!"
 
 
-@app.route("/bookings")
-def bookings():
 
-    conn = sqlite3.connect(DATABASE)
+# ==========================
+# HEALTH CHECK
+# ==========================
 
-    cursor = conn.cursor()
-
-    cursor.execute("""
-        SELECT lesson_date, lesson_time
-        FROM bookings
-    """)
-
-    rows = cursor.fetchall()
-
-    conn.close()
-
-
-    events = []
-
-
-    for row in rows:
-
-        events.append({
-
-            "title": "Booked - " + row[1],
-
-            "start": row[0] + "T" + convert_time(row[1]),
-
-        })
-
-
-    return jsonify(events)
-
-
-@app.route("/view-bookings")
-def view_bookings():
-
-    conn = sqlite3.connect(DATABASE)
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT * FROM bookings")
-
-    rows = cursor.fetchall()
-
-    conn.close()
-
-    return jsonify(rows)
-
-
-def convert_time(time):
-
-    return datetime.strptime(
-        time,
-        "%I:%M %p"
-    ).strftime("%H:%M:%S")
-
-
-@app.route("/booked-slots")
-def booked_slots():
-
-    conn = sqlite3.connect(DATABASE)
-    cursor = conn.cursor()
-
-    cursor.execute("""
-        SELECT lesson_date, lesson_time
-        FROM bookings
-    """)
-
-    rows = cursor.fetchall()
-
-    conn.close()
-
-    return jsonify([
-        {
-            "date": row[0],
-            "time": row[1]
-        }
-        for row in rows
-    ])
-
-
-
-def send_email(to_email, subject, body, attachment=None):
-    print("=== send_email() CALLED ===")
-    print("To:", to_email)
-
-    try:
-        params = {
-            "from": "Millrod Swim <info@millrodswim.com>",
-            "to": [to_email],
-            # "bcc": [OWNER_EMAIL],
-            "subject": subject,
-            "text": body,
-        }
-
-        if attachment:
-            with open(attachment, "rb") as f:
-                pdf_content = base64.b64encode(f.read()).decode("utf-8")
-
-            params["attachments"] = [
-                {
-                    "filename": "pool_registration.pdf",
-                    "content": pdf_content
-                }
-            ]
-
-        response = resend.Emails.send(params)
-
-        print("SUCCESS!")
-        print(response)
-
-    except Exception as e:
-        import traceback
-        traceback.print_exc()
-        print("EMAIL ERROR:", repr(e))
-
-
-
-     
-
-def create_registration_pdf(data):
-
-    from xml.sax.saxutils import escape
-
-    filename = f"pool_registration_{uuid.uuid4()}.pdf"
-
-    doc = SimpleDocTemplate(
-        filename,
-        pagesize=letter
-    )
-
-    styles = getSampleStyleSheet()
-
-    content = []
-
-    content.append(
-        Paragraph(
-            "Swimming Pool Registration",
-            styles["Title"]
-        )
-    )
-
-    content.append(Spacer(1,20))
-
-
-    hidden_fields = [
-        "schedule_id"
-    ]
-
-    for field, value in data.items():
-
-        if field in hidden_fields:
-            continue
-
-        text = (
-            f"<b>{field.replace('_',' ').title()}:</b> "
-            f"{escape(str(value))}"
-        )
-
-        content.append(
-            Paragraph(
-                text,
-                styles["Normal"]
-            )
-        )
-
-        content.append(
-            Spacer(1,10)
-        )
-
-
-    doc.build(content)
-
-    return filename
-
-
-
-@app.route("/register", methods=["POST"])
-def register():
-
-
-    form_data = request.form.to_dict()
-
-
-    student_name = form_data.get("student_name")
-
-    parent_email = form_data.get("email")
-
-    lesson_date = form_data.get("lesson_date")
-
-    lesson_time = form_data.get("lesson_time")
-
-
-
-
-    # ==============================
-    # CHECK EXISTING BOOKINGS
-    # ==============================
-
-
-    conn = sqlite3.connect(DATABASE)
-
-    cursor = conn.cursor()
-
-
-
-    cursor.execute("""
-        SELECT * FROM bookings
-        WHERE lesson_date = ?
-        AND lesson_time = ?
-
-    """,
-    (
-        lesson_date,
-        lesson_time
-    ))
-
-
-
-    existing = cursor.fetchone()
-
-
-
-    if existing:
-
-        conn.close()
-
-        return jsonify({
-
-            "success": False,
-
-            "message": "This date and time is already booked. Please choose another lesson time."
-
-        })
-
-
-
-
-
-    # ==============================
-    # SAVE BOOKING
-    # ==============================
-
-
-    cursor.execute("""
-    INSERT INTO bookings
-    (
-    student_name,
-    dob,
-    age,
-
-    parent_name,
-    email,
-    phone,
-
-    emergency_name,
-    emergency_phone,
-
-    level,
-    experience,
-    goal,
-
-    lesson_type,
-    number_lessons,
-    instructor,
-
-    lesson_date,
-    lesson_time,
-
-    medical,
-    notes,
-
-    agreement,
-
-    created_at
-
-    )
-
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
-
-    """,
-    (
-
-    form_data.get("student_name"),
-
-    form_data.get("dob"),
-
-    form_data.get("age"),
-
-
-    form_data.get("parent_name"),
-
-    form_data.get("email"),
-
-    form_data.get("phone"),
-
-
-    form_data.get("emergency_name"),
-
-    form_data.get("emergency_phone"),
-
-
-    form_data.get("level"),
-
-    form_data.get("experience"),
-
-    form_data.get("goal"),
-
-
-    form_data.get("lesson_type"),
-
-    form_data.get("number_lessons"),
-
-    form_data.get("instructor"),
-
-
-    lesson_date,
-
-    lesson_time,
-
-
-    form_data.get("medical"),
-
-    form_data.get("notes"),
-
-
-    form_data.get("agreement"),
-
-
-    datetime.now().isoformat()
-
-    ))
-
-
-
-    conn.commit()
-
-    conn.close()
-
-
-
-
-
-    # ==============================
-    # CREATE PDF
-    # ==============================
-
-
-    pdf_file = create_registration_pdf(form_data)
-
-
-
-
-
-    # ==============================
-    # SEND OWNER EMAIL
-    # ==============================
-
-
-    send_email(
-
-        OWNER_EMAIL,
-
-        "New Millrod Swim Registration",
-
-        "A new swimming lesson registration was received.",
-
-        pdf_file
-
-    )
-
-
-
-
-
-    # ==============================
-    # SEND PARENT CONFIRMATION
-    # ==============================
-
-
-    if parent_email:
-
-
-        send_email(
-
-            parent_email,
-
-            "Millrod Swim Registration Confirmation",
-
-            f"""
-Dear Parent/Guardian,
-
-Thank you for registering {student_name} with Millrod Swim Academy.
-
-Your requested lesson:
-
-Date: {lesson_date}
-Time: {lesson_time}
-
-We will contact you soon with confirmation.
-
-Thank you,
-
-Millrod Swim Academy
-"""
-
-        )
-
-
-
+@app.route("/health")
+def health():
 
     return jsonify({
 
-    "success": True,
+        "status": "ok",
 
-    "message": "Registration submitted successfully!"
+        "academy": Config.COMPANY_NAME
 
-})
+    })
+
+
+
+# ==========================
+# REGISTER BLUEPRINTS
+# ==========================
+
+from routes.booking import booking_bp
+
+from routes.payment import payment_bp
+
+
+
+app.register_blueprint(
+    booking_bp
+)
+
+
+app.register_blueprint(
+    payment_bp
+)
+
+
+
+# ==========================
+# ERROR HANDLERS
+# ==========================
+
+@app.errorhandler(404)
+def page_not_found(error):
+
+    return render_template(
+        "404.html"
+    ),404
+
+
+
+@app.errorhandler(500)
+def server_error(error):
+
+    return render_template(
+        "500.html"
+    ),500
+
+
+
+
+# ==========================
+# RUN APPLICATION
+# ==========================
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+
+    port = int(
+        os.environ.get(
+            "PORT",
+            5000
+        )
+    )
+
+
+    app.run(
+
+        host="0.0.0.0",
+
+        port=port,
+
+        debug=True
+
+    )

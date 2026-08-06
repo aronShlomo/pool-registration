@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Millrod Swim Academy - Admin Dashboard</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='admin.css') }}"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <div class="dashboard">
+      <!-- ========================= -->
+      <!-- Sidebar -->
+      <!-- ========================= -->
+
+      <aside class="sidebar">
+        <div class="logo">
+          <i class="fas fa-water"></i>
+          <h2>Millrod Swim</h2>
+        </div>
+
+        <nav>
+          <a href="#" class="active">
+            <i class="fas fa-chart-line"></i>
+            Dashboard
+          </a>
+
+          <a href="#">
+            <i class="fas fa-calendar-check"></i>
+            Bookings
+          </a>
+
+          <a href="#">
+            <i class="fas fa-users"></i>
+            Students
+          </a>
+
+          <a href="#">
+            <i class="fas fa-credit-card"></i>
+            Payments
+          </a>
+
+          <a href="#">
+            <i class="fas fa-envelope"></i>
+            Emails
+          </a>
+
+          <a href="#">
+            <i class="fas fa-chart-bar"></i>
+            Reports
+          </a>
+
+          <a href="#">
+            <i class="fas fa-cog"></i>
+            Settings
+          </a>
+        </nav>
+      </aside>
+
+      <!-- ========================= -->
+      <!-- Main Content -->
+      <!-- ========================= -->
+
+      <main class="content">
+        <header class="topbar">
+          <div>
+            <h1>Admin Dashboard</h1>
+
+            <p>Welcome to Millrod Swim Academy</p>
+          </div>
+
+          <div class="admin-user">
+            <i class="fas fa-user-circle"></i>
+
+            <span>Administrator</span>
+          </div>
+        </header>
+
+        <!-- ========================= -->
+        <!-- Statistics -->
+        <!-- ========================= -->
+
+        <section class="stats">
+          <div class="card">
+            <i class="fas fa-calendar-day"></i>
+
+            <h3>{{ today_lessons }}</h3>
+
+            <p>Today's Lessons</p>
+          </div>
+
+          <div class="card">
+            <i class="fas fa-credit-card"></i>
+
+            <h3>{{ pending_payments }}</h3>
+
+            <p>Pending Payments</p>
+          </div>
+
+          <div class="card">
+            <i class="fas fa-check-circle"></i>
+
+            <h3>{{ confirmed_lessons }}</h3>
+
+            <p>Confirmed Lessons</p>
+          </div>
+
+          <div class="card">
+            <i class="fas fa-dollar-sign"></i>
+
+            <h3>${{ revenue }}</h3>
+
+            <p>Total Revenue</p>
+          </div>
+        </section>
+
+        <!-- ========================= -->
+        <!-- Search -->
+        <!-- ========================= -->
+
+        <section class="search-bar">
+          <input type="text" id="searchInput" placeholder="Search student..." />
+        </section>
+
+        <!-- ========================= -->
+        <!-- Bookings Table -->
+        <!-- ========================= -->
+
+        <section class="table-container">
+          <table id="bookingTable">
+            <thead>
+              <tr>
+                <th>ID</th>
+
+                <th>Student</th>
+
+                <th>Email</th>
+
+                <th>Date</th>
+
+                <th>Time</th>
+
+                <th>Lesson</th>
+
+                <th>Package</th>
+
+                <th>Payment</th>
+
+                <th>Status</th>
+
+                <th>Actions</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for booking in bookings %}
+
+              <tr>
+                <td>{{ booking.id }}</td>
+
+                <td>{{ booking.name }}</td>
+
+                <td>{{ booking.email }}</td>
+
+                <td>{{ booking.lesson_date }}</td>
+
+                <td>{{ booking.lesson_time }}</td>
+
+                <td>{{ booking.lesson_type }}</td>
+
+                <td>{{ booking.package }}</td>
+
+                <td>
+                  {% if booking.payment_status == "paid" %}
+
+                  <span class="badge paid"> Paid </span>
+
+                  {% else %}
+
+                  <span class="badge pending"> Pending </span>
+
+                  {% endif %}
+                </td>
+
+                <td>
+                  {% if booking.status == "confirmed" %}
+
+                  <span class="badge confirmed"> Confirmed </span>
+
+                  {% elif booking.status == "cancelled" %}
+
+                  <span class="badge cancelled"> Cancelled </span>
+
+                  {% else %}
+
+                  <span class="badge waiting"> Pending </span>
+
+                  {% endif %}
+                </td>
+
+                <td>
+                  <button class="view-btn" data-id="{{ booking.id }}">
+                    View
+                  </button>
+
+                  <button class="confirm-btn" data-id="{{ booking.id }}">
+                    Confirm
+                  </button>
+
+                  <button class="cancel-btn" data-id="{{ booking.id }}">
+                    Cancel
+                  </button>
+
+                  <button class="delete-btn" data-id="{{ booking.id }}">
+                    Delete
+                  </button>
+                </td>
+              </tr>
+
+              {% endfor %}
+            </tbody>
+          </table>
+        </section>
+      </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='admin.js') }}"></script>
+  </body>
+</html>

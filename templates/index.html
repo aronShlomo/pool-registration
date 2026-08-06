@@ -247,8 +247,8 @@ my goal is to help every student become comfortable and confident in the water.
 <div class="form-box">
   <h3>Swimming Lesson Registration</h3>
 
-  <form id="bookingForm" action="/register" method="POST">
-    <!-- STUDENT INFORMATION -->
+<form id="bookingForm">
+  <!-- STUDENT INFORMATION -->
 
     <h4>Student Information</h4>
 
@@ -495,12 +495,11 @@ and agree to the swimming lesson safety rules.
 
 
 <button
-
-type="submit"
-
+type="button"
+id="payButton"
 class="btn">
 
-Reserve Swimming Lesson
+Pay & Reserve Swimming Lesson
 
 </button>
 
@@ -674,6 +673,97 @@ All Rights Reserved.
 
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
 
+
+
+
+<script>
+
+document
+.getElementById("payButton")
+.addEventListener("click", function(){
+
+
+let form = document.getElementById("bookingForm");
+
+
+let formData = new FormData(form);
+
+
+let data = {};
+
+
+formData.forEach((value,key)=>{
+
+data[key]=value;
+
+});
+
+
+
+fetch("/create-checkout-session",{
+
+
+method:"POST",
+
+
+headers:{
+
+
+"Content-Type":"application/json"
+
+
+},
+
+
+body:JSON.stringify(data)
+
+
+})
+
+
+.then(response=>response.json())
+
+
+.then(data=>{
+
+
+if(data.checkout_url){
+
+
+window.location.href=data.checkout_url;
+
+
+}
+
+else{
+
+
+alert("Payment error. Please try again.");
+
+
+}
+
+
+})
+
+
+.catch(error=>{
+
+
+console.log(error);
+
+
+alert("Something went wrong");
+
+
+});
+
+
+
+});
+
+
+</script>
 
 
 <script src="{{ url_for('static', filename='script.js') }}"></script>
