@@ -113,11 +113,6 @@ from routes.booking import booking_bp
 from routes.payment import payment_bp
 
 
-app.register_blueprint(
-    payment_bp
-)
-
-
 
 # ==========================
 # ERROR HANDLERS
