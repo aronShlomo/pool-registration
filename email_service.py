@@ -132,7 +132,8 @@ def send_admin_notification(
 
     })
     
-    def send_reminder_email(
+
+def send_reminder_email(
     customer_email,
     customer_name,
     lesson_type,
@@ -140,58 +141,51 @@ def send_admin_notification(
     lesson_time
 ):
 
+    resend.Emails.send({
 
-     resend.Emails.send({
+        "from": "Millrod Swim Academy <info@millrodswim.com>",
 
-        "from":
-        "Millrod Swim Academy <info@millrodswim.com>",
-
-
-        "to":
-        [
+        "to": [
             customer_email
         ],
 
+        "subject": "Reminder: Swimming Lesson Tomorrow",
 
-        "subject":
-        "Reminder: Swimming Lesson Tomorrow",
+        "html": f"""
+        
+        <h2>🏊 Millrod Swim Academy</h2>
 
-
-        "html":
-        f"""
-
-        <h2>
-        🏊 Millrod Swim Academy
-        </h2>
-
+        <p>Hello {customer_name},</p>
 
         <p>
-        Hello {customer_name},
+        This is a reminder that your swimming lesson is scheduled for tomorrow.
         </p>
 
 
-        <p>
-        This is a reminder that your swimming lesson is tomorrow.
-        </p>
-
+        <h3>Lesson Details:</h3>
 
         <p>
         <b>Lesson:</b> {lesson_type}
         </p>
 
-
         <p>
         <b>Date:</b> {lesson_date}
         </p>
-
 
         <p>
         <b>Time:</b> {lesson_time}
         </p>
 
 
+        <br>
+
         <p>
         We look forward to seeing you!
+        </p>
+
+
+        <p>
+        Millrod Swim Academy
         </p>
 
         """
