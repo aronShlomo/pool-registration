@@ -2,11 +2,7 @@
 // Page Load
 // ================================
 
-window.addEventListener("load", async function () {
-  if (typeof loadBookedSlots === "function") {
-    await loadBookedSlots();
-  }
-
+window.addEventListener("load", function () {
   if (typeof initializeCalendar === "function") {
     initializeCalendar();
   }
