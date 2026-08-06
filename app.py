@@ -52,6 +52,9 @@ init_db()
 
 app.config.from_object(Config)
 
+print("ADMIN_USERNAME:", Config.ADMIN_USERNAME)
+print("ADMIN_PASSWORD:", Config.ADMIN_PASSWORD)
+
 app.register_blueprint(payment_bp)
 
 app.register_blueprint(booking_bp)
