@@ -6,7 +6,6 @@ from config import Config
 DATABASE = Config.DATABASE
 
 
-
 def get_db_connection():
 
     conn = sqlite3.connect(DATABASE)
@@ -24,11 +23,12 @@ def init_database():
     cursor = conn.cursor()
 
 
+    # Create bookings table if it does not exist
+
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS bookings (
 
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-
 
         -- Customer information
         name TEXT NOT NULL,
@@ -37,32 +37,26 @@ def init_database():
 
         phone TEXT,
 
-
         -- Lesson information
         lesson_type TEXT NOT NULL,
 
         package TEXT NOT NULL,
-
 
         -- Schedule
         lesson_date TEXT NOT NULL,
 
         lesson_time TEXT NOT NULL,
 
-
         -- Payment
         payment_status TEXT DEFAULT 'pending',
 
         stripe_payment_id TEXT,
 
-
         -- Booking status
         status TEXT DEFAULT 'pending',
 
-
         -- Reminder system
         reminder_sent INTEGER DEFAULT 0,
-
 
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
@@ -70,18 +64,51 @@ def init_database():
     """)
 
 
-    # Add reminder column if database already existed
-    try:
+    # ================================
+    # Database migrations
+    # Add missing columns for old databases
+    # ================================
 
-        cursor.execute("""
-            ALTER TABLE bookings
-            ADD COLUMN reminder_sent INTEGER DEFAULT 0
-        """)
+    migrations = [
 
-    except sqlite3.OperationalError:
+        (
+            "payment_status",
+            "TEXT DEFAULT 'pending'"
+        ),
 
-        # Column already exists
-        pass
+        (
+            "stripe_payment_id",
+            "TEXT"
+        ),
+
+        (
+            "status",
+            "TEXT DEFAULT 'pending'"
+        ),
+
+        (
+            "reminder_sent",
+            "INTEGER DEFAULT 0"
+        )
+
+    ]
+
+
+    for column_name, column_type in migrations:
+
+        try:
+
+            cursor.execute(
+                f"""
+                ALTER TABLE bookings
+                ADD COLUMN {column_name} {column_type}
+                """
+            )
+
+        except sqlite3.OperationalError:
+
+            # Column already exists
+            pass
 
 
 
@@ -94,9 +121,8 @@ def init_database():
 def create_booking_table():
 
     init_database()
-    
-    
-    
-    
-   # Keep old imports working
-init_db = init_database 
+
+
+
+# Keep old imports working
+init_db = init_database
