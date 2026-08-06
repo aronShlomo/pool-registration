@@ -1,58 +1,71 @@
-// ================================
-// Page Load
-// ================================
+// =====================================
+// PAGE LOAD
+// =====================================
 
 window.addEventListener("load", function () {
   if (typeof initializeCalendar === "function") {
     initializeCalendar();
   }
+
+  if (typeof loadBookedSlots === "function") {
+    loadBookedSlots();
+  }
 });
-// ================================
-// Stripe Booking
-// ================================
 
-const bookButton = document.getElementById("pay_button");
+// =====================================
+// STRIPE BOOKING
+// =====================================
 
-if (bookButton) {
-  bookButton.addEventListener("click", async function () {
-    bookButton.disabled = true;
-    bookButton.innerText = "Processing...";
+const payButton = document.getElementById("pay_button");
 
-    const bookingData = {
-      name: document.querySelector('input[name="student_name"]').value,
+if (payButton) {
+  payButton.addEventListener("click", async function () {
+    payButton.disabled = true;
 
-      email: document.querySelector('input[name="email"]').value,
-
-      phone: document.querySelector('input[name="phone"]').value,
-
-      lesson_type: document.querySelector('select[name="lesson_type"]').value,
-
-      package: document.querySelector('select[name="number_lessons"]').value,
-
-      date: document.getElementById("lesson_date").value,
-
-      time: document.getElementById("lesson_time").value,
-    };
-
-    console.log("BOOKING DATA:", bookingData);
-
-    if (
-      !bookingData.name ||
-      !bookingData.email ||
-      !bookingData.lesson_type ||
-      !bookingData.package ||
-      !bookingData.date ||
-      !bookingData.time
-    ) {
-      alert("Please complete all required booking information.");
-
-      bookButton.disabled = false;
-      bookButton.innerText = "Pay & Reserve Swimming Lesson";
-
-      return;
-    }
+    payButton.innerText = "Processing...";
 
     try {
+      const bookingData = {
+        name: document.querySelector('input[name="student_name"]').value,
+
+        email: document.querySelector('input[name="email"]').value,
+
+        phone: document.querySelector('input[name="phone"]').value,
+
+        lesson_type: document.querySelector('select[name="lesson_type"]').value,
+
+        package: document.querySelector('select[name="package"]').value,
+
+        date: document.getElementById("lesson_date").value,
+
+        time: document.getElementById("lesson_time").value,
+
+        medical: document.querySelector('textarea[name="medical"]').value,
+
+        notes: document.querySelector('textarea[name="notes"]').value,
+      };
+
+      console.log("BOOKING DATA:", bookingData);
+
+      if (
+        !bookingData.name ||
+        !bookingData.email ||
+        !bookingData.lesson_type ||
+        !bookingData.package ||
+        !bookingData.date ||
+        !bookingData.time
+      ) {
+        alert("Please complete all required booking information.");
+
+        resetButton();
+
+        return;
+      }
+
+      // =============================
+      // CREATE BOOKING
+      // =============================
+
       const bookingResponse = await fetch("/create-booking", {
         method: "POST",
 
@@ -65,17 +78,19 @@ if (bookButton) {
 
       const bookingResult = await bookingResponse.json();
 
-      console.log("BOOKING RESULT:", bookingResult);
+      console.log("BOOKING RESPONSE:", bookingResult);
 
       if (!bookingResponse.ok || !bookingResult.success) {
-        alert(bookingResult.error || "Unable to create booking.");
+        alert(bookingResult.error || "Booking failed");
 
-        bookButton.disabled = false;
-
-        bookButton.innerText = "Pay & Reserve Swimming Lesson";
+        resetButton();
 
         return;
       }
+
+      // =============================
+      // STRIPE CHECKOUT
+      // =============================
 
       const paymentResponse = await fetch("/create-checkout-session", {
         method: "POST",
@@ -91,25 +106,33 @@ if (bookButton) {
 
       const paymentResult = await paymentResponse.json();
 
-      console.log("STRIPE RESULT:", paymentResult);
+      console.log("STRIPE RESPONSE:", paymentResult);
 
       if (paymentResponse.ok && paymentResult.checkout_url) {
         window.location.href = paymentResult.checkout_url;
       } else {
-        alert("Stripe Error:\n" + JSON.stringify(paymentResult));
+        alert("Stripe Error: " + JSON.stringify(paymentResult));
 
-        bookButton.disabled = false;
-
-        bookButton.innerText = "Pay & Reserve Swimming Lesson";
+        resetButton();
       }
     } catch (error) {
-      console.error("PAYMENT ERROR:", error);
+      console.error("ERROR:", error);
 
-      alert("Something went wrong.");
+      alert("Something went wrong. Please try again.");
 
-      bookButton.disabled = false;
-
-      bookButton.innerText = "Pay & Reserve Swimming Lesson";
+      resetButton();
     }
   });
+}
+
+// =====================================
+// RESET BUTTON
+// =====================================
+
+function resetButton() {
+  if (payButton) {
+    payButton.disabled = false;
+
+    payButton.innerText = "Pay & Reserve Swimming Lesson";
+  }
 }
