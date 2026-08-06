@@ -18,6 +18,11 @@ def admin_login():
         username = request.form.get("username")
 
         password = request.form.get("password")
+        
+        print("Entered username:", repr(username))
+        print("Entered password:", repr(password))
+        print("Expected username:", repr(Config.ADMIN_USERNAME))
+        print("Expected password:", repr(Config.ADMIN_PASSWORD))
 
 
         if (

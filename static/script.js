@@ -3,15 +3,19 @@
 // ================================
 
 window.addEventListener("load", async function () {
-  await loadBookedSlots();
-  initializeCalendar();
-});
+  if (typeof loadBookedSlots === "function") {
+    await loadBookedSlots();
+  }
 
+  if (typeof initializeCalendar === "function") {
+    initializeCalendar();
+  }
+});
 // ================================
 // Stripe Booking
 // ================================
 
-const bookButton = document.getElementById("bookLessonBtn");
+const bookButton = document.getElementById("pay_button");
 
 if (bookButton) {
   bookButton.addEventListener("click", async function () {
@@ -19,23 +23,22 @@ if (bookButton) {
     bookButton.innerText = "Processing...";
 
     const bookingData = {
-      name:
-        document.querySelector('input[name="first_name"]').value +
-        " " +
-        document.querySelector('input[name="last_name"]').value,
+      name: document.querySelector('input[name="student_name"]').value,
 
       email: document.querySelector('input[name="email"]').value,
 
-      phone: document.querySelector('input[name="phone_number"]').value,
+      phone: document.querySelector('input[name="phone"]').value,
 
-      lesson_type: document.getElementById("lesson_type").value,
+      lesson_type: document.querySelector('select[name="lesson_type"]').value,
 
-      package: document.getElementById("package").value,
+      package: document.querySelector('select[name="number_lessons"]').value,
 
       date: document.getElementById("lesson_date").value,
 
       time: document.getElementById("lesson_time").value,
     };
+
+    console.log("BOOKING DATA:", bookingData);
 
     if (
       !bookingData.name ||
@@ -48,13 +51,12 @@ if (bookButton) {
       alert("Please complete all required booking information.");
 
       bookButton.disabled = false;
-      bookButton.innerText = "Pay & Book Lesson";
+      bookButton.innerText = "Pay & Reserve Swimming Lesson";
 
       return;
     }
 
     try {
-      // Create booking
       const bookingResponse = await fetch("/create-booking", {
         method: "POST",
 
@@ -66,17 +68,19 @@ if (bookButton) {
       });
 
       const bookingResult = await bookingResponse.json();
+
       console.log("BOOKING RESULT:", bookingResult);
+
       if (!bookingResponse.ok || !bookingResult.success) {
         alert(bookingResult.error || "Unable to create booking.");
 
         bookButton.disabled = false;
-        bookButton.innerText = "Pay & Book Lesson";
+
+        bookButton.innerText = "Pay & Reserve Swimming Lesson";
 
         return;
       }
 
-      // Create Stripe Checkout
       const paymentResponse = await fetch("/create-checkout-session", {
         method: "POST",
 
@@ -91,27 +95,25 @@ if (bookButton) {
 
       const paymentResult = await paymentResponse.json();
 
-      if (paymentResponse.ok && paymentResult.checkout_url) {
-        console.log("Stripe URL:", paymentResult.checkout_url);
+      console.log("STRIPE RESULT:", paymentResult);
 
+      if (paymentResponse.ok && paymentResult.checkout_url) {
         window.location.href = paymentResult.checkout_url;
       } else {
-        console.log("Stripe response status:", paymentResponse.status);
-
-        console.log("Stripe response data:", paymentResult);
-
         alert("Stripe Error:\n" + JSON.stringify(paymentResult));
 
         bookButton.disabled = false;
-        bookButton.innerText = "Pay & Book Lesson";
+
+        bookButton.innerText = "Pay & Reserve Swimming Lesson";
       }
     } catch (error) {
-      console.error(error);
+      console.error("PAYMENT ERROR:", error);
 
-      alert("An unexpected error occurred.");
+      alert("Something went wrong.");
 
       bookButton.disabled = false;
-      bookButton.innerText = "Pay & Book Lesson";
+
+      bookButton.innerText = "Pay & Reserve Swimming Lesson";
     }
   });
 }
