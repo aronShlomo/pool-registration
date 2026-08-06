@@ -35,15 +35,17 @@ def check_availability():
 
     cursor.execute(
         """
-        SELECT id 
+        SELECT *
         FROM bookings
         WHERE lesson_date = ?
         AND lesson_time = ?
-        AND status != 'cancelled'
+        AND payment_status = 'paid'
         """,
-        (date, time)
+        (
+            data["date"],
+            data["time"]
+        )
     )
-
 
     booking = cursor.fetchone()
 

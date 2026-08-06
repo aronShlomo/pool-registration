@@ -159,5 +159,5 @@ def payment_cancel():
 
     return """
     <h1>Payment Cancelled</h1>
-    <p>Your booking was not completed.</p>
+    <p>Your payment was cancelled. You can choose another time or try again.</p>
     """
