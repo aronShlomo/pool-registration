@@ -1,8 +1,11 @@
+```html
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Millrod Swim Academy - Admin Dashboard</title>
 
     <link
@@ -18,57 +21,49 @@
 
   <body>
     <div class="dashboard">
-      <!-- ========================= -->
-      <!-- Sidebar -->
-      <!-- ========================= -->
+      <!-- ================= SIDEBAR ================= -->
 
       <aside class="sidebar">
         <div class="logo">
           <i class="fas fa-water"></i>
+
           <h2>Millrod Swim</h2>
         </div>
 
         <nav>
           <a href="#" class="active">
             <i class="fas fa-chart-line"></i>
+
             Dashboard
           </a>
 
-          <a href="#">
+          <a href="#bookings">
             <i class="fas fa-calendar-check"></i>
+
             Bookings
           </a>
 
-          <a href="#">
+          <a href="#students">
             <i class="fas fa-users"></i>
+
             Students
           </a>
 
-          <a href="#">
+          <a href="#payments">
             <i class="fas fa-credit-card"></i>
+
             Payments
           </a>
 
-          <a href="#">
-            <i class="fas fa-envelope"></i>
-            Emails
-          </a>
+          <a href="/admin/logout">
+            <i class="fas fa-sign-out-alt"></i>
 
-          <a href="#">
-            <i class="fas fa-chart-bar"></i>
-            Reports
-          </a>
-
-          <a href="#">
-            <i class="fas fa-cog"></i>
-            Settings
+            Logout
           </a>
         </nav>
       </aside>
 
-      <!-- ========================= -->
-      <!-- Main Content -->
-      <!-- ========================= -->
+      <!-- ================= MAIN ================= -->
 
       <main class="content">
         <header class="topbar">
@@ -81,13 +76,11 @@
           <div class="admin-user">
             <i class="fas fa-user-circle"></i>
 
-            <span>Administrator</span>
+            <span> Administrator </span>
           </div>
         </header>
 
-        <!-- ========================= -->
-        <!-- Statistics -->
-        <!-- ========================= -->
+        <!-- ================= STATISTICS ================= -->
 
         <section class="stats">
           <div class="card">
@@ -99,7 +92,7 @@
           </div>
 
           <div class="card">
-            <i class="fas fa-credit-card"></i>
+            <i class="fas fa-hourglass-half"></i>
 
             <h3>{{ pending_payments }}</h3>
 
@@ -119,23 +112,23 @@
 
             <h3>${{ revenue }}</h3>
 
-            <p>Total Revenue</p>
+            <p>Revenue</p>
           </div>
         </section>
 
-        <!-- ========================= -->
-        <!-- Search -->
-        <!-- ========================= -->
+        <!-- ================= SEARCH ================= -->
 
         <section class="search-bar">
-          <input type="text" id="searchInput" placeholder="Search student..." />
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Search student name or email..."
+          />
         </section>
 
-        <!-- ========================= -->
-        <!-- Bookings Table -->
-        <!-- ========================= -->
+        <!-- ================= BOOKINGS ================= -->
 
-        <section class="table-container">
+        <section class="table-container" id="bookings">
           <table id="bookingTable">
             <thead>
               <tr>
@@ -144,6 +137,8 @@
                 <th>Student</th>
 
                 <th>Email</th>
+
+                <th>Phone</th>
 
                 <th>Date</th>
 
@@ -170,6 +165,8 @@
                 <td>{{ booking.name }}</td>
 
                 <td>{{ booking.email }}</td>
+
+                <td>{{ booking.phone }}</td>
 
                 <td>{{ booking.lesson_date }}</td>
 
@@ -219,10 +216,6 @@
                   <button class="cancel-btn" data-id="{{ booking.id }}">
                     Cancel
                   </button>
-
-                  <button class="delete-btn" data-id="{{ booking.id }}">
-                    Delete
-                  </button>
                 </td>
               </tr>
 
@@ -236,3 +229,4 @@
     <script src="{{ url_for('static', filename='admin.js') }}"></script>
   </body>
 </html>
+```

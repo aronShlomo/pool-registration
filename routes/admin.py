@@ -1,28 +1,66 @@
-from flask import Blueprint, render_template, jsonify, request, session, redirect, url_for
+from flask import (
+    Blueprint,
+    render_template,
+    jsonify,
+    request,
+    session,
+    redirect,
+    url_for
+)
+
 from database import get_db_connection
 from config import Config
+
 from datetime import datetime
 
-admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
+
+admin_bp = Blueprint(
+    "admin",
+    __name__,
+    url_prefix="/admin"
+)
+
+
 
 
 # =====================================
-# Admin Login
+# CHECK LOGIN
 # =====================================
 
-@admin_bp.route("/login", methods=["GET", "POST"])
+def admin_required():
+
+    return session.get(
+        "admin_logged_in",
+        False
+    )
+
+
+
+
+
+# =====================================
+# LOGIN
+# =====================================
+
+@admin_bp.route(
+    "/login",
+    methods=["GET","POST"]
+)
 def admin_login():
+
 
     if request.method == "POST":
 
-        username = request.form.get("username")
 
-        password = request.form.get("password")
-        
-        print("Entered username:", repr(username))
-        print("Entered password:", repr(password))
-        print("Expected username:", repr(Config.ADMIN_USERNAME))
-        print("Expected password:", repr(Config.ADMIN_PASSWORD))
+        username = request.form.get(
+            "username"
+        )
+
+
+        password = request.form.get(
+            "password"
+        )
+
 
 
         if (
@@ -30,11 +68,16 @@ def admin_login():
             and password == Config.ADMIN_PASSWORD
         ):
 
+
             session["admin_logged_in"] = True
 
+
             return redirect(
-                url_for("admin.admin_dashboard")
+                url_for(
+                    "admin.admin_dashboard"
+                )
             )
+
 
 
         return render_template(
@@ -43,15 +86,22 @@ def admin_login():
         )
 
 
-    return render_template("login.html")
+
+    return render_template(
+        "login.html"
+    )
+
+
+
 
 
 # =====================================
-# Admin Logout
+# LOGOUT
 # =====================================
 
 @admin_bp.route("/logout")
 def admin_logout():
+
 
     session.pop(
         "admin_logged_in",
@@ -60,97 +110,114 @@ def admin_logout():
 
 
     return redirect(
-        url_for("admin.admin_login")
+        url_for(
+            "admin.admin_login"
+        )
     )
 
 
+
+
+
 # =====================================
-# Admin Dashboard
+# DASHBOARD
 # =====================================
 
 @admin_bp.route("/")
 def admin_dashboard():
 
-    if not session.get("admin_logged_in"):
+
+    if not admin_required():
 
         return redirect(
-            url_for("admin.admin_login")
+            url_for(
+                "admin.admin_login"
+            )
         )
 
+
+
     conn = get_db_connection()
+
     cursor = conn.cursor()
 
 
-    # All bookings
 
-    cursor.execute("""
+    cursor.execute(
+        """
         SELECT *
         FROM bookings
         ORDER BY lesson_date, lesson_time
-    """)
+        """
+    )
+
 
     bookings = cursor.fetchall()
 
 
 
-    # Today's lessons
+    today = datetime.now().strftime(
+        "%Y-%m-%d"
+    )
 
-    today = datetime.now().strftime("%Y-%m-%d")
 
 
-    cursor.execute("""
+    cursor.execute(
+        """
         SELECT COUNT(*)
         FROM bookings
-        WHERE lesson_date = ?
-        AND status = 'confirmed'
-    """, (today,))
+        WHERE lesson_date=?
+        AND status='confirmed'
+        """,
+        (today,)
+    )
 
 
     today_lessons = cursor.fetchone()[0]
 
 
 
-    # Pending payments
 
-    cursor.execute("""
+    cursor.execute(
+        """
         SELECT COUNT(*)
         FROM bookings
-        WHERE payment_status = 'pending'
-    """)
+        WHERE payment_status='pending'
+        """
+    )
 
 
     pending_payments = cursor.fetchone()[0]
 
 
 
-    # Confirmed lessons
 
-    cursor.execute("""
+    cursor.execute(
+        """
         SELECT COUNT(*)
         FROM bookings
-        WHERE status = 'confirmed'
-    """)
+        WHERE status='confirmed'
+        """
+    )
 
 
     confirmed_lessons = cursor.fetchone()[0]
 
 
 
-    # Revenue
 
-    cursor.execute("""
-        SELECT SUM(
-            CASE
-                WHEN payment_status = 'paid'
-                THEN 1
-                ELSE 0
-            END
-        )
+    # Count paid bookings
+
+    cursor.execute(
+        """
+        SELECT COUNT(*)
         FROM bookings
-    """)
+        WHERE payment_status='paid'
+        """
+    )
 
 
-    revenue = cursor.fetchone()[0] or 0
+    revenue = cursor.fetchone()[0]
 
 
 
@@ -170,37 +237,46 @@ def admin_dashboard():
         confirmed_lessons=confirmed_lessons,
 
         revenue=revenue
-
     )
 
 
 
 
 
+
 # =====================================
-# View Booking Details
+# GET BOOKING
 # =====================================
 
-@admin_bp.route("/booking/<int:id>")
+@admin_bp.route(
+    "/booking/<int:id>"
+)
 def get_booking(id):
-    if not session.get("admin_logged_in"):
+
+
+    if not admin_required():
 
         return jsonify({
-            "error": "Unauthorized"
-        }), 401
+            "error":"Unauthorized"
+        }),401
+
+
+
     conn = get_db_connection()
 
     cursor = conn.cursor()
+
 
 
     cursor.execute(
         """
         SELECT *
         FROM bookings
-        WHERE id = ?
+        WHERE id=?
         """,
         (id,)
     )
+
 
 
     booking = cursor.fetchone()
@@ -213,35 +289,45 @@ def get_booking(id):
     if not booking:
 
         return jsonify({
-
             "error":"Booking not found"
-
         }),404
 
 
 
-    return jsonify(dict(booking))
+    return jsonify(
+        dict(booking)
+    )
+
 
 
 
 
 
 # =====================================
-# Update Status
+# UPDATE STATUS
 # =====================================
 
-@admin_bp.route("/update-status/<int:id>", methods=["POST"])
+@admin_bp.route(
+    "/update-status/<int:id>",
+    methods=["POST"]
+)
 def update_status(id):
-    if not session.get("admin_logged_in"):
+
+
+    if not admin_required():
 
         return jsonify({
-            "error": "Unauthorized"
-        }), 401
+            "error":"Unauthorized"
+        }),401
+
+
 
     data = request.json
 
 
-    status = data.get("status")
+    status = data.get(
+        "status"
+    )
 
 
 
@@ -252,9 +338,7 @@ def update_status(id):
     ]:
 
         return jsonify({
-
             "error":"Invalid status"
-
         }),400
 
 
@@ -269,9 +353,9 @@ def update_status(id):
         """
         UPDATE bookings
 
-        SET status = ?
+        SET status=?
 
-        WHERE id = ?
+        WHERE id=?
 
         """,
         (
@@ -288,9 +372,7 @@ def update_status(id):
 
 
     return jsonify({
-
         "success":True
-
     })
 
 
@@ -298,16 +380,23 @@ def update_status(id):
 
 
 # =====================================
-# Delete Booking
+# CANCEL BOOKING
 # =====================================
 
-@admin_bp.route("/delete/<int:id>", methods=["DELETE"])
+@admin_bp.route(
+    "/delete/<int:id>",
+    methods=["DELETE"]
+)
 def delete_booking(id):
-    if not session.get("admin_logged_in"):
+
+
+    if not admin_required():
 
         return jsonify({
-            "error": "Unauthorized"
-        }), 401
+            "error":"Unauthorized"
+        }),401
+
+
 
     conn = get_db_connection()
 
@@ -317,8 +406,12 @@ def delete_booking(id):
 
     cursor.execute(
         """
-        DELETE FROM bookings
-        WHERE id = ?
+        UPDATE bookings
+
+        SET status='cancelled'
+
+        WHERE id=?
+
         """,
         (id,)
     )
@@ -332,7 +425,5 @@ def delete_booking(id):
 
 
     return jsonify({
-
         "success":True
-
     })

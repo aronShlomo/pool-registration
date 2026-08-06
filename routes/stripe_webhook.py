@@ -10,10 +10,6 @@ from email_service import (
 )
 
 
-# =====================================
-# Stripe Webhook Blueprint
-# =====================================
-
 webhook_bp = Blueprint(
     "webhook",
     __name__
@@ -23,10 +19,6 @@ webhook_bp = Blueprint(
 stripe.api_key = Config.STRIPE_SECRET_KEY
 
 
-
-# =====================================
-# Stripe Webhook Route
-# =====================================
 
 @webhook_bp.route(
     "/stripe-webhook",
@@ -57,21 +49,24 @@ def stripe_webhook():
     except ValueError:
 
         return jsonify({
-            "error": "Invalid payload"
-        }), 400
+            "error":"Invalid payload"
+        }),400
 
 
     except stripe.error.SignatureVerificationError:
 
         return jsonify({
-            "error": "Invalid signature"
-        }), 400
+            "error":"Invalid signature"
+        }),400
 
 
 
-    # =================================
-    # PAYMENT SUCCESS
-    # =================================
+    print(
+        "STRIPE EVENT:",
+        event["type"]
+    )
+
+
 
     if event["type"] == "checkout.session.completed":
 
@@ -79,7 +74,10 @@ def stripe_webhook():
         session = event["data"]["object"]
 
 
-        booking_id = session["metadata"].get(
+        booking_id = session.get(
+            "metadata",
+            {}
+        ).get(
             "booking_id"
         )
 
@@ -87,8 +85,8 @@ def stripe_webhook():
         if not booking_id:
 
             return jsonify({
-                "error": "Missing booking id"
-            }), 400
+                "error":"Booking ID missing"
+            }),400
 
 
 
@@ -98,46 +96,13 @@ def stripe_webhook():
 
 
 
-        # Update booking payment status
-
-        cursor.execute(
-            """
-            UPDATE bookings
-
-            SET
-
-                payment_status = 'paid',
-
-                status = 'confirmed',
-
-                stripe_payment_id = ?
-
-            WHERE id = ?
-
-            """,
-            (
-                session.get("payment_intent"),
-
-                booking_id
-            )
-        )
-
-
-
-        conn.commit()
-
-
-
-        # Get booking details
+        # Find booking first
 
         cursor.execute(
             """
             SELECT *
-
             FROM bookings
-
-            WHERE id = ?
-
+            WHERE id=?
             """,
             (
                 booking_id,
@@ -148,18 +113,87 @@ def stripe_webhook():
         booking = cursor.fetchone()
 
 
+
+        if not booking:
+
+            conn.close()
+
+            return jsonify({
+                "error":"Booking not found"
+            }),404
+
+
+
+        # Prevent duplicate confirmations
+
+        if booking["status"] == "confirmed":
+
+            conn.close()
+
+            return jsonify({
+                "received":True
+            })
+
+
+
+        # Confirm booking
+
+        cursor.execute(
+            """
+            UPDATE bookings
+
+            SET
+
+            payment_status='paid',
+
+            status='confirmed',
+
+            stripe_payment_id=?
+
+            WHERE id=?
+
+            """,
+
+            (
+
+                session.get(
+                    "payment_intent",
+                    session.get("id")
+                ),
+
+                booking_id
+
+            )
+        )
+
+
+
+        conn.commit()
+
+
+
+        cursor.execute(
+            """
+            SELECT *
+            FROM bookings
+            WHERE id=?
+            """,
+
+            (
+                booking_id,
+            )
+
+        )
+
+
+        booking = cursor.fetchone()
+
+
         conn.close()
 
 
 
-        # =================================
-        # SEND EMAILS
-        # =================================
-
-        if booking:
-
-
-            # Customer confirmation
+        try:
 
             send_booking_confirmation(
 
@@ -179,24 +213,28 @@ def stripe_webhook():
 
 
 
-            # Admin notification
-
             send_admin_notification(
+                booking
+            )
 
-                booking["name"],
 
-                booking["lesson_type"],
+            print(
+                "EMAILS SENT"
+            )
 
-                booking["lesson_date"],
 
-                booking["lesson_time"]
+        except Exception as e:
 
+            print(
+                "EMAIL ERROR:",
+                repr(e)
             )
 
 
 
     return jsonify({
 
-        "received": True
+        "received":True
 
     })
+

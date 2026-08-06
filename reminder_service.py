@@ -6,76 +6,110 @@ from email_service import send_reminder_email
 
 
 
+# =====================================
+# SEND LESSON REMINDERS
+# =====================================
+
 def send_lesson_reminders():
 
-
-    tomorrow = (
-        datetime.now()
-        + timedelta(days=1)
-    ).strftime("%Y-%m-%d")
+    try:
 
 
-
-    conn = get_db_connection()
-
-    cursor = conn.cursor()
+        tomorrow = (
+            datetime.now()
+            + timedelta(days=1)
+        ).strftime("%Y-%m-%d")
 
 
 
-    cursor.execute(
-        """
-        SELECT *
-        FROM bookings
+        conn = get_db_connection()
 
-        WHERE lesson_date = ?
-
-        AND status = 'confirmed'
-
-        AND reminder_sent = 0
-
-        """,
-        (tomorrow,)
-    )
-
-
-
-    bookings = cursor.fetchall()
-
-
-
-    for booking in bookings:
-
-
-        send_reminder_email(
-
-            booking["email"],
-
-            booking["name"],
-
-            booking["lesson_type"],
-
-            booking["lesson_date"],
-
-            booking["lesson_time"]
-
-        )
+        cursor = conn.cursor()
 
 
 
         cursor.execute(
             """
-            UPDATE bookings
+            SELECT *
 
-            SET reminder_sent = 1
+            FROM bookings
 
-            WHERE id = ?
+            WHERE lesson_date = ?
+
+            AND status = 'confirmed'
+
+            AND reminder_sent = 0
 
             """,
-            (booking["id"],)
+
+            (
+                tomorrow,
+            )
         )
 
 
 
-    conn.commit()
+        bookings = cursor.fetchall()
 
-    conn.close()
+
+
+        for booking in bookings:
+
+
+
+            success = send_reminder_email(
+
+                booking["email"],
+
+                booking["name"],
+
+                booking["lesson_type"],
+
+                booking["lesson_date"],
+
+                booking["lesson_time"]
+
+            )
+
+
+
+            if success:
+
+
+                cursor.execute(
+                    """
+                    UPDATE bookings
+
+                    SET reminder_sent = 1
+
+                    WHERE id = ?
+
+                    """,
+
+                    (
+                        booking["id"],
+                    )
+
+                )
+
+
+
+        conn.commit()
+
+        conn.close()
+
+
+
+        print(
+            "REMINDER CHECK COMPLETED"
+        )
+
+
+
+    except Exception as e:
+
+
+        print(
+            "REMINDER SERVICE ERROR:",
+            repr(e)
+        )

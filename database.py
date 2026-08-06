@@ -1,10 +1,17 @@
 import sqlite3
 
 from config import Config
+from datetime import datetime, timedelta
+
 
 
 DATABASE = Config.DATABASE
 
+
+
+# ==========================
+# DATABASE CONNECTION
+# ==========================
 
 def get_db_connection():
 
@@ -15,6 +22,40 @@ def get_db_connection():
     return conn
 
 
+def remove_expired_pending_bookings():
+
+    conn = get_db_connection()
+
+    cursor = conn.cursor()
+
+
+    expired_time = (
+        datetime.now()
+        - timedelta(minutes=30)
+    )
+
+
+    cursor.execute(
+        """
+        DELETE FROM bookings
+        WHERE status = 'pending'
+        AND payment_status = 'pending'
+        AND created_at < ?
+        """,
+        (
+            expired_time,
+        )
+    )
+
+
+    conn.commit()
+
+    conn.close()
+
+
+# ==========================
+# INITIALIZE DATABASE
+# ==========================
 
 def init_database():
 
@@ -23,40 +64,50 @@ def init_database():
     cursor = conn.cursor()
 
 
-    # Create bookings table if it does not exist
-
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS bookings (
 
         id INTEGER PRIMARY KEY AUTOINCREMENT,
 
         -- Customer information
+
         name TEXT NOT NULL,
 
         email TEXT NOT NULL,
 
         phone TEXT,
 
+
         -- Lesson information
+
         lesson_type TEXT NOT NULL,
 
         package TEXT NOT NULL,
 
+
         -- Schedule
+
         lesson_date TEXT NOT NULL,
 
         lesson_time TEXT NOT NULL,
 
+
         -- Payment
+
         payment_status TEXT DEFAULT 'pending',
 
         stripe_payment_id TEXT,
 
+
         -- Booking status
+
         status TEXT DEFAULT 'pending',
 
+
         -- Reminder system
+
         reminder_sent INTEGER DEFAULT 0,
+
 
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
@@ -64,50 +115,38 @@ def init_database():
     """)
 
 
-    # ================================
-    # Database migrations
-    # Add missing columns for old databases
-    # ================================
 
-    migrations = [
+    # ==========================
+    # DATABASE MIGRATIONS
+    # ==========================
 
-        (
-            "payment_status",
-            "TEXT DEFAULT 'pending'"
-        ),
+    migrations = {
 
-        (
-            "stripe_payment_id",
-            "TEXT"
-        ),
+        "payment_status": "TEXT DEFAULT 'pending'",
 
-        (
-            "status",
-            "TEXT DEFAULT 'pending'"
-        ),
+        "stripe_payment_id": "TEXT",
 
-        (
-            "reminder_sent",
-            "INTEGER DEFAULT 0"
-        )
+        "status": "TEXT DEFAULT 'pending'",
 
-    ]
+        "reminder_sent": "INTEGER DEFAULT 0"
+
+    }
 
 
-    for column_name, column_type in migrations:
+
+    for column, definition in migrations.items():
 
         try:
 
             cursor.execute(
                 f"""
                 ALTER TABLE bookings
-                ADD COLUMN {column_name} {column_type}
+                ADD COLUMN {column} {definition}
                 """
             )
 
         except sqlite3.OperationalError:
 
-            # Column already exists
             pass
 
 
@@ -118,11 +157,11 @@ def init_database():
 
 
 
-def create_booking_table():
+# ==========================
+# COMPATIBILITY
+# ==========================
+
+def init_db():
 
     init_database()
 
-
-
-# Keep old imports working
-init_db = init_database

@@ -1,121 +1,119 @@
 document.addEventListener("DOMContentLoaded", function () {
   // =====================================
-  // Search Bookings
+  // SEARCH BOOKINGS
   // =====================================
 
   const searchInput = document.getElementById("searchInput");
 
   if (searchInput) {
     searchInput.addEventListener("keyup", function () {
-      const searchValue = searchInput.value.toLowerCase();
+      const value = searchInput.value.toLowerCase();
 
-      const rows = document.querySelectorAll("#bookingTable tbody tr");
+      document
+        .querySelectorAll("#bookingTable tbody tr")
+        .forEach(function (row) {
+          const text = row.textContent.toLowerCase();
 
-      rows.forEach(function (row) {
-        const text = row.textContent.toLowerCase();
-
-        if (text.includes(searchValue)) {
-          row.style.display = "";
-        } else {
-          row.style.display = "none";
-        }
-      });
+          if (text.includes(value)) {
+            row.style.display = "";
+          } else {
+            row.style.display = "none";
+          }
+        });
     });
   }
 
   // =====================================
-  // View Booking
+  // VIEW BOOKING
   // =====================================
 
   document.querySelectorAll(".view-btn").forEach((button) => {
     button.addEventListener("click", async function () {
-      const bookingId = this.dataset.id;
+      const id = this.dataset.id;
 
       try {
-        const response = await fetch(`/admin/booking/${bookingId}`);
+        const response = await fetch(`/admin/booking/${id}`);
 
-        const data = await response.json();
+        const booking = await response.json();
 
         alert(
-          `Student: ${data.name}
+          `
+Student:
+${booking.name}
 
-Email: ${data.email}
 
-Phone: ${data.phone}
+Email:
+${booking.email}
 
-Lesson: ${data.lesson_type}
 
-Package: ${data.package}
+Phone:
+${booking.phone}
 
-Date: ${data.lesson_date}
 
-Time: ${data.lesson_time}
+Lesson:
+${booking.lesson_type}
 
-Payment: ${data.payment_status}
 
-Status: ${data.status}`,
+Package:
+${booking.package}
+
+
+Date:
+${booking.lesson_date}
+
+
+Time:
+${booking.lesson_time}
+
+
+Payment:
+${booking.payment_status}
+
+
+Status:
+${booking.status}
+
+`,
         );
       } catch (error) {
         console.error(error);
 
-        alert("Unable to load booking details");
+        alert("Unable to load booking");
       }
     });
   });
 
   // =====================================
-  // Confirm Booking
+  // CONFIRM BOOKING
   // =====================================
 
   document.querySelectorAll(".confirm-btn").forEach((button) => {
-    button.addEventListener("click", async function () {
-      updateBookingStatus(this.dataset.id, "confirmed");
+    button.addEventListener("click", function () {
+      const id = this.dataset.id;
+
+      if (confirm("Confirm this booking?")) {
+        updateBookingStatus(id, "confirmed");
+      }
     });
   });
 
   // =====================================
-  // Cancel Booking
+  // CANCEL BOOKING
   // =====================================
 
   document.querySelectorAll(".cancel-btn").forEach((button) => {
-    button.addEventListener("click", async function () {
-      updateBookingStatus(this.dataset.id, "cancelled");
-    });
-  });
-
-  // =====================================
-  // Delete Booking
-  // =====================================
-
-  document.querySelectorAll(".delete-btn").forEach((button) => {
-    button.addEventListener("click", async function () {
+    button.addEventListener("click", function () {
       const id = this.dataset.id;
 
-      if (!confirm("Delete this booking?")) {
-        return;
-      }
-
-      try {
-        const response = await fetch(`/admin/delete/${id}`, {
-          method: "DELETE",
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-          location.reload();
-        }
-      } catch (error) {
-        console.error(error);
-
-        alert("Delete failed");
+      if (confirm("Cancel this booking?")) {
+        updateBookingStatus(id, "cancelled");
       }
     });
   });
 });
 
 // =====================================
-// Update Booking Status
+// UPDATE STATUS
 // =====================================
 
 async function updateBookingStatus(id, status) {
