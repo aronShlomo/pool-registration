@@ -141,7 +141,7 @@ def send_admin_notification(
 ):
 
 
-    resend.Emails.send({
+     resend.Emails.send({
 
         "from":
         "Millrod Swim Academy <info@millrodswim.com>",
