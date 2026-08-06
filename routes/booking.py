@@ -1,9 +1,15 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, render_template
 from datetime import datetime
 
 from database import get_db_connection
 
 booking_bp = Blueprint("booking", __name__)
+
+
+@booking_bp.route("/booking")
+def booking_page():
+
+    return render_template("booking.html")
 
 
 @booking_bp.route("/check-availability", methods=["POST"])
