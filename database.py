@@ -17,7 +17,7 @@ def get_db_connection():
 
 
 
-def init_db():
+def init_database():
 
     conn = get_db_connection()
 
@@ -93,4 +93,4 @@ def init_db():
 
 def create_booking_table():
 
-    init_db()
+    init_database()
