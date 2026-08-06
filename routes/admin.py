@@ -42,57 +42,31 @@ def admin_required():
 # LOGIN
 # =====================================
 
-@admin_bp.route(
-    "/login",
-    methods=["GET","POST"]
-)
+@admin_bp.route("/login", methods=["GET", "POST"])
 def admin_login():
 
+    # Already logged in? Go straight to dashboard.
+    if session.get("admin_logged_in"):
+        return redirect(url_for("admin.admin_dashboard"))
 
     if request.method == "POST":
 
-
-        username = request.form.get(
-            "username"
-        )
-
-
-        password = request.form.get(
-            "password"
-        )
-
-
+        username = request.form.get("username")
+        password = request.form.get("password")
 
         if (
             username == Config.ADMIN_USERNAME
             and password == Config.ADMIN_PASSWORD
         ):
-
-
             session["admin_logged_in"] = True
-
-
-            return redirect(
-                url_for(
-                    "admin.admin_dashboard"
-                )
-            )
-
-
+            return redirect(url_for("admin.admin_dashboard"))
 
         return render_template(
             "login.html",
             error="Invalid username or password"
         )
 
-
-
-    return render_template(
-        "login.html"
-    )
-
-
-
+    return render_template("login.html")
 
 
 # =====================================
@@ -102,18 +76,9 @@ def admin_login():
 @admin_bp.route("/logout")
 def admin_logout():
 
+    session.pop("admin_logged_in", None)
 
-    session.pop(
-        "admin_logged_in",
-        None
-    )
-
-
-    return redirect(
-        url_for(
-            "admin.admin_login"
-        )
-    )
+    return redirect("/")
 
 
 
