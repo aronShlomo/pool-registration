@@ -10,12 +10,28 @@ from email_service import (
 )
 
 
-stripe_bp = Blueprint("stripe", __name__)
+# =====================================
+# Stripe Webhook Blueprint
+# =====================================
+
+webhook_bp = Blueprint(
+    "webhook",
+    __name__
+)
+
 
 stripe.api_key = Config.STRIPE_SECRET_KEY
 
 
-@stripe_bp.route("/stripe-webhook", methods=["POST"])
+
+# =====================================
+# Stripe Webhook Route
+# =====================================
+
+@webhook_bp.route(
+    "/stripe-webhook",
+    methods=["POST"]
+)
 def stripe_webhook():
 
     payload = request.data
@@ -28,23 +44,33 @@ def stripe_webhook():
     try:
 
         event = stripe.Webhook.construct_event(
+
             payload,
+
             sig_header,
+
             Config.STRIPE_WEBHOOK_SECRET
+
         )
 
 
-    except Exception as e:
+    except ValueError:
 
         return jsonify({
-            "error": str(e)
+            "error": "Invalid payload"
+        }), 400
+
+
+    except stripe.error.SignatureVerificationError:
+
+        return jsonify({
+            "error": "Invalid signature"
         }), 400
 
 
 
     # =================================
-    # PAYMENT COMPLETED
-    # PUT IT HERE
+    # PAYMENT SUCCESS
     # =================================
 
     if event["type"] == "checkout.session.completed":
@@ -53,7 +79,16 @@ def stripe_webhook():
         session = event["data"]["object"]
 
 
-        booking_id = session["metadata"]["booking_id"]
+        booking_id = session["metadata"].get(
+            "booking_id"
+        )
+
+
+        if not booking_id:
+
+            return jsonify({
+                "error": "Missing booking id"
+            }), 400
 
 
 
@@ -63,36 +98,50 @@ def stripe_webhook():
 
 
 
-        # Update payment status
+        # Update booking payment status
 
         cursor.execute(
             """
             UPDATE bookings
 
-            SET 
-            payment_status = 'paid',
-            status = 'confirmed'
+            SET
+
+                payment_status = 'paid',
+
+                status = 'confirmed',
+
+                stripe_payment_id = ?
 
             WHERE id = ?
 
             """,
-            (booking_id,)
+            (
+                session.get("payment_intent"),
+
+                booking_id
+            )
         )
+
 
 
         conn.commit()
 
 
 
-        # Get booking information
+        # Get booking details
 
         cursor.execute(
             """
             SELECT *
+
             FROM bookings
+
             WHERE id = ?
+
             """,
-            (booking_id,)
+            (
+                booking_id,
+            )
         )
 
 
@@ -103,10 +152,14 @@ def stripe_webhook():
 
 
 
-        # Send emails
+        # =================================
+        # SEND EMAILS
+        # =================================
 
         if booking:
 
+
+            # Customer confirmation
 
             send_booking_confirmation(
 
@@ -125,6 +178,9 @@ def stripe_webhook():
             )
 
 
+
+            # Admin notification
+
             send_admin_notification(
 
                 booking["name"],
@@ -140,5 +196,7 @@ def stripe_webhook():
 
 
     return jsonify({
+
         "received": True
+
     })
