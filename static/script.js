@@ -1,222 +1,256 @@
-// =====================================
-// GLOBAL VARIABLES
-// =====================================
+// ==============================
+// LESSON PRICES
+// ==============================
 
-let bookedSlots = [];
+const lessonPrices = {
+  "Private Lesson": {
+    "Single Lesson": "$80",
+    "4 Lessons Package": "$300",
+    "8 Lessons Package": "$560",
+    "Monthly Program": "$650",
+  },
 
-// =====================================
-// PAGE LOAD
-// =====================================
+  "Semi-Private Lesson": {
+    "Single Lesson": "$50",
+    "4 Lessons Package": "$180",
+    "8 Lessons Package": "$340",
+    "Monthly Program": "$400",
+  },
 
-window.addEventListener("load", function () {
-  initializeCalendar();
+  "Group Lesson": {
+    "Single Lesson": "$35",
+    "4 Lessons Package": "$120",
+    "8 Lessons Package": "$220",
+    "Monthly Program": "$260",
+  },
+};
 
-  loadBookedSlots();
-
-  updatePrice();
-});
-
-// =====================================
-// CALENDAR
-// =====================================
-
-function initializeCalendar() {
-  const calendarElement = document.getElementById("calendar");
-
-  if (!calendarElement) return;
-
-  const calendar = new FullCalendar.Calendar(calendarElement, {
-    initialView: "dayGridMonth",
-
-    selectable: true,
-
-    events: "/bookings",
-
-    dateClick: function (info) {
-      document.getElementById("lesson_date").value = info.dateStr;
-
-      alert("Selected date: " + info.dateStr);
-    },
-  });
-
-  calendar.render();
-}
-
-// =====================================
-// LOAD BOOKED TIMES
-// =====================================
-
-async function loadBookedSlots() {
-  try {
-    const response = await fetch("/booked-slots");
-
-    bookedSlots = await response.json();
-  } catch (error) {
-    console.error("Booked slots error:", error);
-  }
-}
-
-// =====================================
+// ==============================
 // PRICE DISPLAY
-// =====================================
+// ==============================
+
+const lessonType = document.getElementById("lesson_type");
+const packageType = document.getElementById("package");
+const priceDisplay = document.getElementById("priceDisplay");
+
+function getSelectedPrice() {
+  const lesson = lessonType.value;
+  const pack = packageType.value;
+
+  if (lessonPrices[lesson] && lessonPrices[lesson][pack]) {
+    return lessonPrices[lesson][pack];
+  }
+
+  return "";
+}
 
 function updatePrice() {
-  const lesson = document.getElementById("lesson_type");
+  const price = getSelectedPrice();
 
-  const packageSelect = document.getElementById("package");
-
-  const priceBox = document.getElementById("priceDisplay");
-
-  if (!lesson || !packageSelect) return;
-
-  const prices = {
-    "Private Lesson": {
-      "Single Lesson": 80,
-
-      "4 Lessons Package": 300,
-
-      "8 Lessons Package": 560,
-
-      "Monthly Program": 1000,
-    },
-
-    "Semi-Private Lesson": {
-      "Single Lesson": 120,
-
-      "4 Lessons Package": 450,
-
-      "8 Lessons Package": 850,
-
-      "Monthly Program": 1500,
-    },
-
-    "Group Lesson": {
-      "Single Lesson": 60,
-
-      "4 Lessons Package": 220,
-
-      "8 Lessons Package": 400,
-
-      "Monthly Program": 700,
-    },
-  };
-
-  const value = prices[lesson.value]?.[packageSelect.value];
-
-  if (value) {
-    priceBox.innerText = "Price: $" + value;
+  if (price) {
+    priceDisplay.textContent = "Price: " + price;
   } else {
-    priceBox.innerText = "Price: Select Lesson";
+    priceDisplay.textContent = "Price: Select Lesson";
   }
 }
 
-document.getElementById("lesson_type")?.addEventListener("change", updatePrice);
+lessonType.addEventListener("change", updatePrice);
 
-document.getElementById("package")?.addEventListener("change", updatePrice);
+packageType.addEventListener("change", updatePrice);
 
-// =====================================
-// PAYMENT BUTTON
-// =====================================
+// ==============================
+// GET FORM DATA
+// ==============================
 
-const payButton = document.getElementById("pay_button");
+function getBookingData() {
+  const form = document.getElementById("bookingForm");
 
-if (payButton) {
-  payButton.addEventListener(
-    "click",
+  return {
+    name: form.name.value.trim(),
 
-    async function () {
-      payButton.disabled = true;
+    age: form.age.value,
 
-      payButton.innerText = "Processing...";
+    phone: form.phone.value.trim(),
 
-      try {
-        const bookingData = {
-          name: document.querySelector('input[name="name"]').value,
+    email: form.email.value.trim(),
 
-          email: document.querySelector('input[name="email"]').value,
+    lesson_type: form.lesson_type.value,
 
-          phone: document.querySelector('input[name="phone"]').value,
+    package: form.package.value,
 
-          lesson_type: document.querySelector('select[name="lesson_type"]')
-            .value,
+    lesson_date: form.date.value,
 
-          package: document.querySelector('select[name="package"]').value,
+    lesson_time: form.time.value,
 
-          date: document.getElementById("lesson_date").value,
+    price: getSelectedPrice(),
 
-          time: document.getElementById("lesson_time").value,
-        };
+    medical: form.medical.value,
 
-        console.log("BOOKING:", bookingData);
+    notes: form.notes.value,
+  };
+}
 
-        const bookingResponse = await fetch("/create-booking", {
-          method: "POST",
+// ==============================
+// MESSAGE
+// ==============================
 
-          headers: {
-            "Content-Type": "application/json",
-          },
+function showMessage(message, success = true) {
+  const box = document.getElementById("bookingMessage");
 
-          body: JSON.stringify(bookingData),
-        });
+  box.className = success ? "success-message" : "error-message";
 
-        const bookingResult = await bookingResponse.json();
+  box.innerHTML = message;
+}
 
-        if (!bookingResponse.ok || !bookingResult.success) {
-          alert(bookingResult.error || "Booking failed");
+// ==============================
+// PAY WITH STRIPE
+// ==============================
 
-          resetButton();
+document.getElementById("pay_button").addEventListener("click", async () => {
+  try {
+    const bookingData = getBookingData();
 
-          return;
-        }
+    const response = await fetch("/create-booking", {
+      method: "POST",
 
-        // ================================
-        // STRIPE CHECKOUT
-        // ================================
+      headers: {
+        "Content-Type": "application/json",
+      },
 
-        const paymentResponse = await fetch("/create-checkout-session", {
-          method: "POST",
+      body: JSON.stringify(bookingData),
+    });
 
-          headers: {
-            "Content-Type": "application/json",
-          },
+    const booking = await response.json();
 
-          body: JSON.stringify({
-            booking_id: bookingResult.booking_id,
-          }),
-        });
+    if (!booking.success) {
+      showMessage(booking.error, false);
 
-        const paymentResult = await paymentResponse.json();
+      return;
+    }
 
-        if (!paymentResponse.ok) {
-          alert(paymentResult.error);
+    const stripeResponse = await fetch("/create-checkout-session", {
+      method: "POST",
 
-          resetButton();
+      headers: {
+        "Content-Type": "application/json",
+      },
 
-          return;
-        }
+      body: JSON.stringify({
+        booking_id: booking.booking_id,
+      }),
+    });
 
-        window.location.href = paymentResult.checkout_url;
-        // window.location.href =
-        //   "/test-payment-success/" + bookingResult.booking_id;
-      } catch (error) {
-        console.error(error);
+    const stripe = await stripeResponse.json();
 
-        alert("Something went wrong");
+    if (stripe.checkout_url) {
+      window.location.href = stripe.checkout_url;
+    } else {
+      showMessage(stripe.error, false);
+    }
+  } catch (error) {
+    console.log(error);
 
-        resetButton();
+    showMessage("Server error. Please try again.", false);
+  }
+});
+
+// ==============================
+// RESERVE AND PAY LATER
+// ==============================
+
+const skipButton = document.getElementById("skip_payment_button");
+
+if (skipButton) {
+  skipButton.addEventListener("click", async () => {
+    try {
+      const bookingData = getBookingData();
+
+      const response = await fetch("/create-booking", {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify(bookingData),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        document.getElementById("bookingMessage").innerHTML = `
+
+
+<div class="success-message">
+
+
+<h3>
+✅ Reservation Successful!
+</h3>
+
+
+
+<p>
+Your swimming lesson has been reserved.
+</p>
+
+
+
+<p>
+<b>
+Payment Method:
+</b>
+Pay when you arrive
+</p>
+
+
+
+<p>
+We accept:
+<br>
+💵 Cash
+<br>
+📱 Zelle
+</p>
+
+
+
+<p>
+Please complete payment before your lesson begins.
+</p>
+
+
+
+<p>
+<b>
+Amount Due:
+</b>
+${bookingData.price}
+</p>
+
+
+
+<p>
+Thank you for choosing 
+Millrod Swim Academy!
+</p>
+
+
+
+</div>
+
+`;
+
+        document.getElementById("bookingForm").reset();
+
+        updatePrice();
+      } else {
+        showMessage(result.error || "Unable to reserve lesson.", false);
       }
-    },
-  );
-}
+    } catch (error) {
+      console.log(error);
 
-// =====================================
-// RESET BUTTON
-// =====================================
-
-function resetButton() {
-  if (payButton) {
-    payButton.disabled = false;
-
-    payButton.innerText = "Pay & Reserve Lesson";
-  }
+      showMessage("Server error. Please try again.", false);
+    }
+  });
 }

@@ -14,6 +14,7 @@ from reportlab.platypus import (
 from reportlab.lib.styles import getSampleStyleSheet
 
 
+
 # ==========================
 # RESEND CONFIGURATION
 # ==========================
@@ -24,17 +25,18 @@ if Config.RESEND_API_KEY:
 
 else:
 
-    print(
-        "WARNING: RESEND_API_KEY is missing"
-    )
+    print("WARNING: RESEND_API_KEY is missing")
+
 
 
 EMAIL_FROM = Config.EMAIL_FROM
 
 
 
+
+
 # ==========================
-# CUSTOMER CONFIRMATION EMAIL
+# CUSTOMER BOOKING EMAIL
 # ==========================
 
 def send_booking_confirmation(
@@ -43,10 +45,36 @@ def send_booking_confirmation(
     lesson_type,
     package,
     lesson_date,
-    lesson_time
+    lesson_time,
+    payment_status="pending"
 ):
 
     try:
+
+        if payment_status == "paid":
+
+            message = """
+            Your payment has been received.
+            Your swimming lesson is confirmed.
+            """
+
+            subject = (
+                "Swimming Lesson Confirmed - Millrod Swim Academy"
+            )
+
+        else:
+
+            message = """
+            Your swimming lesson has been reserved.
+            Payment is still pending.
+            You can complete payment later.
+            """
+
+            subject = (
+                "Swimming Lesson Reserved - Millrod Swim Academy"
+            )
+
+
 
         response = resend.Emails.send({
 
@@ -56,8 +84,7 @@ def send_booking_confirmation(
                 customer_email
             ],
 
-            "subject":
-            "Your Swimming Lesson Confirmation - Millrod Swim Academy",
+            "subject": subject,
 
 
             "html": f"""
@@ -73,8 +100,7 @@ def send_booking_confirmation(
 
 
             <p>
-            Your swimming lesson payment has been received
-            and your booking is confirmed.
+            {message}
             </p>
 
 
@@ -111,7 +137,8 @@ def send_booking_confirmation(
 
 
             <p>
-            Thank you for choosing Millrod Swim Academy!
+            Thank you for choosing
+            Millrod Swim Academy!
             </p>
 
             """
@@ -142,23 +169,22 @@ def send_booking_confirmation(
 
 
 
+
+
 # ==========================
 # ADMIN NOTIFICATION EMAIL
 # ==========================
 
 def send_admin_notification(booking):
 
-
     pdf_file = None
 
 
     try:
 
-
         pdf_file = create_booking_pdf(
             booking
         )
-
 
 
         with open(
@@ -178,7 +204,7 @@ def send_admin_notification(booking):
             "from": EMAIL_FROM,
 
 
-            "to":[
+            "to": [
                 Config.OWNER_EMAIL
             ],
 
@@ -196,7 +222,7 @@ def send_admin_notification(booking):
 
 
             <p>
-            A new swimming lesson has been booked.
+            A new swimming lesson reservation was created.
             </p>
 
 
@@ -246,7 +272,8 @@ def send_admin_notification(booking):
 
 
             <p>
-            Booking information is attached.
+            <b>Payment:</b>
+            {booking["payment_status"]}
             </p>
 
 
@@ -306,6 +333,7 @@ def send_admin_notification(booking):
 
 
 
+
 # ==========================
 # CREATE BOOKING PDF
 # ==========================
@@ -339,8 +367,24 @@ def create_booking_pdf(booking):
     content = []
 
 
+    amount = "Please contact Millrod Swim Academy for payment amount"
 
-    information = [
+
+    if booking["package"] == "Single Lesson":
+        amount = "$80"
+
+    elif booking["package"] == "4 Lessons Package":
+        amount = "$300"
+
+    elif booking["package"] == "8 Lessons Package":
+        amount = "$560"
+
+    elif booking["package"] == "Monthly Program":
+        amount = "$700"
+
+
+
+    information=[
 
         "Millrod Swim Academy",
 
@@ -348,7 +392,7 @@ def create_booking_pdf(booking):
 
         "",
 
-        f"Student Name: {booking['name']}",
+        f"Student: {booking['name']}",
 
         f"Email: {booking['email']}",
 
@@ -361,6 +405,20 @@ def create_booking_pdf(booking):
         f"Date: {booking['lesson_date']}",
 
         f"Time: {booking['lesson_time']}",
+
+
+        "----------------------------",
+
+
+        "Payment Status: NOT PAID YET",
+
+        f"Amount Due: {amount}",
+
+        "Payment Method: Cash or Zelle",
+
+        "",
+
+        "Please pay when you arrive for your swimming lesson.",
 
     ]
 
@@ -398,6 +456,7 @@ def create_booking_pdf(booking):
 
 
 
+
 # ==========================
 # REMINDER EMAIL
 # ==========================
@@ -413,7 +472,7 @@ def send_reminder_email(
     try:
 
 
-        resend.Emails.send({
+        response = resend.Emails.send({
 
             "from": EMAIL_FROM,
 
@@ -445,6 +504,11 @@ def send_reminder_email(
             </p>
 
 
+            <h3>
+            Lesson Details
+            </h3>
+
+
             <p>
             <b>Lesson:</b>
             {lesson_type}
@@ -462,13 +526,23 @@ def send_reminder_email(
             {lesson_time}
             </p>
 
+
+            <br>
+
+
+            <p>
+            We look forward to seeing you!
+            </p>
+
+
             """
 
         })
 
 
         print(
-            "REMINDER EMAIL SENT"
+            "REMINDER EMAIL SENT:",
+            response
         )
 
 
@@ -486,4 +560,3 @@ def send_reminder_email(
 
 
         return False
-

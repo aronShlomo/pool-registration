@@ -4,9 +4,7 @@ from config import Config
 from datetime import datetime, timedelta
 
 
-
 DATABASE = Config.DATABASE
-
 
 
 # ==========================
@@ -22,6 +20,11 @@ def get_db_connection():
     return conn
 
 
+
+# ==========================
+# REMOVE EXPIRED PENDING BOOKINGS
+# ==========================
+
 def remove_expired_pending_bookings():
 
     conn = get_db_connection()
@@ -32,15 +35,19 @@ def remove_expired_pending_bookings():
     expired_time = (
         datetime.now()
         - timedelta(minutes=30)
-    )
+    ).strftime("%Y-%m-%d %H:%M:%S")
 
 
     cursor.execute(
         """
         DELETE FROM bookings
+
         WHERE status = 'pending'
+
         AND payment_status = 'pending'
+
         AND created_at < ?
+
         """,
         (
             expired_time,
@@ -51,6 +58,7 @@ def remove_expired_pending_bookings():
     conn.commit()
 
     conn.close()
+
 
 
 # ==========================
@@ -64,71 +72,100 @@ def init_database():
     cursor = conn.cursor()
 
 
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS bookings (
+    cursor.execute(
+        """
 
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        CREATE TABLE IF NOT EXISTS bookings (
 
-        -- Customer information
-
-        name TEXT NOT NULL,
-
-        email TEXT NOT NULL,
-
-        phone TEXT,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
 
 
-        -- Lesson information
+            name TEXT NOT NULL,
 
-        lesson_type TEXT NOT NULL,
+            email TEXT NOT NULL,
 
-        package TEXT NOT NULL,
-
-
-        -- Schedule
-
-        lesson_date TEXT NOT NULL,
-
-        lesson_time TEXT NOT NULL,
+            phone TEXT,
 
 
-        -- Payment
+            lesson_type TEXT NOT NULL,
 
-        payment_status TEXT DEFAULT 'pending',
-
-        stripe_payment_id TEXT,
+            package TEXT NOT NULL,
 
 
-        -- Booking status
+            lesson_date TEXT NOT NULL,
 
-        status TEXT DEFAULT 'pending',
-
-
-        -- Reminder system
-
-        reminder_sent INTEGER DEFAULT 0,
+            lesson_time TEXT NOT NULL,
+            
+            price TEXT,
 
 
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            payment_method TEXT DEFAULT 'none',
 
+            payment_status TEXT DEFAULT 'pending',
+
+            stripe_payment_id TEXT,
+            
+
+
+            status TEXT DEFAULT 'pending',
+
+
+            reminder_sent INTEGER DEFAULT 0,
+
+
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+        )
+
+        """
     )
-    """)
 
 
 
     # ==========================
-    # DATABASE MIGRATIONS
+    # SAFE MIGRATIONS
     # ==========================
+
+    cursor.execute(
+        "PRAGMA table_info(bookings)"
+    )
+
+
+    existing_columns = [
+
+        column[1]
+
+        for column in cursor.fetchall()
+
+    ]
+
+
 
     migrations = {
 
-        "payment_status": "TEXT DEFAULT 'pending'",
+        "payment_method":
+        "TEXT DEFAULT 'none'",
 
-        "stripe_payment_id": "TEXT",
 
-        "status": "TEXT DEFAULT 'pending'",
+        "payment_status":
+        "TEXT DEFAULT 'pending'",
 
-        "reminder_sent": "INTEGER DEFAULT 0"
+
+        "stripe_payment_id":
+        "TEXT",
+
+
+        "status":
+        "TEXT DEFAULT 'pending'",
+
+
+        "reminder_sent":
+        "INTEGER DEFAULT 0",
+        
+        "price": "TEXT"
+
+        
+        
 
     }
 
@@ -136,18 +173,26 @@ def init_database():
 
     for column, definition in migrations.items():
 
-        try:
+
+        if column not in existing_columns:
+
 
             cursor.execute(
+
                 f"""
+
                 ALTER TABLE bookings
+
                 ADD COLUMN {column} {definition}
+
                 """
+
             )
 
-        except sqlite3.OperationalError:
 
-            pass
+            print(
+                f"Added column: {column}"
+            )
 
 
 
@@ -164,4 +209,3 @@ def init_database():
 def init_db():
 
     init_database()
-

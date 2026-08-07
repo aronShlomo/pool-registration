@@ -38,21 +38,19 @@ def create_checkout_session():
         if not data:
 
             return jsonify({
-                "error":"No JSON received"
-            }),400
+                "error": "No JSON received"
+            }), 400
 
 
 
-        booking_id = data.get(
-            "booking_id"
-        )
+        booking_id = data.get("booking_id")
 
 
         if not booking_id:
 
             return jsonify({
-                "error":"Booking ID missing"
-            }),400
+                "error": "Booking ID missing"
+            }), 400
 
 
 
@@ -73,6 +71,7 @@ def create_checkout_session():
 
         booking = cursor.fetchone()
 
+
         conn.close()
 
 
@@ -80,8 +79,8 @@ def create_checkout_session():
         if not booking:
 
             return jsonify({
-                "error":"Booking not found"
-            }),404
+                "error": "Booking not found"
+            }), 404
 
 
 
@@ -102,21 +101,20 @@ def create_checkout_session():
             mode="payment",
 
 
-            customer_email=
-                booking["email"],
+            customer_email=booking["email"],
 
 
             line_items=[
 
                 {
 
-                    "price_data":{
+                    "price_data": {
 
                         "currency":
                             Config.CURRENCY,
 
 
-                        "product_data":{
+                        "product_data": {
 
                             "name":
                             f"{booking['lesson_type']} - {booking['package']}"
@@ -130,7 +128,7 @@ def create_checkout_session():
                     },
 
 
-                    "quantity":1
+                    "quantity": 1
 
                 }
 
@@ -167,6 +165,7 @@ def create_checkout_session():
 
     except Exception as e:
 
+
         print(
             "STRIPE ERROR:",
             e
@@ -183,17 +182,15 @@ def create_checkout_session():
 
 
 
+
 # =====================================
-# TEST PAYMENT SUCCESS (NO STRIPE)
+# TEST PAYMENT SUCCESS
 # =====================================
 
-@payment_bp.route("/test-payment-success/<int:booking_id>")
+@payment_bp.route(
+    "/test-payment-success/<int:booking_id>"
+)
 def test_payment_success(booking_id):
-
-    from email_service import (
-        send_booking_confirmation,
-        send_admin_notification
-    )
 
 
     conn = get_db_connection()
@@ -201,21 +198,21 @@ def test_payment_success(booking_id):
     cursor = conn.cursor()
 
 
-    # Confirm booking manually
-
     cursor.execute(
         """
         UPDATE bookings
 
         SET
 
-        payment_status = 'paid',
+        payment_method='card',
 
-        status = 'confirmed',
+        payment_status='paid',
 
-        stripe_payment_id = 'TEST_PAYMENT'
+        status='confirmed',
 
-        WHERE id = ?
+        stripe_payment_id='TEST_PAYMENT'
+
+        WHERE id=?
 
         """,
         (
@@ -228,13 +225,11 @@ def test_payment_success(booking_id):
 
 
 
-    # Get booking information
-
     cursor.execute(
         """
         SELECT *
         FROM bookings
-        WHERE id = ?
+        WHERE id=?
         """,
         (
             booking_id,
@@ -257,10 +252,6 @@ def test_payment_success(booking_id):
 
     try:
 
-
-        print("Sending customer confirmation email...")
-
-
         send_booking_confirmation(
 
             booking["email"],
@@ -278,17 +269,9 @@ def test_payment_success(booking_id):
         )
 
 
-
-        print("Sending admin notification...")
-
-
         send_admin_notification(
             booking
         )
-
-
-        print("ALL EMAILS SENT")
-
 
 
         return """
@@ -296,10 +279,6 @@ def test_payment_success(booking_id):
         <h1>TEST PAYMENT SUCCESS</h1>
 
         <p>Booking confirmed.</p>
-
-        <p>Customer email sent.</p>
-
-        <p>Admin email sent.</p>
 
         <a href="/">Return Home</a>
 
@@ -312,17 +291,12 @@ def test_payment_success(booking_id):
 
         print(
             "EMAIL ERROR:",
-            repr(e)
+            e
         )
 
 
-        return f"""
+        return str(e)
 
-        <h1>Email Error</h1>
-
-        <p>{e}</p>
-
-        """
 
 
 
@@ -350,9 +324,11 @@ def payment_success():
 
     try:
 
+
         session = stripe.checkout.Session.retrieve(
             session_id
         )
+
 
 
         if session.payment_status != "paid":
@@ -376,8 +352,13 @@ def payment_success():
             UPDATE bookings
 
             SET
+
+            payment_method='card',
+
             payment_status='paid',
+
             status='confirmed',
+
             stripe_payment_id=?
 
             WHERE id=?
@@ -385,11 +366,15 @@ def payment_success():
             """,
 
             (
+
                 session.id,
+
                 booking_id
+
             )
 
         )
+
 
 
         conn.commit()
@@ -402,7 +387,9 @@ def payment_success():
             FROM bookings
             WHERE id=?
             """,
-            (booking_id,)
+            (
+                booking_id,
+            )
         )
 
 
@@ -414,7 +401,11 @@ def payment_success():
 
 
 
-        # Send emails
+        if not booking:
+
+            return "Booking not found"
+
+
 
         send_booking_confirmation(
 
@@ -445,9 +436,11 @@ def payment_success():
         Payment Successful!
         </h1>
 
+
         <p>
         Your swimming lesson is confirmed.
         </p>
+
 
         <a href="/">
         Return Home
@@ -481,15 +474,18 @@ def payment_success():
 )
 def payment_cancel():
 
+
     return """
 
     <h1>
     Payment Cancelled
     </h1>
 
+
     <p>
     You can return and select another time.
     </p>
+
 
     <a href="/">
     Back

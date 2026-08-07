@@ -9,7 +9,7 @@
 
     <meta
       name="description"
-      content="Professional swimming lessons for children and adults at Millrod Swim Academy."
+      content="Millrod Swim Academy provides professional swimming lessons for children and adults. Learn water safety, confidence, and advanced swimming skills."
     />
 
     <link
@@ -24,42 +24,108 @@
   </head>
 
   <body>
-    <!-- NAVBAR -->
+    <!-- ==========================
+     NAVBAR
+========================== -->
 
     <header class="navbar">
       <div class="logo">🏊 Millrod Swim Academy</div>
 
       <nav>
-        <a href="#home">Home</a>
+        <a href="#home"> Home </a>
 
-        <a href="#about">Experience</a>
+        <a href="#pool"> About </a>
 
-        <a href="#programs">Programs</a>
+        <a href="#about"> Instructor </a>
 
-        <a href="#booking">Book</a>
+        <a href="#programs"> Programs </a>
 
-        <a href="#contact">Contact</a>
+        <a href="#booking"> Book </a>
+
+        <a href="#contact"> Contact </a>
 
         <a href="/admin/login" class="admin-icon" title="Admin Login"> 🔒 </a>
       </nav>
     </header>
 
-    <!-- HERO -->
+    <!-- ==========================
+     HERO
+========================== -->
 
     <section class="hero" id="home">
       <div class="hero-content">
-        <h1>Build Confidence. Learn Safety. Master Swimming.</h1>
+        <h1>
+          Build Confidence.<br />
+          Learn Safety.<br />
+          Master Swimming.
+        </h1>
 
         <p>
-          Professional swimming lessons designed for children and adults of all
-          skill levels.
+          Professional swimming instruction for children and adults of all skill
+          levels. Personalized lessons focused on safety, confidence, and
+          technique.
         </p>
 
         <a href="#booking" class="btn"> Schedule Your Lesson </a>
       </div>
     </section>
 
-    <!-- ABOUT -->
+    <!-- ==========================
+     ABOUT POOL
+========================== -->
+
+    <section class="section about-pool" id="pool">
+      <div class="container">
+        <h2>About Millrod Swim Academy</h2>
+
+        <div class="about-content">
+          <div class="about-image">
+            <img
+              src="{{ url_for('static', filename='images/pool.jpg') }}"
+              alt="Millrod Swim Academy Pool"
+            />
+          </div>
+
+          <div class="about-text">
+            <h3>A Safe Place To Learn, Grow, And Succeed</h3>
+
+            <p>
+              Welcome to Millrod Swim Academy. We are Noam and Rivka Millrod, a
+              husband-and-wife swim instruction team dedicated to providing
+              professional, high-quality swimming lessons. With more than 30
+              years of combined teaching experience, we have helped hundreds of
+              children and adults develop confidence, improve their swimming
+              abilities, and build lifelong water safety skills.
+            </p>
+
+            <p>
+              Our lessons are designed for every level — from beginners learning
+              their first strokes to experienced swimmers looking to improve
+              technique, endurance, and efficiency. Every swimmer receives
+              personalized instruction in a supportive, encouraging environment
+              where safety always comes first.
+            </p>
+
+            <p>
+              Our goal is simple: help every student become a confident, safe,
+              and capable swimmer.
+            </p>
+
+            <div class="instructor-badges">
+              <span> 🌊 Safe Environment </span>
+
+              <span> 🏊 Professional Training </span>
+
+              <span> ⭐ Personalized Lessons </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================
+     INSTRUCTOR
+========================== -->
 
     <section class="section" id="about">
       <div class="container">
@@ -77,13 +143,19 @@
             <h3>Certified Swimming Instructor</h3>
 
             <p>
-              At Millrod Swim Academy we focus on water safety, confidence, and
-              professional swimming technique.
+              At Millrod Swim Academy, we focus on building strong swimming
+              foundations through patience, encouragement, and professional
+              instruction.
             </p>
 
             <p>
-              Lessons are available for beginners, intermediate swimmers, and
-              advanced students.
+              Students learn water safety, confidence, breathing techniques,
+              stroke development, and advanced swimming skills.
+            </p>
+
+            <p>
+              Lessons are available for children, teenagers, and adults at
+              beginner, intermediate, and advanced levels.
             </p>
 
             <div class="instructor-badges">
@@ -98,41 +170,63 @@
       </div>
     </section>
 
-    <!-- PROGRAMS -->
+    <!-- ==============================
+     PROGRAMS SECTION
+============================== -->
 
     <section class="section" id="programs">
       <div class="container">
         <h2>Swimming Programs</h2>
 
+        <p class="intro">
+          Programs designed to help every swimmer improve skills, confidence,
+          and water safety.
+        </p>
+
         <div class="cards">
           <div class="card">
             <h3>🐬 Learn To Swim</h3>
 
-            <p>Build confidence and learn essential swimming skills.</p>
+            <p>
+              Perfect for beginners. Students learn water comfort, floating,
+              breathing, kicking, and essential swimming skills.
+            </p>
           </div>
 
           <div class="card">
             <h3>🏊 Stroke Improvement</h3>
 
-            <p>Improve breathing, technique, and endurance.</p>
+            <p>
+              Improve freestyle, backstroke, breathing technique, coordination,
+              and swimming endurance.
+            </p>
           </div>
 
           <div class="card">
             <h3>🏆 Advanced Training</h3>
 
-            <p>Advanced coaching for stronger swimmers.</p>
+            <p>
+              Advanced coaching for swimmers who want stronger technique, speed,
+              and confidence.
+            </p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- BOOKING -->
+    <!-- ==============================
+     BOOKING SECTION
+============================== -->
 
     <section class="section booking-section" id="booking">
       <div class="container">
         <h2>Book Your Swimming Lesson</h2>
 
-        <p>Choose your lesson and reserve your available time.</p>
+        <p class="intro">
+          Select your lesson, choose a date and reserve your swimming time.
+        </p>
+
+        <!-- CALENDAR -->
 
         <div class="calendar-box">
           <h3>Available Schedule</h3>
@@ -140,12 +234,14 @@
           <div id="calendar"></div>
         </div>
 
-        <!-- FORM -->
+        <!-- REGISTRATION FORM -->
 
         <div class="form-box">
           <h3>Swimming Lesson Registration</h3>
 
           <form id="bookingForm">
+            <!-- STUDENT INFORMATION -->
+
             <h4>Student Information</h4>
 
             <label> Student Name </label>
@@ -155,6 +251,8 @@
             <label> Age </label>
 
             <input type="number" name="age" required />
+
+            <!-- PARENT INFORMATION -->
 
             <h4>Parent / Guardian Information</h4>
 
@@ -166,6 +264,8 @@
 
             <input type="email" name="email" required />
 
+            <!-- LESSON INFORMATION -->
+
             <h4>Lesson Details</h4>
 
             <label> Lesson Type </label>
@@ -173,26 +273,28 @@
             <select name="lesson_type" id="lesson_type" required>
               <option value="">Select Lesson</option>
 
-              <option>Private Lesson</option>
+              <option value="Private Lesson">Private Lesson</option>
 
-              <option>Semi-Private Lesson</option>
+              <option value="Semi-Private Lesson">Semi-Private Lesson</option>
 
-              <option>Group Lesson</option>
+              <option value="Group Lesson">Group Lesson</option>
             </select>
 
             <label> Package </label>
 
             <select name="package" id="package" required>
-              <option>Single Lesson</option>
+              <option value="Single Lesson">Single Lesson</option>
 
-              <option>4 Lessons Package</option>
+              <option value="4 Lessons Package">4 Lessons Package</option>
 
-              <option>8 Lessons Package</option>
+              <option value="8 Lessons Package">8 Lessons Package</option>
 
-              <option>Monthly Program</option>
+              <option value="Monthly Program">Monthly Program</option>
             </select>
 
             <h3 id="priceDisplay">Price: Select Lesson</h3>
+
+            <!-- SCHEDULE -->
 
             <h4>Schedule</h4>
 
@@ -222,24 +324,41 @@
               <option>4:00 PM</option>
             </select>
 
-            <h4>Health Information</h4>
+            <!-- ADDITIONAL INFORMATION -->
+
+            <h4>Additional Information</h4>
 
             <textarea
               name="medical"
               placeholder="Medical conditions or allergies"
             ></textarea>
 
-            <textarea name="notes" placeholder="Additional notes"></textarea>
+            <textarea
+              name="notes"
+              placeholder="Additional notes or requests"
+            ></textarea>
 
             <label class="checkbox">
               <input type="checkbox" required />
 
-              I agree that the information provided is correct.
+              I confirm that the information provided is correct.
             </label>
 
-            <button type="button" id="pay_button" class="btn">
-              Pay & Reserve Lesson
-            </button>
+            <!-- PAYMENT BUTTONS -->
+
+            <div class="booking-buttons">
+              <button type="button" id="pay_button" class="btn">
+                Pay & Reserve Lesson
+              </button>
+
+              <button
+                type="button"
+                id="skip_payment_button"
+                class="btn secondary-btn"
+              >
+                Reserve & Pay Later
+              </button>
+            </div>
 
             <div id="bookingMessage"></div>
           </form>
@@ -247,23 +366,96 @@
       </div>
     </section>
 
-    <!-- CONTACT -->
+    <!-- ==============================
+     CONTACT SECTION
+============================== -->
 
-    <section class="section" id="contact">
+    <!-- ==============================
+     CONTACT SECTION
+============================== -->
+
+    <section class="section contact-section" id="contact">
       <div class="container">
         <h2>Contact Millrod Swim Academy</h2>
 
-        <p>Email: themillrodswim@gmail.com</p>
+        <p class="contact-intro">
+          Have questions about lessons, schedules, or programs? We are happy to
+          help you find the perfect swimming experience.
+        </p>
+
+        <div class="contact-grid">
+          <div class="contact-card">
+            <div class="contact-icon">📧</div>
+
+            <h3>Email Us</h3>
+
+            <p>Send us your questions and we will get back to you.</p>
+
+            <a href="mailto:themillrodswim@gmail.com">
+              themillrodswim@gmail.com
+            </a>
+          </div>
+
+          <div class="contact-card">
+            <div class="contact-icon">🏊</div>
+
+            <h3>Swimming Lessons</h3>
+
+            <p>
+              Private lessons, group programs, beginner training, and advanced
+              swimming development.
+            </p>
+
+            <a href="#booking"> Schedule A Lesson </a>
+          </div>
+
+          <div class="contact-card">
+            <div class="contact-icon">🌊</div>
+
+            <h3>Our Mission</h3>
+
+            <p>
+              Helping swimmers build confidence, improve skills, and stay safe
+              in the water.
+            </p>
+          </div>
+        </div>
       </div>
     </section>
 
-    <footer>
-      <h3>🏊 Millrod Swim Academy</h3>
+    <!-- ==============================
+     FOOTER
+============================== -->
 
-      <p>Professional Swimming Lessons | Safety | Confidence</p>
+    <footer class="footer">
+      <div class="footer-container">
+        <h3>🏊 Millrod Swim Academy</h3>
 
-      <p>© 2026 Millrod Swim Academy</p>
+        <p>
+          Professional Swimming Lessons
+          <br />
+          Safety • Confidence • Skill Development
+        </p>
+
+        <div class="footer-links">
+          <a href="#home"> Home </a>
+
+          <a href="#programs"> Programs </a>
+
+          <a href="#booking"> Book A Lesson </a>
+
+          <a href="#contact"> Contact </a>
+        </div>
+
+        <p class="copyright">
+          © 2026 Millrod Swim Academy. All Rights Reserved.
+        </p>
+      </div>
     </footer>
+
+    <!-- ==============================
+     JAVASCRIPT
+============================== -->
 
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
 

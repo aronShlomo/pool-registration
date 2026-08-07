@@ -19,128 +19,6 @@ body {
   line-height: 1.6;
 }
 
-/* ==============================
-   INSTRUCTOR PROFILE
-============================== */
-.instructor-profile {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 50px;
-  max-width: 1000px;
-  margin: auto;
-}
-.instructor-image {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.instructor-image img {
-  width: 260px;
-  height: 260px;
-
-  object-fit: cover;
-  object-position: center 65%;
-
-  border-radius: 50%;
-
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-}
-
-.instructor-info {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-@media (max-width: 768px) {
-  .instructor-profile {
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-    text-align: center;
-  }
-
-  .instructor-image {
-    order: 1;
-    width: 100%;
-  }
-
-  .instructor-content {
-    order: 2;
-    width: 100%;
-  }
-
-  .instructor-image img {
-    width: 85%;
-    height: auto;
-    margin: 0 auto;
-    display: block;
-  }
-}
-
-@media (max-width: 800px) {
-  .instructor-image img {
-    width: 220px;
-    height: 220px;
-    transform: none;
-  }
-}
-
-.instructor-info p {
-  max-width: 800px;
-
-  margin: 0 auto 20px;
-
-  font-size: 18px;
-}
-
-.instructor-badges {
-  display: flex;
-
-  justify-content: center;
-
-  flex-wrap: wrap;
-
-  gap: 15px;
-}
-
-.instructor-badges span {
-  background: #eaf7ff;
-
-  padding: 10px 18px;
-
-  border-radius: 30px;
-
-  font-weight: 600;
-
-  color: #003b5c;
-}
-
-@media (max-width: 800px) {
-  .instructor-profile {
-    grid-template-columns: 1fr;
-
-    text-align: center;
-  }
-
-  .instructor-badges {
-    justify-content: center;
-  }
-}
-
-.contact-box a {
-  color: #0077b6;
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.contact-box a:hover {
-  color: #00a8e8;
-  text-decoration: underline;
-}
-
 .container {
   width: 90%;
   max-width: 1200px;
@@ -154,14 +32,14 @@ body {
 h2 {
   text-align: center;
   font-size: 38px;
-  margin-bottom: 25px;
+  margin-bottom: 30px;
   color: #003b5c;
 }
 
-.intro {
-  max-width: 850px;
-  margin: 0 auto 45px;
+.section-intro {
   text-align: center;
+  max-width: 850px;
+  margin: -10px auto 45px;
   font-size: 18px;
   color: #555;
 }
@@ -183,21 +61,23 @@ h2 {
 
   background: white;
 
-  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 .logo {
-  font-size: 24px;
-  font-weight: bold;
+  font-size: 25px;
+  font-weight: 700;
   color: #0077b6;
 }
 
-.logo span {
-  font-size: 30px;
+.navbar nav {
+  display: flex;
+  align-items: center;
 }
 
 .navbar nav a {
   text-decoration: none;
+
   color: #333;
 
   margin-left: 25px;
@@ -211,6 +91,40 @@ h2 {
   color: #0077b6;
 }
 
+/* ADMIN BUTTON */
+
+.admin-icon {
+  position: fixed;
+
+  top: 18px;
+
+  right: 20px;
+
+  width: 42px;
+
+  height: 42px;
+
+  background: #003b5c;
+
+  color: white !important;
+
+  border-radius: 50%;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  font-size: 18px;
+
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
+}
+
+.admin-icon:hover {
+  background: #0077b6;
+}
+
 /* ==============================
    HERO SECTION
 ============================== */
@@ -220,9 +134,9 @@ h2 {
 
   display: flex;
 
-  align-items: center;
-
   justify-content: center;
+
+  align-items: center;
 
   text-align: center;
 
@@ -235,7 +149,7 @@ h2 {
 }
 
 .hero-content {
-  max-width: 800px;
+  max-width: 850px;
 }
 
 .hero h1 {
@@ -263,13 +177,13 @@ h2 {
 
   border-radius: 50px;
 
-  text-decoration: none;
-
-  font-weight: bold;
-
   border: none;
 
   cursor: pointer;
+
+  font-weight: bold;
+
+  text-decoration: none;
 
   transition: 0.3s;
 }
@@ -281,7 +195,143 @@ h2 {
 }
 
 /* ==============================
-   CARDS
+   ABOUT POOL
+============================== */
+
+.about-pool {
+  background: #f1f9ff;
+}
+
+.about-content {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 50px;
+}
+
+.about-image {
+  flex: 1;
+
+  text-align: center;
+}
+
+.about-image img {
+  width: 100%;
+
+  max-width: 450px;
+
+  height: 350px;
+
+  object-fit: cover;
+
+  border-radius: 25px;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.about-text {
+  flex: 1;
+}
+
+.about-text h3 {
+  color: #0077b6;
+
+  font-size: 28px;
+
+  margin-bottom: 20px;
+}
+
+.about-text p {
+  font-size: 17px;
+
+  color: #444;
+
+  margin-bottom: 18px;
+}
+
+/* ==============================
+   INSTRUCTOR SECTION
+============================== */
+
+.instructor-profile {
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 60px;
+
+  max-width: 1050px;
+
+  margin: auto;
+}
+
+.instructor-image {
+  flex: 0 0 300px;
+
+  display: flex;
+
+  justify-content: center;
+}
+
+.instructor-image img {
+  width: 280px;
+
+  height: 280px;
+
+  object-fit: cover;
+
+  object-position: center;
+
+  border-radius: 50%;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+}
+
+.instructor-info {
+  flex: 1;
+}
+
+.instructor-info h3 {
+  color: #0077b6;
+
+  font-size: 30px;
+
+  margin-bottom: 20px;
+}
+
+.instructor-info p {
+  font-size: 18px;
+
+  margin-bottom: 20px;
+}
+
+.instructor-badges {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 15px;
+}
+
+.instructor-badges span {
+  background: #eaf7ff;
+
+  padding: 10px 18px;
+
+  border-radius: 30px;
+
+  color: #003b5c;
+
+  font-weight: 600;
+}
+
+/* ==============================
+   PROGRAM CARDS
 ============================== */
 
 .cards {
@@ -297,7 +347,7 @@ h2 {
 
   padding: 35px;
 
-  border-radius: 18px;
+  border-radius: 20px;
 
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 
@@ -311,53 +361,15 @@ h2 {
 .card h3 {
   color: #0077b6;
 
-  margin-bottom: 15px;
-
   font-size: 24px;
+
+  margin-bottom: 15px;
 }
 
-.card ul {
-  margin-top: 15px;
+.card p {
+  color: #555;
 
-  padding-left: 20px;
-}
-
-.card li {
-  margin-bottom: 8px;
-}
-
-/* ==============================
-   BENEFITS SECTION
-============================== */
-
-.benefits {
-  background: #eaf7ff;
-
-  padding: 80px 0;
-}
-
-.benefit-grid {
-  display: grid;
-
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-
-  gap: 30px;
-}
-
-.benefit-grid div {
-  background: white;
-
-  padding: 30px;
-
-  border-radius: 15px;
-
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
-}
-
-.benefit-grid h3 {
-  color: #0077b6;
-
-  margin-bottom: 12px;
+  font-size: 17px;
 }
 
 /* ==============================
@@ -368,47 +380,27 @@ h2 {
   background: white;
 }
 
-.booking-layout {
-  display: grid;
-
-  grid-template-columns: 1.2fr 1fr;
-
-  gap: 40px;
-
-  align-items: start;
+.booking-section > .container {
+  max-width: 1100px;
 }
 
-.calendar-box,
-.form-box {
-  background: #ffffff;
+.calendar-box {
+  background: white;
 
-  padding: 30px;
+  padding: 25px;
 
   border-radius: 20px;
 
   box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+
+  width: 90%;
+
+  max-width: 850px;
+
+  margin: 40px auto;
 }
 
-.booking-layout {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.booking-section {
-  display: flex;
-  justify-content: center;
-}
-
-.calendar-layout {
-  width: 100%;
-  max-width: 90%;
-  margin: 0 auto;
-}
-
-.calendar-box h3,
-.form-box h3 {
+.calendar-box h3 {
   text-align: center;
 
   color: #003b5c;
@@ -416,7 +408,7 @@ h2 {
   margin-bottom: 25px;
 }
 
-/* Calendar */
+/* FULL CALENDAR */
 
 #calendar {
   width: 100%;
@@ -424,6 +416,10 @@ h2 {
 
 .fc {
   background: white;
+
+  border-radius: 15px;
+
+  overflow: hidden;
 }
 
 .fc .fc-toolbar-title {
@@ -437,54 +433,78 @@ h2 {
 
   border: none !important;
 }
+
+.fc-button:hover {
+  background: #005f8a !important;
+}
+
 .fc-daygrid-day:hover {
   background: #eaf7ff;
 
   cursor: pointer;
 }
 
-.fc-event {
-  border-radius: 8px;
-
-  padding: 4px;
-
-  font-size: 13px;
-}
-
 .fc-day-today {
   background: #eaf7ff !important;
 }
 
-#bookingMessage {
-  margin-top: 20px;
+/* ==============================
+   BOOKING FORM
+============================== */
 
-  padding: 15px;
+.form-box {
+  background: white;
 
-  border-radius: 10px;
+  width: 90%;
 
-  text-align: center;
+  max-width: 800px;
 
-  font-weight: bold;
+  margin: 40px auto;
+
+  padding: 35px;
+
+  border-radius: 20px;
+
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
 }
 
-/* ==============================
-   FORM DESIGN
-============================== */
+.form-box h3 {
+  text-align: center;
+
+  color: #003b5c;
+
+  font-size: 28px;
+
+  margin-bottom: 25px;
+}
+
+.form-box h4 {
+  color: #0077b6;
+
+  font-size: 20px;
+
+  margin-top: 30px;
+
+  margin-bottom: 15px;
+
+  border-bottom: 2px solid #e6f4fb;
+
+  padding-bottom: 8px;
+}
 
 .form-box label {
   display: block;
 
+  font-weight: 600;
+
   margin-top: 15px;
 
   margin-bottom: 6px;
-
-  font-weight: 600;
-
-  color: #333;
 }
 
 .form-box input,
-.form-box select {
+.form-box select,
+.form-box textarea {
   width: 100%;
 
   padding: 13px 15px;
@@ -499,235 +519,37 @@ h2 {
 }
 
 .form-box input:focus,
-.form-box select:focus {
+.form-box select:focus,
+.form-box textarea:focus {
   border-color: #00a8e8;
-}
-
-.form-box button {
-  width: 100%;
-
-  margin-top: 25px;
-}
-
-/* ==============================
-   MESSAGES
-============================== */
-
-.success-message {
-  margin-top: 20px;
-
-  padding: 15px;
-
-  background: #d4edda;
-
-  color: #155724;
-
-  border-radius: 10px;
-
-  text-align: center;
-}
-
-.error-message {
-  margin-top: 20px;
-
-  padding: 15px;
-
-  background: #f8d7da;
-
-  color: #721c24;
-
-  border-radius: 10px;
-
-  text-align: center;
-}
-
-/* ==============================
-   CONTACT SECTION
-============================== */
-
-.contact {
-  background: #f1f9ff;
-}
-
-.contact-grid {
-  display: grid;
-
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-
-  gap: 30px;
-}
-
-.contact-box {
-  background: white;
-
-  padding: 30px;
-
-  border-radius: 15px;
-
-  text-align: center;
-
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-}
-
-.contact-box h3 {
-  color: #0077b6;
-
-  margin-bottom: 15px;
-}
-
-/* ==============================
-   FOOTER
-============================== */
-
-footer {
-  background: #003b5c;
-
-  color: white;
-
-  text-align: center;
-
-  padding: 35px 10px;
-}
-
-footer h3 {
-  font-size: 26px;
-
-  margin-bottom: 10px;
-}
-
-.copyright {
-  margin-top: 20px;
-
-  opacity: 0.8;
-}
-
-/* ==============================
-   MOBILE DESIGN
-============================== */
-
-@media (max-width: 900px) {
-  .navbar {
-    flex-direction: column;
-
-    gap: 15px;
-  }
-
-  .navbar nav {
-    display: flex;
-
-    flex-wrap: wrap;
-
-    justify-content: center;
-  }
-
-  @media (max-width: 500px) {
-    .navbar nav a {
-      font-size: 14px;
-
-      margin: 5px;
-    }
-  }
-
-  #bookingMessage {
-    animation: fadeIn 0.4s ease;
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-
-    to {
-      opacity: 1;
-      transform: none;
-    }
-  }
-
-  .btn {
-    box-shadow: 0 8px 20px rgba(0, 168, 232, 0.3);
-  }
-
-  .btn:hover {
-    box-shadow: 0 12px 25px rgba(0, 168, 232, 0.45);
-  }
-
-  .navbar nav a {
-    margin: 8px;
-  }
-
-  .hero h1 {
-    font-size: 38px;
-  }
-
-  .hero p {
-    font-size: 18px;
-  }
-
-  .booking-layout {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 500px) {
-  h2 {
-    font-size: 30px;
-  }
-
-  .hero {
-    min-height: 75vh;
-  }
-
-  .card,
-  .calendar-box,
-  .form-box {
-    padding: 20px;
-  }
-}
-
-/* ==============================
-   EXTENDED REGISTRATION FORM
-============================== */
-
-.form-box h4 {
-  margin-top: 30px;
-  margin-bottom: 15px;
-
-  color: #0077b6;
-
-  font-size: 20px;
-
-  border-bottom: 2px solid #e6f4fb;
-
-  padding-bottom: 8px;
 }
 
 .form-box textarea {
-  width: 100%;
-
-  padding: 14px;
-
-  border: 1px solid #ddd;
-
-  border-radius: 10px;
-
-  font-size: 16px;
+  min-height: 120px;
 
   resize: vertical;
-
-  min-height: 100px;
 }
 
-.form-box textarea:focus {
-  outline: none;
+/* PRICE DISPLAY */
 
-  border-color: #00a8e8;
+#priceDisplay {
+  margin-top: 25px;
+
+  text-align: center;
+
+  color: #0077b6;
+
+  background: #eaf7ff;
+
+  padding: 15px;
+
+  border-radius: 15px;
 }
 
-/* Checkbox styling */
+/* CHECKBOX */
 
 .checkbox {
-  display: flex;
+  display: flex !important;
 
   align-items: flex-start;
 
@@ -735,9 +557,7 @@ footer h3 {
 
   margin-top: 25px;
 
-  line-height: 1.5;
-
-  font-weight: normal;
+  font-weight: normal !important;
 }
 
 .checkbox input {
@@ -746,58 +566,807 @@ footer h3 {
   margin-top: 5px;
 }
 
-/* Better form spacing */
+/* PAYMENT BUTTON */
 
-.form-box input,
-.form-box select,
-.form-box textarea {
-  margin-bottom: 8px;
+#pay_button {
+  width: 100%;
+
+  margin-top: 25px;
+
+  font-size: 18px;
 }
 
-/* Make long forms easier to read */
+/* BOOKING MESSAGE */
 
-.form-box {
-  max-height: none;
+#bookingMessage {
+  margin-top: 20px;
+
+  padding: 15px;
+
+  border-radius: 10px;
+
+  text-align: center;
+
+  font-weight: bold;
 }
 
-.form-box h3 {
-  font-size: 26px;
+.success-message {
+  background: #d4edda;
+
+  color: #155724;
+}
+
+.error-message {
+  background: #f8d7da;
+
+  color: #721c24;
+}
+
+/* ==============================
+   PROGRAM CARDS
+============================== */
+
+.cards {
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+
+  gap: 30px;
+}
+
+.card {
+  background: white;
+
+  padding: 35px;
+
+  border-radius: 20px;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+}
+
+.card h3 {
+  color: #0077b6;
+
+  font-size: 24px;
+
+  margin-bottom: 15px;
+}
+
+.card p {
+  color: #555;
+
+  font-size: 17px;
+}
+
+/* ==============================
+   BOOKING SECTION
+============================== */
+
+.booking-section {
+  background: white;
+}
+
+.booking-section > .container {
+  max-width: 1100px;
+}
+
+.calendar-box {
+  background: white;
+
+  padding: 25px;
+
+  border-radius: 20px;
+
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+
+  width: 90%;
+
+  max-width: 850px;
+
+  margin: 40px auto;
+}
+
+.calendar-box h3 {
+  text-align: center;
+
+  color: #003b5c;
 
   margin-bottom: 25px;
 }
 
-/* Mobile improveme nts */
+/* FULL CALENDAR */
 
-@media (max-width: 600px) {
-  .form-box h4 {
-    font-size: 18px;
-  }
-
-  .form-box input,
-  .form-box select,
-  .form-box textarea {
-    font-size: 15px;
-  }
+#calendar {
+  width: 100%;
 }
 
-.admin-icon {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  width: 42px;
-  height: 42px;
-  background: #003b5c;
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-decoration: none;
+.fc {
+  background: white;
+
+  border-radius: 15px;
+
+  overflow: hidden;
+}
+
+.fc .fc-toolbar-title {
+  font-size: 22px;
+
+  color: #003b5c;
+}
+
+.fc-button {
+  background: #0077b6 !important;
+
+  border: none !important;
+}
+
+.fc-button:hover {
+  background: #005f8a !important;
+}
+
+.fc-daygrid-day:hover {
+  background: #eaf7ff;
+
+  cursor: pointer;
+}
+
+.fc-day-today {
+  background: #eaf7ff !important;
+}
+
+/* ==============================
+   BOOKING FORM
+============================== */
+
+.form-box {
+  background: white;
+
+  width: 90%;
+
+  max-width: 800px;
+
+  margin: 40px auto;
+
+  padding: 35px;
+
+  border-radius: 20px;
+
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+}
+
+.form-box h3 {
+  text-align: center;
+
+  color: #003b5c;
+
+  font-size: 28px;
+
+  margin-bottom: 25px;
+}
+
+.form-box h4 {
+  color: #0077b6;
+
+  font-size: 20px;
+
+  margin-top: 30px;
+
+  margin-bottom: 15px;
+
+  border-bottom: 2px solid #e6f4fb;
+
+  padding-bottom: 8px;
+}
+
+.form-box label {
+  display: block;
+
+  font-weight: 600;
+
+  margin-top: 15px;
+
+  margin-bottom: 6px;
+}
+
+.form-box input,
+.form-box select,
+.form-box textarea {
+  width: 100%;
+
+  padding: 13px 15px;
+
+  border: 1px solid #ddd;
+
+  border-radius: 10px;
+
+  font-size: 16px;
+
+  outline: none;
+}
+
+.form-box input:focus,
+.form-box select:focus,
+.form-box textarea:focus {
+  border-color: #00a8e8;
+}
+
+.form-box textarea {
+  min-height: 120px;
+
+  resize: vertical;
+}
+
+/* PRICE DISPLAY */
+
+#priceDisplay {
+  margin-top: 25px;
+
+  text-align: center;
+
+  color: #0077b6;
+
+  background: #eaf7ff;
+
+  padding: 15px;
+
+  border-radius: 15px;
+}
+
+/* CHECKBOX */
+
+.checkbox {
+  display: flex !important;
+
+  align-items: flex-start;
+
+  gap: 10px;
+
+  margin-top: 25px;
+
+  font-weight: normal !important;
+}
+
+.checkbox input {
+  width: auto;
+
+  margin-top: 5px;
+}
+
+/* PAYMENT BUTTON */
+
+#pay_button {
+  width: 100%;
+
+  margin-top: 25px;
+
   font-size: 18px;
-  z-index: 9999;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
 }
 
-.admin-icon:hover {
+/* BOOKING MESSAGE */
+
+#bookingMessage {
+  margin-top: 20px;
+
+  padding: 15px;
+
+  border-radius: 10px;
+
+  text-align: center;
+
+  font-weight: bold;
+}
+
+.success-message {
+  background: #d4edda;
+
+  color: #155724;
+}
+
+.error-message {
+  background: #f8d7da;
+
+  color: #721c24;
+}
+
+/* ==============================
+   PROGRAM CARDS
+============================== */
+
+.cards {
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+
+  gap: 30px;
+}
+
+.card {
+  background: white;
+
+  padding: 35px;
+
+  border-radius: 20px;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+}
+
+.card h3 {
+  color: #0077b6;
+
+  font-size: 24px;
+
+  margin-bottom: 15px;
+}
+
+.card p {
+  color: #555;
+
+  font-size: 17px;
+}
+
+/* ==============================
+   BOOKING SECTION
+============================== */
+
+.booking-section {
+  background: white;
+}
+
+.booking-section > .container {
+  max-width: 1100px;
+}
+
+.calendar-box {
+  background: white;
+
+  padding: 25px;
+
+  border-radius: 20px;
+
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+
+  width: 90%;
+
+  max-width: 850px;
+
+  margin: 40px auto;
+}
+
+.calendar-box h3 {
+  text-align: center;
+
+  color: #003b5c;
+
+  margin-bottom: 25px;
+}
+
+/* FULL CALENDAR */
+
+#calendar {
+  width: 100%;
+}
+
+.fc {
+  background: white;
+
+  border-radius: 15px;
+
+  overflow: hidden;
+}
+
+.fc .fc-toolbar-title {
+  font-size: 22px;
+
+  color: #003b5c;
+}
+
+.fc-button {
+  background: #0077b6 !important;
+
+  border: none !important;
+}
+
+.fc-button:hover {
+  background: #005f8a !important;
+}
+
+.fc-daygrid-day:hover {
+  background: #eaf7ff;
+
+  cursor: pointer;
+}
+
+.fc-day-today {
+  background: #eaf7ff !important;
+}
+
+/* ==============================
+   BOOKING FORM
+============================== */
+
+.form-box {
+  background: white;
+
+  width: 90%;
+
+  max-width: 800px;
+
+  margin: 40px auto;
+
+  padding: 35px;
+
+  border-radius: 20px;
+
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+}
+
+.form-box h3 {
+  text-align: center;
+
+  color: #003b5c;
+
+  font-size: 28px;
+
+  margin-bottom: 25px;
+}
+
+.form-box h4 {
+  color: #0077b6;
+
+  font-size: 20px;
+
+  margin-top: 30px;
+
+  margin-bottom: 15px;
+
+  border-bottom: 2px solid #e6f4fb;
+
+  padding-bottom: 8px;
+}
+
+.form-box label {
+  display: block;
+
+  font-weight: 600;
+
+  margin-top: 15px;
+
+  margin-bottom: 6px;
+}
+
+.form-box input,
+.form-box select,
+.form-box textarea {
+  width: 100%;
+
+  padding: 13px 15px;
+
+  border: 1px solid #ddd;
+
+  border-radius: 10px;
+
+  font-size: 16px;
+
+  outline: none;
+}
+
+.form-box input:focus,
+.form-box select:focus,
+.form-box textarea:focus {
+  border-color: #00a8e8;
+}
+
+.form-box textarea {
+  min-height: 120px;
+
+  resize: vertical;
+}
+
+/* PRICE DISPLAY */
+
+#priceDisplay {
+  margin-top: 25px;
+
+  text-align: center;
+
+  color: #0077b6;
+
+  background: #eaf7ff;
+
+  padding: 15px;
+
+  border-radius: 15px;
+}
+
+/* CHECKBOX */
+
+.checkbox {
+  display: flex !important;
+
+  align-items: flex-start;
+
+  gap: 10px;
+
+  margin-top: 25px;
+
+  font-weight: normal !important;
+}
+
+.checkbox input {
+  width: auto;
+
+  margin-top: 5px;
+}
+
+/* PAYMENT BUTTON */
+
+#pay_button {
+  width: 100%;
+
+  margin-top: 25px;
+
+  font-size: 18px;
+}
+
+/* BOOKING MESSAGE */
+
+#bookingMessage {
+  margin-top: 20px;
+
+  padding: 15px;
+
+  border-radius: 10px;
+
+  text-align: center;
+
+  font-weight: bold;
+}
+
+.booking-buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.booking-buttons .btn {
+  flex: 1;
+}
+
+.secondary-btn {
+  background: #6c757d;
+}
+
+.secondary-btn:hover {
+  background: #5a6268;
+}
+
+@media (max-width: 768px) {
+  .booking-buttons {
+    flex-direction: column;
+  }
+}
+
+.success-message {
+  background: #d4edda;
+
+  color: #155724;
+}
+
+.booking-buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.booking-buttons button {
+  flex: 1;
+}
+
+.secondary-btn {
+  background: #6c757d;
+}
+
+.secondary-btn:hover {
+  background: #495057;
+}
+
+@media (max-width: 700px) {
+  .booking-buttons {
+    flex-direction: column;
+  }
+}
+
+.error-message {
+  background: #f8d7da;
+
+  color: #721c24;
+}
+
+.secondary-btn {
+  background: #003b5c;
+  margin-top: 15px;
+}
+
+.secondary-btn:hover {
   background: #0077b6;
+}
+
+.booking-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+/* Center booking calendar */
+
+.calendar-box {
+  max-width: 850px;
+  margin: 40px auto;
+}
+
+#calendar {
+  max-width: 800px;
+  margin: auto;
+}
+
+/* Payment buttons */
+
+.booking-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.secondary-btn {
+  background: #003b5c;
+}
+
+.secondary-btn:hover {
+  background: #0077b6;
+}
+
+/* ==============================
+   CONTACT SECTION
+============================== */
+
+.contact-section {
+  text-align: center;
+}
+
+.contact-intro {
+  max-width: 700px;
+
+  margin: 0 auto 40px;
+
+  font-size: 18px;
+
+  line-height: 1.6;
+}
+
+.contact-grid {
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 30px;
+}
+
+.contact-card {
+  background: white;
+
+  padding: 35px 25px;
+
+  border-radius: 20px;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+
+  transition: transform 0.3s ease;
+}
+
+.contact-card:hover {
+  transform: translateY(-8px);
+}
+
+.contact-icon {
+  font-size: 45px;
+
+  margin-bottom: 15px;
+}
+
+.contact-card h3 {
+  margin-bottom: 15px;
+}
+
+.contact-card p {
+  line-height: 1.6;
+
+  color: #555;
+}
+
+.contact-card a {
+  color: #0077cc;
+
+  font-weight: bold;
+
+  text-decoration: none;
+}
+
+.contact-card a:hover {
+  text-decoration: underline;
+}
+
+/* ==============================
+   FOOTER
+============================== */
+
+.footer {
+  background: #063970;
+
+  color: white;
+
+  text-align: center;
+
+  padding: 45px 20px;
+}
+
+.footer-container h3 {
+  font-size: 28px;
+
+  margin-bottom: 15px;
+}
+
+.footer-container p {
+  line-height: 1.7;
+}
+
+.footer-links {
+  margin: 25px 0;
+}
+
+.footer-links a {
+  color: white;
+
+  margin: 0 12px;
+
+  text-decoration: none;
+
+  font-weight: 500;
+}
+
+.footer-links a:hover {
+  opacity: 0.8;
+}
+
+.copyright {
+  margin-top: 25px;
+
+  font-size: 14px;
+}
+
+/* MOBILE */
+
+@media (max-width: 768px) {
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-links a {
+    display: block;
+
+    margin: 12px;
+  }
 }
