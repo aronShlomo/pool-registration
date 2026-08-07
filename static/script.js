@@ -259,6 +259,10 @@ Millrod Swim Academy!
 // LOAD BOOKED TIMES
 // ==============================
 
+// ==============================
+// LOAD BOOKED TIMES
+// ==============================
+
 async function loadBookedSlots() {
   try {
     const response = await fetch("/booked-slots");
@@ -266,16 +270,18 @@ async function loadBookedSlots() {
     const bookedSlots = await response.json();
 
     const dateInput = document.getElementById("lesson_date");
+
     const timeSelect = document.getElementById("lesson_time");
 
     function updateDisabledTimes() {
       const selectedDate = dateInput.value;
 
-      // Reset all options
       Array.from(timeSelect.options).forEach((option) => {
-        option.disabled = false;
+        if (option.value) {
+          option.disabled = false;
 
-        option.textContent = option.value;
+          option.textContent = option.value;
+        }
       });
 
       bookedSlots.forEach((slot) => {
@@ -284,7 +290,7 @@ async function loadBookedSlots() {
             if (option.value === slot.time) {
               option.disabled = true;
 
-              option.textContent = option.value + " (Already Booked)";
+              option.textContent = option.value + " (Booked)";
             }
           });
         }
@@ -297,6 +303,228 @@ async function loadBookedSlots() {
   }
 }
 
-// Load when page opens
+// ==============================
+// AVAILABLE SCHEDULE DISPLAY
+// ==============================
 
-document.addEventListener("DOMContentLoaded", loadBookedSlots);
+async function loadAvailableSchedule() {
+  const scheduleBox = document.getElementById("availableSchedule");
+
+  if (!scheduleBox) {
+    return;
+  }
+
+  try {
+    const response = await fetch("/booked-slots");
+
+    const bookedSlots = await response.json();
+
+    let html = "";
+
+    const times = [
+      "9:00 AM",
+      "10:00 AM",
+      "11:00 AM",
+      "12:00 PM",
+      "1:00 PM",
+      "2:00 PM",
+      "3:00 PM",
+      "4:00 PM",
+    ];
+
+    const today = new Date();
+
+    for (let i = 0; i < 30; i++) {
+      let date = new Date();
+
+      date.setDate(today.getDate() + i);
+
+      // Skip Sunday
+
+      if (date.getDay() === 0) {
+        continue;
+      }
+
+      let databaseDate = date.toISOString().split("T")[0];
+
+      let displayDate = date.toLocaleDateString("en-US", {
+        weekday: "long",
+        month: "long",
+        day: "numeric",
+      });
+
+      html += `
+
+      <div class="schedule-day">
+
+        <h4>
+        ${displayDate}
+        </h4>
+
+        <div class="schedule-times">
+
+      `;
+
+      times.forEach((time) => {
+        let booked = bookedSlots.some(
+          (slot) => slot.date === databaseDate && slot.time === time,
+        );
+
+        if (booked) {
+          html += `
+
+          <button 
+          class="time booked"
+          disabled>
+
+          🔴 ${time}
+          <br>
+          Booked
+
+          </button>
+
+          `;
+        } else {
+          html += `
+
+          <button 
+          class="time available"
+          onclick="
+          selectTime('${databaseDate}','${time}')
+          ">
+
+          🟢 ${time}
+
+          </button>
+
+          `;
+        }
+      });
+
+      html += `
+
+        </div>
+
+      </div>
+
+      `;
+    }
+
+    scheduleBox.innerHTML = html;
+  } catch (error) {
+    console.log("Schedule error:", error);
+
+    scheduleBox.innerHTML = "Unable to load schedule.";
+  }
+}
+
+// ==============================
+// SELECT TIME FROM SCHEDULE
+// ==============================
+
+function selectTime(date, time) {
+  document.getElementById("lesson_date").value = date;
+
+  document.getElementById("lesson_time").value = time;
+
+  document.getElementById("booking").scrollIntoView({
+    behavior: "smooth",
+  });
+}
+
+// LOAD EVERYTHING
+
+document.addEventListener("DOMContentLoaded", () => {
+  loadBookedSlots();
+
+  loadAvailableSchedule();
+});
+
+// ==============================
+// SHOW AVAILABLE SCHEDULE
+// ==============================
+
+async function loadAvailableSchedule() {
+  const scheduleBox = document.getElementById("availableSchedule");
+
+  try {
+    const response = await fetch("/booked-slots");
+
+    const bookedSlots = await response.json();
+
+    const today = new Date();
+
+    let html = "";
+
+    for (let i = 0; i < 30; i++) {
+      let date = new Date();
+
+      date.setDate(today.getDate() + i);
+
+      // Skip Sunday
+
+      if (date.getDay() === 0) {
+        continue;
+      }
+
+      let formattedDate = date.toISOString().split("T")[0];
+
+      let displayDate = date.toLocaleDateString("en-US", {
+        weekday: "long",
+        month: "long",
+        day: "numeric",
+      });
+
+      html += `
+      
+      <div class="schedule-day">
+
+        <h4>${displayDate}</h4>
+
+        <p>Available Times:</p>
+
+      `;
+
+      let times = [
+        "9:00 AM",
+        "10:00 AM",
+        "11:00 AM",
+        "12:00 PM",
+        "1:00 PM",
+        "2:00 PM",
+        "3:00 PM",
+        "4:00 PM",
+      ];
+
+      times.forEach((time) => {
+        let booked = bookedSlots.some(
+          (slot) => slot.date === formattedDate && slot.time === time,
+        );
+
+        if (booked) {
+          html += `
+          <span class="time booked">
+          ${time} - Booked
+          </span>
+          `;
+        } else {
+          html += `
+          <span class="time available">
+          ${time} - Available
+          </span>
+          `;
+        }
+      });
+
+      html += `</div>`;
+    }
+
+    scheduleBox.innerHTML = html;
+  } catch (error) {
+    scheduleBox.innerHTML = "Unable to load schedule.";
+
+    console.log(error);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", loadAvailableSchedule);

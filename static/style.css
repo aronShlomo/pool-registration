@@ -1610,3 +1610,149 @@ h2 {
     padding: 30px 15px;
   }
 }
+
+/* ==============================
+AVAILABLE SCHEDULE DESKTOP
+============================== */
+
+.schedule-container {
+  max-width: 950px;
+
+  margin: 40px auto;
+
+  background: white;
+
+  padding: 35px;
+
+  border-radius: 25px;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+.schedule-header {
+  text-align: center;
+
+  margin-bottom: 25px;
+}
+
+.schedule-header h3 {
+  font-size: 28px;
+
+  color: #0066cc;
+
+  margin-bottom: 10px;
+}
+
+.schedule-header p {
+  color: #666;
+
+  font-size: 16px;
+}
+
+.calendar-wrapper {
+  max-width: 750px;
+
+  margin: auto;
+}
+
+/* Full Calendar */
+
+#calendar {
+  background: white;
+
+  border-radius: 20px;
+
+  padding: 20px;
+}
+
+/* Calendar buttons */
+
+.fc .fc-button-primary {
+  background: #0077cc;
+
+  border: none;
+
+  border-radius: 10px;
+}
+
+.fc .fc-button-primary:hover {
+  background: #005fa3;
+}
+
+/* Schedule Legend */
+
+.schedule-info {
+  display: flex;
+
+  justify-content: center;
+
+  gap: 25px;
+
+  margin-top: 30px;
+}
+
+.schedule-card {
+  display: flex;
+
+  align-items: center;
+
+  gap: 15px;
+
+  padding: 15px 25px;
+
+  border-radius: 15px;
+
+  width: 260px;
+}
+
+.schedule-card p {
+  margin: 5px 0 0;
+
+  font-size: 14px;
+}
+
+/* Available */
+
+.schedule-card.available {
+  background: #e9fff0;
+}
+
+/* Booked */
+
+.schedule-card.booked {
+  background: #ffecec;
+}
+
+/* Mobile */
+
+@media (max-width: 768px) {
+  .schedule-container {
+    padding: 20px;
+  }
+
+  .schedule-info {
+    flex-direction: column;
+
+    align-items: center;
+  }
+
+  .schedule-card {
+    width: 100%;
+  }
+
+  .calendar-wrapper {
+    width: 100%;
+  }
+}
+
+/* ==============================
+AVAILABLE SCHEDULE DESKTOP
+============================== */
+
+.schedule-container {
+  max-width: 950px;
+  margin: 40px auto;
+  background: white;
+  padding: 35px;
+  border-radius: 25px;
+}
