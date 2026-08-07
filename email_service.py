@@ -46,7 +46,9 @@ def send_booking_confirmation(
     package,
     lesson_date,
     lesson_time,
-    payment_status="pending"
+    payment_status,
+    price
+    
 ):
 
     try:
@@ -119,6 +121,17 @@ def send_booking_confirmation(
             <b>Package:</b>
             {package}
             </p>
+                        
+            <p>
+            <b>Package:</b>
+            {package}
+            </p>
+
+
+            <p>
+            <b>Amount:</b>
+            {price}
+            </p>
 
 
             <p>
@@ -133,8 +146,25 @@ def send_booking_confirmation(
             </p>
 
 
+            <p>
+            <b>Date:</b>
+            {lesson_date}
+            </p>
+
+
+            <p>
+            <b>Time:</b>
+            {lesson_time}
+            </p>
+
+          
+
             <br>
 
+            <p>
+            <b>Payment Status:</b>
+            Payment pending - Please pay with cash or Zelle when you arrive.
+            </p>
 
             <p>
             Thank you for choosing

@@ -226,38 +226,38 @@ def create_booking():
 
         try:
 
-            print("SENDING CUSTOMER EMAIL...")
+            print("========== SENDING CUSTOMER EMAIL ==========")
 
 
             customer_sent = send_booking_confirmation(
 
-                booking["email"],
+                customer_email=booking["email"],
 
-                booking["name"],
+                customer_name=booking["name"],
 
-                booking["lesson_type"],
+                lesson_type=booking["lesson_type"],
 
-                booking["package"],
+                package=booking["package"],
 
-                booking["lesson_date"],
+                lesson_date=booking["lesson_date"],
 
-                booking["lesson_time"],
+                lesson_time=booking["lesson_time"],
 
-                booking["payment_status"],
+                payment_status=booking["payment_status"],
 
-                booking["price"]
+                price=booking["price"]
 
             )
 
 
             print(
-                "CUSTOMER EMAIL:",
+                "CUSTOMER EMAIL SENT:",
                 customer_sent
             )
 
 
 
-            print("SENDING ADMIN EMAIL...")
+            print("========== SENDING OWNER EMAIL ==========")
 
 
             admin_sent = send_admin_notification(
@@ -266,19 +266,18 @@ def create_booking():
 
 
             print(
-                "ADMIN EMAIL:",
+                "OWNER EMAIL SENT:",
                 admin_sent
             )
 
 
-        except Exception as email_error:
 
+        except Exception as e:
 
             print(
-                "EMAIL ERROR:",
-                repr(email_error)
+                "EMAIL FAILED:",
+                repr(e)
             )
-
 
 
 
