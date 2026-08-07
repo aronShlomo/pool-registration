@@ -254,3 +254,49 @@ Millrod Swim Academy!
     }
   });
 }
+
+// ==============================
+// LOAD BOOKED TIMES
+// ==============================
+
+async function loadBookedSlots() {
+  try {
+    const response = await fetch("/booked-slots");
+
+    const bookedSlots = await response.json();
+
+    const dateInput = document.getElementById("lesson_date");
+    const timeSelect = document.getElementById("lesson_time");
+
+    function updateDisabledTimes() {
+      const selectedDate = dateInput.value;
+
+      // Reset all options
+      Array.from(timeSelect.options).forEach((option) => {
+        option.disabled = false;
+
+        option.textContent = option.value;
+      });
+
+      bookedSlots.forEach((slot) => {
+        if (slot.date === selectedDate) {
+          Array.from(timeSelect.options).forEach((option) => {
+            if (option.value === slot.time) {
+              option.disabled = true;
+
+              option.textContent = option.value + " (Already Booked)";
+            }
+          });
+        }
+      });
+    }
+
+    dateInput.addEventListener("change", updateDisabledTimes);
+  } catch (error) {
+    console.log("Booked slots error:", error);
+  }
+}
+
+// Load when page opens
+
+document.addEventListener("DOMContentLoaded", loadBookedSlots);
