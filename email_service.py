@@ -117,10 +117,6 @@ def send_booking_confirmation(
             </p>
 
 
-            <p>
-            <b>Package:</b>
-            {package}
-            </p>
                         
             <p>
             <b>Package:</b>
@@ -134,11 +130,7 @@ def send_booking_confirmation(
             </p>
 
 
-            <p>
-            <b>Date:</b>
-            {lesson_date}
-            </p>
-
+        
 
             <p>
             <b>Time:</b>
