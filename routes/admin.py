@@ -171,18 +171,23 @@ def admin_dashboard():
 
 
 
-    # Count paid bookings
+    # Sum revenue of paid bookings (price may be stored like '$80' or '80')
 
     cursor.execute(
         """
-        SELECT COUNT(*)
+        SELECT COALESCE(SUM(CAST(REPLACE(price, '$', '') AS REAL)), 0)
         FROM bookings
         WHERE payment_status='paid'
         """
     )
 
+    revenue_value = cursor.fetchone()[0] or 0
 
-    revenue = cursor.fetchone()[0]
+    # Format to two decimal places (dollars)
+    try:
+        revenue = f"{float(revenue_value):.2f}"
+    except Exception:
+        revenue = "0.00"
 
 
 
