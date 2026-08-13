@@ -1,0 +1,1758 @@
+/* ==============================
+   GLOBAL SETTINGS
+============================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #f5f9fc;
+  color: #1b2a3a;
+  line-height: 1.6;
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.section {
+  padding: 80px 0;
+}
+
+h2 {
+  text-align: center;
+  font-size: 38px;
+  margin-bottom: 30px;
+  color: #003b5c;
+}
+
+.section-intro {
+  text-align: center;
+  max-width: 850px;
+  margin: -10px auto 45px;
+  font-size: 18px;
+  color: #555;
+}
+
+/* ==============================
+   NAVBAR
+============================== */
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 18px 8%;
+
+  background: white;
+
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.logo {
+  font-size: 25px;
+  font-weight: 700;
+  color: #0077b6;
+}
+
+.navbar nav {
+  display: flex;
+  align-items: center;
+}
+
+.navbar nav a {
+  text-decoration: none;
+
+  color: #333;
+
+  margin-left: 25px;
+
+  font-weight: 600;
+
+  transition: 0.3s;
+}
+
+.navbar nav a:hover {
+  color: #0077b6;
+}
+
+/* ADMIN BUTTON */
+
+.admin-icon {
+  position: fixed;
+
+  top: 18px;
+
+  right: 20px;
+
+  width: 42px;
+
+  height: 42px;
+
+  background: #003b5c;
+
+  color: white !important;
+
+  border-radius: 50%;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  font-size: 18px;
+
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
+}
+
+.admin-icon:hover {
+  background: #0077b6;
+}
+
+/* ==============================
+   HERO SECTION
+============================== */
+
+.hero {
+  min-height: 90vh;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  text-align: center;
+
+  background:
+    linear-gradient(rgba(0, 80, 130, 0.65), rgba(0, 40, 80, 0.75)),
+    url("https://images.unsplash.com/photo-1530549387789-4c1017266635")
+      center/cover;
+
+  color: white;
+}
+
+.hero-content {
+  max-width: 850px;
+}
+
+.hero h1 {
+  font-size: 55px;
+
+  line-height: 1.2;
+
+  margin-bottom: 25px;
+}
+
+.hero p {
+  font-size: 22px;
+
+  margin-bottom: 35px;
+}
+
+.btn {
+  display: inline-block;
+
+  background: #00a8e8;
+
+  color: white;
+
+  padding: 15px 35px;
+
+  border-radius: 50px;
+
+  border: none;
+
+  cursor: pointer;
+
+  font-weight: bold;
+
+  text-decoration: none;
+
+  transition: 0.3s;
+}
+
+.btn:hover {
+  background: #0077b6;
+
+  transform: translateY(-3px);
+}
+
+/* ==============================
+   ABOUT POOL
+============================== */
+
+.about-pool {
+  background: #f1f9ff;
+}
+
+.about-content {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 50px;
+}
+
+.about-image {
+  flex: 1;
+
+  text-align: center;
+}
+
+.about-image img {
+  width: 100%;
+
+  max-width: 450px;
+
+  height: 350px;
+
+  object-fit: cover;
+
+  border-radius: 25px;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.about-text {
+  flex: 1;
+}
+
+.about-text h3 {
+  color: #0077b6;
+
+  font-size: 28px;
+
+  margin-bottom: 20px;
+}
+
+.about-text p {
+  font-size: 17px;
+
+  color: #444;
+
+  margin-bottom: 18px;
+}
+
+/* ==============================
+   INSTRUCTOR SECTION
+============================== */
+
+.instructor-profile {
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 60px;
+
+  max-width: 1050px;
+
+  margin: auto;
+}
+
+.instructor-image {
+  flex: 0 0 300px;
+
+  display: flex;
+
+  justify-content: center;
+}
+
+.instructor-image img {
+  width: 280px;
+
+  height: 280px;
+
+  object-fit: cover;
+
+  object-position: center;
+
+  border-radius: 50%;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+}
+
+.instructor-info {
+  flex: 1;
+}
+
+.instructor-info h3 {
+  color: #0077b6;
+
+  font-size: 30px;
+
+  margin-bottom: 20px;
+}
+
+.instructor-info p {
+  font-size: 18px;
+
+  margin-bottom: 20px;
+}
+
+.instructor-badges {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 15px;
+}
+
+.instructor-badges span {
+  background: #eaf7ff;
+
+  padding: 10px 18px;
+
+  border-radius: 30px;
+
+  color: #003b5c;
+
+  font-weight: 600;
+}
+
+/* ==============================
+   PROGRAM CARDS
+============================== */
+
+.cards {
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+
+  gap: 30px;
+}
+
+.card {
+  background: white;
+
+  padding: 35px;
+
+  border-radius: 20px;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+}
+
+.card h3 {
+  color: #0077b6;
+
+  font-size: 24px;
+
+  margin-bottom: 15px;
+}
+
+.card p {
+  color: #555;
+
+  font-size: 17px;
+}
+
+/* ==============================
+   BOOKING SECTION
+============================== */
+
+.booking-section {
+  background: white;
+}
+
+.booking-section > .container {
+  max-width: 1100px;
+}
+
+.calendar-box {
+  background: white;
+
+  padding: 25px;
+
+  border-radius: 20px;
+
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+
+  width: 90%;
+
+  max-width: 850px;
+
+  margin: 40px auto;
+}
+
+.calendar-box h3 {
+  text-align: center;
+
+  color: #003b5c;
+
+  margin-bottom: 25px;
+}
+
+/* FULL CALENDAR */
+
+#calendar {
+  width: 100%;
+}
+
+.fc {
+  background: white;
+
+  border-radius: 15px;
+
+  overflow: hidden;
+}
+
+.fc .fc-toolbar-title {
+  font-size: 22px;
+
+  color: #003b5c;
+}
+
+.fc-button {
+  background: #0077b6 !important;
+
+  border: none !important;
+}
+
+.fc-button:hover {
+  background: #005f8a !important;
+}
+
+.fc-daygrid-day:hover {
+  background: #eaf7ff;
+
+  cursor: pointer;
+}
+
+.fc-day-today {
+  background: #eaf7ff !important;
+}
+
+/* ==============================
+   BOOKING FORM
+============================== */
+
+.form-box {
+  background: white;
+
+  width: 90%;
+
+  max-width: 800px;
+
+  margin: 40px auto;
+
+  padding: 35px;
+
+  border-radius: 20px;
+
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+}
+
+.form-box h3 {
+  text-align: center;
+
+  color: #003b5c;
+
+  font-size: 28px;
+
+  margin-bottom: 25px;
+}
+
+.form-box h4 {
+  color: #0077b6;
+
+  font-size: 20px;
+
+  margin-top: 30px;
+
+  margin-bottom: 15px;
+
+  border-bottom: 2px solid #e6f4fb;
+
+  padding-bottom: 8px;
+}
+
+.form-box label {
+  display: block;
+
+  font-weight: 600;
+
+  margin-top: 15px;
+
+  margin-bottom: 6px;
+}
+
+.form-box input,
+.form-box select,
+.form-box textarea {
+  width: 100%;
+
+  padding: 13px 15px;
+
+  border: 1px solid #ddd;
+
+  border-radius: 10px;
+
+  font-size: 16px;
+
+  outline: none;
+}
+
+.form-box input:focus,
+.form-box select:focus,
+.form-box textarea:focus {
+  border-color: #00a8e8;
+}
+
+.form-box textarea {
+  min-height: 120px;
+
+  resize: vertical;
+}
+
+/* PRICE DISPLAY */
+
+#priceDisplay {
+  margin-top: 25px;
+
+  text-align: center;
+
+  color: #0077b6;
+
+  background: #eaf7ff;
+
+  padding: 15px;
+
+  border-radius: 15px;
+}
+
+/* CHECKBOX */
+
+.checkbox {
+  display: flex !important;
+
+  align-items: flex-start;
+
+  gap: 10px;
+
+  margin-top: 25px;
+
+  font-weight: normal !important;
+}
+
+.checkbox input {
+  width: auto;
+
+  margin-top: 5px;
+}
+
+/* PAYMENT BUTTON */
+
+#pay_button {
+  width: 100%;
+
+  margin-top: 25px;
+
+  font-size: 18px;
+}
+
+/* BOOKING MESSAGE */
+
+#bookingMessage {
+  margin-top: 20px;
+
+  padding: 15px;
+
+  border-radius: 10px;
+
+  text-align: center;
+
+  font-weight: bold;
+}
+
+.success-message {
+  background: #d4edda;
+
+  color: #155724;
+}
+
+.error-message {
+  background: #f8d7da;
+
+  color: #721c24;
+}
+
+/* ==============================
+   PROGRAM CARDS
+============================== */
+
+.cards {
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+
+  gap: 30px;
+}
+
+.card {
+  background: white;
+
+  padding: 35px;
+
+  border-radius: 20px;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+}
+
+.card h3 {
+  color: #0077b6;
+
+  font-size: 24px;
+
+  margin-bottom: 15px;
+}
+
+.card p {
+  color: #555;
+
+  font-size: 17px;
+}
+
+/* ==============================
+   BOOKING SECTION
+============================== */
+
+.booking-section {
+  background: white;
+}
+
+.booking-section > .container {
+  max-width: 1100px;
+}
+
+.calendar-box {
+  background: white;
+
+  padding: 25px;
+
+  border-radius: 20px;
+
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+
+  width: 90%;
+
+  max-width: 850px;
+
+  margin: 40px auto;
+}
+
+.calendar-box h3 {
+  text-align: center;
+
+  color: #003b5c;
+
+  margin-bottom: 25px;
+}
+
+/* FULL CALENDAR */
+
+#calendar {
+  width: 100%;
+}
+
+.fc {
+  background: white;
+
+  border-radius: 15px;
+
+  overflow: hidden;
+}
+
+.fc .fc-toolbar-title {
+  font-size: 22px;
+
+  color: #003b5c;
+}
+
+.fc-button {
+  background: #0077b6 !important;
+
+  border: none !important;
+}
+
+.fc-button:hover {
+  background: #005f8a !important;
+}
+
+.fc-daygrid-day:hover {
+  background: #eaf7ff;
+
+  cursor: pointer;
+}
+
+.fc-day-today {
+  background: #eaf7ff !important;
+}
+
+/* ==============================
+   BOOKING FORM
+============================== */
+
+.form-box {
+  background: white;
+
+  width: 90%;
+
+  max-width: 800px;
+
+  margin: 40px auto;
+
+  padding: 35px;
+
+  border-radius: 20px;
+
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+}
+
+.form-box h3 {
+  text-align: center;
+
+  color: #003b5c;
+
+  font-size: 28px;
+
+  margin-bottom: 25px;
+}
+
+.form-box h4 {
+  color: #0077b6;
+
+  font-size: 20px;
+
+  margin-top: 30px;
+
+  margin-bottom: 15px;
+
+  border-bottom: 2px solid #e6f4fb;
+
+  padding-bottom: 8px;
+}
+
+.form-box label {
+  display: block;
+
+  font-weight: 600;
+
+  margin-top: 15px;
+
+  margin-bottom: 6px;
+}
+
+.form-box input,
+.form-box select,
+.form-box textarea {
+  width: 100%;
+
+  padding: 13px 15px;
+
+  border: 1px solid #ddd;
+
+  border-radius: 10px;
+
+  font-size: 16px;
+
+  outline: none;
+}
+
+.form-box input:focus,
+.form-box select:focus,
+.form-box textarea:focus {
+  border-color: #00a8e8;
+}
+
+.form-box textarea {
+  min-height: 120px;
+
+  resize: vertical;
+}
+
+/* PRICE DISPLAY */
+
+#priceDisplay {
+  margin-top: 25px;
+
+  text-align: center;
+
+  color: #0077b6;
+
+  background: #eaf7ff;
+
+  padding: 15px;
+
+  border-radius: 15px;
+}
+
+/* CHECKBOX */
+
+.checkbox {
+  display: flex !important;
+
+  align-items: flex-start;
+
+  gap: 10px;
+
+  margin-top: 25px;
+
+  font-weight: normal !important;
+}
+
+.checkbox input {
+  width: auto;
+
+  margin-top: 5px;
+}
+
+/* PAYMENT BUTTON */
+
+#pay_button {
+  width: 100%;
+
+  margin-top: 25px;
+
+  font-size: 18px;
+}
+
+/* BOOKING MESSAGE */
+
+#bookingMessage {
+  margin-top: 20px;
+
+  padding: 15px;
+
+  border-radius: 10px;
+
+  text-align: center;
+
+  font-weight: bold;
+}
+
+.success-message {
+  background: #d4edda;
+
+  color: #155724;
+}
+
+.error-message {
+  background: #f8d7da;
+
+  color: #721c24;
+}
+
+/* ==============================
+   PROGRAM CARDS
+============================== */
+
+.cards {
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+
+  gap: 30px;
+}
+
+.card {
+  background: white;
+
+  padding: 35px;
+
+  border-radius: 20px;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+}
+
+.card h3 {
+  color: #0077b6;
+
+  font-size: 24px;
+
+  margin-bottom: 15px;
+}
+
+.card p {
+  color: #555;
+
+  font-size: 17px;
+}
+
+/* ==============================
+   BOOKING SECTION
+============================== */
+
+.booking-section {
+  background: white;
+}
+
+.booking-section > .container {
+  max-width: 1100px;
+}
+
+.calendar-box {
+  background: white;
+
+  padding: 25px;
+
+  border-radius: 20px;
+
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+
+  width: 90%;
+
+  max-width: 850px;
+
+  margin: 40px auto;
+}
+
+.calendar-box h3 {
+  text-align: center;
+
+  color: #003b5c;
+
+  margin-bottom: 25px;
+}
+
+/* FULL CALENDAR */
+
+#calendar {
+  width: 100%;
+}
+
+.fc {
+  background: white;
+
+  border-radius: 15px;
+
+  overflow: hidden;
+}
+
+.fc .fc-toolbar-title {
+  font-size: 22px;
+
+  color: #003b5c;
+}
+
+.fc-button {
+  background: #0077b6 !important;
+
+  border: none !important;
+}
+
+.fc-button:hover {
+  background: #005f8a !important;
+}
+
+.fc-daygrid-day:hover {
+  background: #eaf7ff;
+
+  cursor: pointer;
+}
+
+.fc-day-today {
+  background: #eaf7ff !important;
+}
+
+/* ==============================
+   BOOKING FORM
+============================== */
+
+.form-box {
+  background: white;
+
+  width: 90%;
+
+  max-width: 800px;
+
+  margin: 40px auto;
+
+  padding: 35px;
+
+  border-radius: 20px;
+
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+}
+
+.form-box h3 {
+  text-align: center;
+
+  color: #003b5c;
+
+  font-size: 28px;
+
+  margin-bottom: 25px;
+}
+
+.form-box h4 {
+  color: #0077b6;
+
+  font-size: 20px;
+
+  margin-top: 30px;
+
+  margin-bottom: 15px;
+
+  border-bottom: 2px solid #e6f4fb;
+
+  padding-bottom: 8px;
+}
+
+.form-box label {
+  display: block;
+
+  font-weight: 600;
+
+  margin-top: 15px;
+
+  margin-bottom: 6px;
+}
+
+.form-box input,
+.form-box select,
+.form-box textarea {
+  width: 100%;
+
+  padding: 13px 15px;
+
+  border: 1px solid #ddd;
+
+  border-radius: 10px;
+
+  font-size: 16px;
+
+  outline: none;
+}
+
+.form-box input:focus,
+.form-box select:focus,
+.form-box textarea:focus {
+  border-color: #00a8e8;
+}
+
+.form-box textarea {
+  min-height: 120px;
+
+  resize: vertical;
+}
+
+/* PRICE DISPLAY */
+
+#priceDisplay {
+  margin-top: 25px;
+
+  text-align: center;
+
+  color: #0077b6;
+
+  background: #eaf7ff;
+
+  padding: 15px;
+
+  border-radius: 15px;
+}
+
+/* CHECKBOX */
+
+.checkbox {
+  display: flex !important;
+
+  align-items: flex-start;
+
+  gap: 10px;
+
+  margin-top: 25px;
+
+  font-weight: normal !important;
+}
+
+.checkbox input {
+  width: auto;
+
+  margin-top: 5px;
+}
+
+/* PAYMENT BUTTON */
+
+#pay_button {
+  width: 100%;
+
+  margin-top: 25px;
+
+  font-size: 18px;
+}
+
+/* BOOKING MESSAGE */
+
+#bookingMessage {
+  margin-top: 20px;
+
+  padding: 15px;
+
+  border-radius: 10px;
+
+  text-align: center;
+
+  font-weight: bold;
+}
+
+.booking-buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.booking-buttons .btn {
+  flex: 1;
+}
+
+.secondary-btn {
+  background: #6c757d;
+}
+
+.secondary-btn:hover {
+  background: #5a6268;
+}
+
+@media (max-width: 768px) {
+  .booking-buttons {
+    flex-direction: column;
+  }
+}
+
+.success-message {
+  background: #d4edda;
+
+  color: #155724;
+}
+
+.booking-buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.booking-buttons button {
+  flex: 1;
+}
+
+.secondary-btn {
+  background: #6c757d;
+}
+
+.secondary-btn:hover {
+  background: #495057;
+}
+
+@media (max-width: 700px) {
+  .booking-buttons {
+    flex-direction: column;
+  }
+}
+
+.error-message {
+  background: #f8d7da;
+
+  color: #721c24;
+}
+
+.secondary-btn {
+  background: #003b5c;
+  margin-top: 15px;
+}
+
+.secondary-btn:hover {
+  background: #0077b6;
+}
+
+.booking-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+/* Center booking calendar */
+
+.calendar-box {
+  max-width: 850px;
+  margin: 40px auto;
+}
+
+#calendar {
+  max-width: 800px;
+  margin: auto;
+}
+
+/* Payment buttons */
+
+.booking-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.secondary-btn {
+  background: #003b5c;
+}
+
+.secondary-btn:hover {
+  background: #0077b6;
+}
+
+/* ==============================
+   CONTACT SECTION
+============================== */
+
+.contact-section {
+  text-align: center;
+}
+
+.contact-intro {
+  max-width: 700px;
+
+  margin: 0 auto 40px;
+
+  font-size: 18px;
+
+  line-height: 1.6;
+}
+
+.contact-grid {
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 30px;
+}
+
+.contact-card {
+  background: white;
+
+  padding: 35px 25px;
+
+  border-radius: 20px;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+
+  transition: transform 0.3s ease;
+}
+
+.contact-card:hover {
+  transform: translateY(-8px);
+}
+
+.contact-icon {
+  font-size: 45px;
+
+  margin-bottom: 15px;
+}
+
+.contact-card h3 {
+  margin-bottom: 15px;
+}
+
+.contact-card p {
+  line-height: 1.6;
+
+  color: #555;
+}
+
+.contact-card a {
+  color: #0077cc;
+
+  font-weight: bold;
+
+  text-decoration: none;
+}
+
+.contact-card a:hover {
+  text-decoration: underline;
+}
+
+/* ==============================
+   FOOTER
+============================== */
+
+.footer {
+  background: #063970;
+
+  color: white;
+
+  text-align: center;
+
+  padding: 45px 20px;
+}
+
+.footer-container h3 {
+  font-size: 28px;
+
+  margin-bottom: 15px;
+}
+
+.footer-container p {
+  line-height: 1.7;
+}
+
+.footer-links {
+  margin: 25px 0;
+}
+
+.footer-links a {
+  color: white;
+
+  margin: 0 12px;
+
+  text-decoration: none;
+
+  font-weight: 500;
+}
+
+.footer-links a:hover {
+  opacity: 0.8;
+}
+
+.copyright {
+  margin-top: 25px;
+
+  font-size: 14px;
+}
+
+/* MOBILE */
+
+@media (max-width: 768px) {
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-links a {
+    display: block;
+
+    margin: 12px;
+  }
+}
+
+/* =====================================
+   MOBILE RESPONSIVE DESIGN
+===================================== */
+
+@media (max-width: 768px) {
+  /* NAVBAR */
+
+  .navbar {
+    flex-direction: column;
+
+    padding: 15px;
+
+    text-align: center;
+  }
+
+  .logo {
+    font-size: 22px;
+
+    margin-bottom: 15px;
+  }
+
+  .navbar nav {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    justify-content: center;
+
+    gap: 12px;
+  }
+
+  .navbar nav a {
+    font-size: 14px;
+  }
+
+  /* HERO SECTION */
+
+  .hero {
+    min-height: 80vh;
+
+    padding: 40px 20px;
+
+    background-position: center;
+  }
+
+  .hero-content {
+    width: 100%;
+
+    text-align: center;
+  }
+
+  .hero h1 {
+    font-size: 38px;
+
+    line-height: 1.15;
+  }
+
+  .hero p {
+    font-size: 17px;
+
+    line-height: 1.6;
+  }
+
+  /* GENERAL SECTIONS */
+
+  .section {
+    padding: 45px 15px;
+  }
+
+  .container {
+    width: 100%;
+  }
+
+  h2 {
+    font-size: 30px;
+
+    text-align: center;
+  }
+
+  .intro {
+    text-align: center;
+
+    font-size: 16px;
+  }
+
+  /* ABOUT SECTION */
+
+  .about-content {
+    display: flex;
+
+    flex-direction: column;
+  }
+
+  .about-image {
+    order: 1;
+  }
+
+  .about-text {
+    order: 2;
+  }
+
+  .about-image img {
+    width: 100%;
+
+    height: auto;
+
+    border-radius: 20px;
+  }
+
+  /* INSTRUCTOR */
+
+  .instructor-profile {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 25px;
+  }
+
+  .instructor-image {
+    width: 100%;
+  }
+
+  .instructor-image img {
+    width: 100%;
+
+    height: auto;
+
+    border-radius: 20px;
+  }
+
+  .instructor-info {
+    text-align: center;
+  }
+
+  /* BADGES */
+
+  .instructor-badges {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+  }
+
+  .instructor-badges span {
+    width: 100%;
+
+    text-align: center;
+  }
+
+  /* PROGRAM CARDS */
+
+  .cards {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 20px;
+  }
+
+  .card {
+    width: 100%;
+
+    padding: 25px;
+  }
+
+  /* BOOKING AREA */
+
+  .calendar-box {
+    width: 100%;
+
+    overflow: hidden;
+  }
+
+  #calendar {
+    width: 100%;
+
+    font-size: 12px;
+  }
+
+  .fc-toolbar {
+    display: flex !important;
+
+    flex-direction: column;
+
+    gap: 10px;
+  }
+
+  .fc-toolbar-title {
+    font-size: 18px !important;
+  }
+
+  /* FORM */
+
+  .form-box {
+    width: 100%;
+
+    padding: 20px;
+  }
+
+  .form-box input,
+  .form-box select,
+  .form-box textarea {
+    width: 100%;
+
+    font-size: 16px;
+
+    padding: 12px;
+  }
+
+  .booking-buttons {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 15px;
+  }
+
+  .booking-buttons button {
+    width: 100%;
+  }
+
+  /* CONTACT */
+
+  .contact-box {
+    text-align: center;
+
+    padding: 25px;
+  }
+
+  /* FOOTER */
+
+  footer {
+    text-align: center;
+
+    padding: 30px 15px;
+  }
+}
+
+/* ==============================
+AVAILABLE SCHEDULE DESKTOP
+============================== */
+
+.schedule-container {
+  max-width: 950px;
+
+  margin: 40px auto;
+
+  background: white;
+
+  padding: 35px;
+
+  border-radius: 25px;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+.schedule-header {
+  text-align: center;
+
+  margin-bottom: 25px;
+}
+
+.schedule-header h3 {
+  font-size: 28px;
+
+  color: #0066cc;
+
+  margin-bottom: 10px;
+}
+
+.schedule-header p {
+  color: #666;
+
+  font-size: 16px;
+}
+
+.calendar-wrapper {
+  max-width: 750px;
+
+  margin: auto;
+}
+
+/* Full Calendar */
+
+#calendar {
+  background: white;
+
+  border-radius: 20px;
+
+  padding: 20px;
+}
+
+/* Calendar buttons */
+
+.fc .fc-button-primary {
+  background: #0077cc;
+
+  border: none;
+
+  border-radius: 10px;
+}
+
+.fc .fc-button-primary:hover {
+  background: #005fa3;
+}
+
+/* Schedule Legend */
+
+.schedule-info {
+  display: flex;
+
+  justify-content: center;
+
+  gap: 25px;
+
+  margin-top: 30px;
+}
+
+.schedule-card {
+  display: flex;
+
+  align-items: center;
+
+  gap: 15px;
+
+  padding: 15px 25px;
+
+  border-radius: 15px;
+
+  width: 260px;
+}
+
+.schedule-card p {
+  margin: 5px 0 0;
+
+  font-size: 14px;
+}
+
+/* Available */
+
+.schedule-card.available {
+  background: #e9fff0;
+}
+
+/* Booked */
+
+.schedule-card.booked {
+  background: #ffecec;
+}
+
+/* Mobile */
+
+@media (max-width: 768px) {
+  .schedule-container {
+    padding: 20px;
+  }
+
+  .schedule-info {
+    flex-direction: column;
+
+    align-items: center;
+  }
+
+  .schedule-card {
+    width: 100%;
+  }
+
+  .calendar-wrapper {
+    width: 100%;
+  }
+}
+
+/* ==============================
+AVAILABLE SCHEDULE DESKTOP
+============================== */
+
+.schedule-container {
+  max-width: 950px;
+  margin: 40px auto;
+  background: white;
+  padding: 35px;
+  border-radius: 25px;
+}
